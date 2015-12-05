@@ -22,12 +22,14 @@ public final class EncryptConfigValueCommand extends Command {
     @Override
     public void configure(Subparser subparser) {
         subparser.addArgument("-k", "--keyfile")
+            .required(false)
             .type(String.class)
             .dest(KEYFILE)
             .setDefault(GenerateKeyCommand.DEFAULT_KEY_FILE_LOCATION)
             .help("The location of the key file");
 
         subparser.addArgument("-v", "--value")
+            .required(true)
             .type(String.class)
             .dest(VALUE)
             .help("The value to encrypt");

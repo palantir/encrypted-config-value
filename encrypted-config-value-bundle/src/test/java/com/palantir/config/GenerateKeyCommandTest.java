@@ -15,7 +15,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.junit.Test;
 
 public final class GenerateKeyCommandTest {
-    private GenerateKeyCommand command = new GenerateKeyCommand();
+    private final GenerateKeyCommand command = new GenerateKeyCommand();
 
     @Test
     public void weGenerateAValidKey() throws Exception {

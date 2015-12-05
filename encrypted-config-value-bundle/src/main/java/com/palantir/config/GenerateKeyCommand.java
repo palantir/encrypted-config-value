@@ -24,16 +24,19 @@ public final class GenerateKeyCommand extends Command {
     @Override
     public void configure(Subparser subparser) {
         subparser.addArgument("-a", "--algorithm")
+            .required(true)
             .type(String.class)
             .dest(ALGORITHM)
             .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator)");
 
         subparser.addArgument("-n", "--keysize")
+            .required(true)
             .type(Integer.class)
             .dest(KEYSIZE)
             .help("The size of the key in bits");
 
         subparser.addArgument("-f", "--file")
+            .required(false)
             .type(String.class)
             .dest(FILE)
             .setDefault(DEFAULT_KEY_FILE_LOCATION)
