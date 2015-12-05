@@ -1,0 +1,16 @@
+apply from: "${rootDir}/gradle/libs.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
+
+dependencies {
+    compile libs.guava
+    compile libs.jackson.databind
+    compile libs.dropwizard.core
+    compile project(':encrypted-config-value')
+
+    testCompile libs.hamcrest
+    testCompile libs.junit
+
+    processor libs.immutables
+}
+
+tasks.check.dependsOn(javadoc)

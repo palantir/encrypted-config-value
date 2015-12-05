@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import javax.crypto.KeyGenerator;
@@ -17,10 +18,22 @@ import javax.crypto.SecretKey;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface KeyWithAlgorithm {
-    String getAlgorithm();
+public abstract class KeyWithAlgorithm {
+    abstract String getAlgorithm();
 
-    byte[] getKey();
+    abstract byte[] getKey();
+
+    @Override
+    public final String toString() {
+        byte[] encodedKey = Base64.getEncoder().encode(getKey());
+        String encodedKeyString = new String(encodedKey, StandardCharsets.UTF_8);
+        return getAlgorithm() + ":" + encodedKeyString;
+    }
+
+    public final void toFile(Path path) throws IOException {
+        byte[] serialized = toString().getBytes(StandardCharsets.UTF_8);
+        Files.write(path, serialized, StandardOpenOption.CREATE_NEW);
+    }
 
     static KeyWithAlgorithm from(String algorithm, byte[] key) {
         return ImmutableKeyWithAlgorithm.builder()
@@ -37,9 +50,9 @@ public interface KeyWithAlgorithm {
     }
 
     static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
-        checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key>");
+        checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key in base64>");
         String[] tokens = keyWithAlgorithm.split(":", 2);
-        byte[] decodedKey = Base64.getDecoder().decode(tokens[1]);
+        byte[] decodedKey = Base64.getDecoder().decode(tokens[1].getBytes(StandardCharsets.UTF_8));
         return KeyWithAlgorithm.from(tokens[0], decodedKey);
     }
 

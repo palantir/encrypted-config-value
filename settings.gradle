@@ -1,1 +1,2 @@
 include 'encrypted-config-value'
+include 'encrypted-config-value-bundle'

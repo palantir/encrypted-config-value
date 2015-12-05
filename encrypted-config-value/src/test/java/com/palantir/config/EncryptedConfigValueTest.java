@@ -17,7 +17,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public final class EncryptedConfigValueTest {
-    private final String plaintext = "my secret. I don't want anyone to know this";
+    private static final String plaintext = "my secret. I don't want anyone to know this";
 
     @Test
     public void weCanEncryptAndDecryptAValueUsingBlowfish() {
