@@ -28,7 +28,7 @@ public final class GenerateKeyCommand extends Command {
             .dest(ALGORITHM)
             .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator)");
 
-        subparser.addArgument("-k", "--keysize")
+        subparser.addArgument("-n", "--keysize")
             .type(Integer.class)
             .dest(KEYSIZE)
             .help("The size of the key in bits");
