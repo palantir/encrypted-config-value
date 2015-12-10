@@ -51,6 +51,15 @@ public final class Main extends Application<MyApplicationConfig> {
     
 }
  ```
+ 
+then
+
+```console
+my-application$ ./bin/my-dropwizard-app generate-random-key -a AES -n 128
+Wrote key to var/conf/encrypted-config-value.key
+my-application$ ./bin/my-dropwizard-app encrypt-config-value -v topSecretPassword $HONK
+enc:V92jePHsFbT0PxdJoer+oA== 
+```
 
 License
 -------
