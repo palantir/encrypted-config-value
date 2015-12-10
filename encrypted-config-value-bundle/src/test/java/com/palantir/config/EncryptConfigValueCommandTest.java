@@ -26,14 +26,17 @@ public final class EncryptConfigValueCommandTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final EncryptConfigValueCommand command = new EncryptConfigValueCommand();
 
+    private PrintStream originalSystemOut;
+
     @Before
     public void setUpStreams() throws UnsupportedEncodingException {
+        originalSystemOut = System.out;
         System.setOut(new PrintStream(outContent, false, CHARSET));
     }
 
     @After
     public void cleanUpStreams() {
-        System.setOut(null);
+        System.setOut(originalSystemOut);
     }
 
     @Test
