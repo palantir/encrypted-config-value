@@ -33,6 +33,8 @@ subprojects {
     apply plugin: 'com.palantir.baseline-findbugs'
     apply plugin: 'com.palantir.baseline-idea'
     apply plugin: 'org.inferred.processors'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
 
     repositories {
         jcenter()
