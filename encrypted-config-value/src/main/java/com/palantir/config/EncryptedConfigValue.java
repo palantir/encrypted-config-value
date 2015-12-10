@@ -7,6 +7,7 @@ package com.palantir.config;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.IOException;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -18,6 +19,19 @@ public abstract class EncryptedConfigValue {
 
     public final String getDecryptedValue(KeyWithAlgorithm key) {
         return EncryptedConfigValues.getDecryptedValue(encryptedValue(), key);
+    }
+
+    /**
+     * Tries to decrypt using the key at the default path.
+     * @see KeyWithAlgorithm#DEFAULT_KEY_PATH
+     * @return the decrypted value
+     */
+    public final String getDecryptedValue() {
+        try {
+            return getDecryptedValue(KeyWithAlgorithm.fromDefaultPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Was unable to read key", e);
+        }
     }
 
     @Override

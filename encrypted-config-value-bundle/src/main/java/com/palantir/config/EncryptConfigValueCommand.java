@@ -25,7 +25,7 @@ public final class EncryptConfigValueCommand extends Command {
             .required(false)
             .type(String.class)
             .dest(KEYFILE)
-            .setDefault(GenerateKeyCommand.DEFAULT_KEY_FILE_LOCATION)
+            .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
             .help("The location of the key file");
 
         subparser.addArgument("-v", "--value")

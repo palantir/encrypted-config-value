@@ -12,7 +12,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
 
 public final class GenerateKeyCommand extends Command {
 
-    public static final String DEFAULT_KEY_FILE_LOCATION = "var/conf/encrypted-config-value.key";
     public static final String KEYSIZE = "keysize";
     public static final String FILE = "file";
     public static final String ALGORITHM = "algorithm";
@@ -39,7 +38,7 @@ public final class GenerateKeyCommand extends Command {
             .required(false)
             .type(String.class)
             .dest(FILE)
-            .setDefault(DEFAULT_KEY_FILE_LOCATION)
+            .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
             .help("The location to write the key");
     }
 

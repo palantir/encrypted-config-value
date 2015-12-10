@@ -86,8 +86,8 @@ public final class EncryptedConfigValues {
      *
      * @see EncryptedConfigValues#getEncryptedString(String, KeyWithAlgorithm)
      */
-    public static EncryptedConfigValue getEncryptedConfigValue(String rawValue, KeyWithAlgorithm key) {
-        String encryptedString = getEncryptedString(rawValue, key);
+    public static EncryptedConfigValue getEncryptedConfigValue(String plaintext, KeyWithAlgorithm key) {
+        String encryptedString = getEncryptedString(plaintext, key);
         return EncryptedConfigValue.fromEncryptedString(encryptedString);
     }
 
