@@ -35,28 +35,28 @@ public abstract class KeyWithAlgorithm {
         Files.write(path, serialized, StandardOpenOption.CREATE_NEW);
     }
 
-    static KeyWithAlgorithm from(String algorithm, byte[] key) {
+    public static KeyWithAlgorithm from(String algorithm, byte[] key) {
         return ImmutableKeyWithAlgorithm.builder()
                 .algorithm(algorithm)
                 .key(key)
                 .build();
     }
 
-    static KeyWithAlgorithm randomKey(String algorithm, int size) throws NoSuchAlgorithmException {
+    public static KeyWithAlgorithm randomKey(String algorithm, int size) throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
         keyGen.init(size);
         SecretKey secretKey = keyGen.generateKey();
         return KeyWithAlgorithm.from(algorithm, secretKey.getEncoded());
     }
 
-    static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
+    public static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
         checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key in base64>");
         String[] tokens = keyWithAlgorithm.split(":", 2);
         byte[] decodedKey = Base64.getDecoder().decode(tokens[1].getBytes(StandardCharsets.UTF_8));
         return KeyWithAlgorithm.from(tokens[0], decodedKey);
     }
 
-    static KeyWithAlgorithm fromPath(Path keyPath) throws IOException {
+    public static KeyWithAlgorithm fromPath(Path keyPath) throws IOException {
         byte[] contents = Files.readAllBytes(keyPath);
         return KeyWithAlgorithm.fromString(new String(contents, StandardCharsets.UTF_8));
     }
