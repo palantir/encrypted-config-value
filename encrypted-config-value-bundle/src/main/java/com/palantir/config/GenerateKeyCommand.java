@@ -6,6 +6,7 @@ package com.palantir.config;
 
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
@@ -47,9 +48,12 @@ public final class GenerateKeyCommand extends Command {
         String algorithm = namespace.getString(ALGORITHM);
         int keySize = namespace.getInt(KEYSIZE);
         String file = namespace.getString(FILE);
+        Path path = Paths.get(file);
 
         KeyWithAlgorithm randomKey = KeyWithAlgorithm.randomKey(algorithm, keySize);
-        randomKey.toFile(Paths.get(file));
+        randomKey.toFile(path);
+
+        System.out.println("Wrote key to " + path);
     }
 
 }
