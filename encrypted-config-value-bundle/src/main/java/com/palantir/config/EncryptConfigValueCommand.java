@@ -41,8 +41,8 @@ public final class EncryptConfigValueCommand extends Command {
         String value = namespace.getString(VALUE);
 
         KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.fromPath(Paths.get(keyfile));
-        String encryptedValue = EncryptedConfigValues.getEncryptedValue(value, keyWithAlgorithm);
+        EncryptedConfigValue ecv = EncryptedConfigValues.getEncryptedConfigValue(value, keyWithAlgorithm);
 
-        System.out.println(encryptedValue);
+        System.out.println(ecv);
     }
 }

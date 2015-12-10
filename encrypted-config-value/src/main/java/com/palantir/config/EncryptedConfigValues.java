@@ -22,13 +22,28 @@ public final class EncryptedConfigValues {
         /* do not instantiate */
     }
 
+    /**
+     * Checks that this encrypted value is valid and decodes it into a byte array.
+     * If the value is invalid, an {@link IllegalArgumentException} will be thrown.
+     * @param encryptedValue  the encrypted value to convert and validate
+     * @return this encrypted value as bytes
+     */
+    public static byte[] getBytesAndValidate(String encryptedValue) {
+        return Base64.getDecoder().decode(encryptedValue);
+    }
+
+    /**
+     * @param encryptedValue  an encrypted string representing UTF-8 encoded bytes.
+     * @param key             the decryption key.
+     * @return the plaintext
+     */
     public static String getDecryptedValue(String encryptedValue, KeyWithAlgorithm key) {
         SecretKeySpec secretKeySpec = getSecretKeySpec(key);
 
         try {
             Cipher cipher = Cipher.getInstance(key.getAlgorithm());
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-            byte[] rawBytes = Base64.getDecoder().decode(encryptedValue);
+            byte[] rawBytes = getBytesAndValidate(encryptedValue);
             byte[] decrypted = cipher.doFinal(rawBytes);
             return new String(decrypted, charset);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -40,13 +55,20 @@ public final class EncryptedConfigValues {
         }
     }
 
-    public static String getEncryptedValue(String rawValue, KeyWithAlgorithm key) {
+    /**
+     * @param plaintext  the plaintext to encrypt.
+     * @param key        the encryption key to use.
+     * @return a base-64 encoding of the encrypted bytes
+     *
+     * @see EncryptedConfigValues#getEncryptedConfigValue(String, KeyWithAlgorithm)
+     */
+    public static String getEncryptedString(String plaintext, KeyWithAlgorithm key) {
         SecretKeySpec secretKeySpec = getSecretKeySpec(key);
 
         try {
             Cipher cipher = Cipher.getInstance(key.getAlgorithm());
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-            byte[] encrypted = cipher.doFinal(rawValue.getBytes(charset));
+            byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new RuntimeException("The cipher could not be initialized", e);
@@ -55,6 +77,18 @@ public final class EncryptedConfigValues {
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             throw new RuntimeException("The encrypted value was not valid", e);
         }
+    }
+
+    /**
+     * @param plaintext  the plaintext to encrypt.
+     * @param key        the encryption key to use.
+     * @return an encrypted config value for the given plaintext
+     *
+     * @see EncryptedConfigValues#getEncryptedString(String, KeyWithAlgorithm)
+     */
+    public static EncryptedConfigValue getEncryptedConfigValue(String rawValue, KeyWithAlgorithm key) {
+        String encryptedString = getEncryptedString(rawValue, key);
+        return EncryptedConfigValue.fromEncryptedString(encryptedString);
     }
 
 

@@ -18,36 +18,35 @@ import org.junit.Test;
 
 public final class EncryptedConfigValueTest {
     private static final String plaintext = "my secret. I don't want anyone to know this";
+    private static final KeyWithAlgorithm blowfishKey
+            = KeyWithAlgorithm.from("Blowfish", "some basic key".getBytes(StandardCharsets.UTF_8));
 
     @Test
-    public void weCanEncryptAndDecryptAValueUsingBlowfish() {
-        KeyWithAlgorithm key = KeyWithAlgorithm.from("Blowfish", "some basic key".getBytes(StandardCharsets.UTF_8));
-        String encryptedValue = EncryptedConfigValues.getEncryptedValue(plaintext, key);
-
-        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValue.fromString(encryptedValue);
-        String decryptedValue = encryptedConfigValue.getDecryptedValue(key);
-
-        assertThat(decryptedValue, is(plaintext));
+    public void weCanConstructFromAValidString() {
+        String valid = "enc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
+        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValue.fromString(valid);
+        assertThat(encryptedConfigValue.getDecryptedValue(blowfishKey), is(plaintext));
     }
 
-    @Test
-    public void weCanEncryptAndDecryptAValueUsingAes() throws NoSuchAlgorithmException {
-        KeyWithAlgorithm key = KeyWithAlgorithm.randomKey("AES", 128);
-        String encryptedValue = EncryptedConfigValues.getEncryptedValue(plaintext, key);
-
-        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValue.fromString(encryptedValue);
-        String decryptedValue = encryptedConfigValue.getDecryptedValue(key);
-
-        assertThat(decryptedValue, is(plaintext));
+    @Test(expected = IllegalArgumentException.class)
+    public void weFailToConstructWithInvalidPrefix() {
+        String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
+        EncryptedConfigValue.fromString(invalid); // throws
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void weFailToConstructWithAnInvalidEncryptedValue() {
+        String invalid = "enc:verysecret";
+        EncryptedConfigValue.fromEncryptedString(invalid);
+    }
+
 
     @Test
     public void weCannotDecryptWithTheWrongKey() throws NoSuchAlgorithmException {
         KeyWithAlgorithm key = KeyWithAlgorithm.randomKey("Blowfish", 128);
         KeyWithAlgorithm otherKey = KeyWithAlgorithm.randomKey("Blowfish", 128);
-        String encryptedValue = EncryptedConfigValues.getEncryptedValue(plaintext, key);
+        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValues.getEncryptedConfigValue(plaintext, key);
 
-        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValue.fromString(encryptedValue);
         try {
             encryptedConfigValue.getDecryptedValue(otherKey); //throws
             Assert.fail("should have thrown an exception");
@@ -56,18 +55,13 @@ public final class EncryptedConfigValueTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void weCannotEncryptWithAnEmptyKey() {
-        KeyWithAlgorithm key = KeyWithAlgorithm.fromString("Blowfish:");
-        EncryptedConfigValues.getEncryptedValue(plaintext, key); //throws
-    }
-
     @Test
     public void weCanDeserializeFromAString()
             throws NoSuchAlgorithmException, JsonParseException, JsonMappingException, IOException {
         KeyWithAlgorithm key = KeyWithAlgorithm.randomKey("Blowfish", 128);
-        String encryptedString = EncryptedConfigValues.getEncryptedValue(plaintext, key);
-        String jsonString = "\"" + encryptedString + "\"";
+        EncryptedConfigValue encryptedConfigValue = EncryptedConfigValues.getEncryptedConfigValue(plaintext, key);
+
+        String jsonString = "\"" + encryptedConfigValue.toString() + "\"";
 
         ObjectMapper mapper = new ObjectMapper();
         EncryptedConfigValue encryptedValue = mapper.readValue(jsonString, EncryptedConfigValue.class);
