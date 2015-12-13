@@ -20,6 +20,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public abstract class KeyWithAlgorithm {
+    public static final String KEY_PATH_PROPERTY = "palantir.config.key_path";
     public static final String DEFAULT_KEY_PATH = "var/conf/encrypted-config-value.key";
 
     abstract String getAlgorithm();
@@ -65,6 +66,6 @@ public abstract class KeyWithAlgorithm {
     }
 
     public static KeyWithAlgorithm fromDefaultPath() throws IOException {
-        return fromPath(Paths.get(DEFAULT_KEY_PATH));
+        return fromPath(Paths.get(System.getProperty(KEY_PATH_PROPERTY, DEFAULT_KEY_PATH)));
     }
 }
