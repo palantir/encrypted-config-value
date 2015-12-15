@@ -1,5 +1,17 @@
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.palantir.config.crypto;
@@ -13,7 +25,6 @@ import net.sourceforge.argparse4j.inf.Subparser;
 
 public final class GenerateKeyCommand extends Command {
 
-    public static final String KEYSIZE = "keysize";
     public static final String FILE = "file";
     public static final String ALGORITHM = "algorithm";
 
@@ -29,30 +40,24 @@ public final class GenerateKeyCommand extends Command {
             .dest(ALGORITHM)
             .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator)");
 
-        subparser.addArgument("-n", "--keysize")
-            .required(true)
-            .type(Integer.class)
-            .dest(KEYSIZE)
-            .help("The size of the key in bits");
-
         subparser.addArgument("-f", "--file")
             .required(false)
             .type(String.class)
             .dest(FILE)
             .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
-            .help("The location to write the key");
+            .help("The location to write the key.");
     }
 
     @Override
     public void run(Bootstrap<?> bootstrap, Namespace namespace) throws Exception {
         String algorithm = namespace.getString(ALGORITHM);
-        int keySize = namespace.getInt(KEYSIZE);
         String file = namespace.getString(FILE);
         Path path = Paths.get(file);
 
-        KeyWithAlgorithm randomKey = KeyWithAlgorithm.randomKey(algorithm, keySize);
+        KeyWithAlgorithm randomKey = KeyWithAlgorithm.randomKey(algorithm);
         randomKey.toFile(path);
 
+        // print to console, notifying that we did something
         System.out.println("Wrote key to " + path);
     }
 

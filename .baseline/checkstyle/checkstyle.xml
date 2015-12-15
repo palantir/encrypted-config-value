@@ -21,8 +21,8 @@
     <module name="NewlineAtEndOfFile"> <!-- Java Style Guide: Line ending: LF -->
         <property name="lineSeparator" value="lf"/>
     </module>
-    <module name="RegexpHeader">
-        <property name="header" value="^/\*$\n^ \* Copyright \d{4} Palantir Technologies, Inc\. All rights reserved\.$"/>
+    <module name="Header">
+        <property name="headerFile" value="${samedir}/../copyright/apache-2.0.txt"/>
         <property name="fileExtensions" value=".java,.ts"/>
     </module>
     <module name="RegexpMultiline"> <!-- Development Practices: Writing good unit tests -->

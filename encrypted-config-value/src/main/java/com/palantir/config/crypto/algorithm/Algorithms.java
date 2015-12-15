@@ -13,3 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.palantir.config.crypto.algorithm;
+
+public final class Algorithms {
+
+    private Algorithms() {
+        /* do not instantiate */
+    }
+
+    public static Algorithm getInstance(String algorithmType) {
+        switch (algorithmType) {
+            case AesAlgorithm.ALGORITHM_TYPE:
+                return new AesAlgorithm();
+            default:
+                throw new IllegalArgumentException("Unknown algorithm type: " + algorithmType);
+        }
+    }
+}
