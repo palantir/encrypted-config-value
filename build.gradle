@@ -23,7 +23,7 @@ repositories {
 
 allprojects {
     version gitVersion()
-    group 'com.palantir.config'
+    group 'com.palantir.config.crypto'
 }
 
 subprojects {

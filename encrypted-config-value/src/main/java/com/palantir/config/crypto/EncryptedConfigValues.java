@@ -2,7 +2,7 @@
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.config;
+package com.palantir.config.crypto;
 
 import com.google.common.base.Charsets;
 import java.nio.charset.Charset;

@@ -2,7 +2,7 @@
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
  */
 
-package com.palantir.config;
+package com.palantir.config.crypto;
 
 import io.dropwizard.Bundle;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
