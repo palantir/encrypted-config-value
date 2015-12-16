@@ -1,5 +1,17 @@
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.palantir.config.crypto;
@@ -30,21 +42,17 @@ public final class VariableSubstitutionTest {
     public void testCanDecryptValueInConfig() throws IOException {
         assertEquals("value", RULE.getConfiguration().getUnencrypted());
         assertEquals("value", RULE.getConfiguration().getEncrypted());
-        assertEquals("value", RULE.getConfiguration().getValueObject().getDecryptedValue());
     }
 
     public static final class TestConfig extends Configuration {
         private final String unencrypted;
         private final String encrypted;
-        private final EncryptedConfigValue valueObject;
 
         public TestConfig(
                 @JsonProperty("unencrypted") String unencrypted,
-                @JsonProperty("encrypted") String encrypted,
-                @JsonProperty("value-object") EncryptedConfigValue valueObject) {
+                @JsonProperty("encrypted") String encrypted) {
             this.unencrypted = unencrypted;
             this.encrypted = encrypted;
-            this.valueObject = valueObject;
         }
 
         public String getUnencrypted() {
@@ -53,10 +61,6 @@ public final class VariableSubstitutionTest {
 
         public String getEncrypted() {
             return encrypted;
-        }
-
-        public EncryptedConfigValue getValueObject() {
-            return valueObject;
         }
     }
 

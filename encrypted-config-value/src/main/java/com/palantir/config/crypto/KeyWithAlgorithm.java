@@ -1,11 +1,25 @@
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.palantir.config.crypto;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.Algorithms;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,8 +28,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -23,9 +35,9 @@ public abstract class KeyWithAlgorithm {
     public static final String KEY_PATH_PROPERTY = "palantir.config.key_path";
     public static final String DEFAULT_KEY_PATH = "var/conf/encrypted-config-value.key";
 
-    abstract String getAlgorithm();
+    public abstract String getAlgorithm();
 
-    abstract byte[] getKey();
+    public abstract byte[] getKey();
 
     @Override
     public final String toString() {
@@ -46,16 +58,17 @@ public abstract class KeyWithAlgorithm {
                 .build();
     }
 
-    public static KeyWithAlgorithm randomKey(String algorithm, int size) throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
-        keyGen.init(size);
-        SecretKey secretKey = keyGen.generateKey();
-        return KeyWithAlgorithm.from(algorithm, secretKey.getEncoded());
+    public static KeyWithAlgorithm randomKey(String algorithmType) throws NoSuchAlgorithmException {
+        Algorithm algorithm = Algorithms.getInstance(algorithmType);
+        return algorithm.generateKey();
     }
 
     public static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
         checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key in base64>");
+
         String[] tokens = keyWithAlgorithm.split(":", 2);
+        Base64Utils.checkIsBase64(tokens[1]);
+
         byte[] decodedKey = Base64.getDecoder().decode(tokens[1].getBytes(StandardCharsets.UTF_8));
         return KeyWithAlgorithm.from(tokens[0], decodedKey);
     }

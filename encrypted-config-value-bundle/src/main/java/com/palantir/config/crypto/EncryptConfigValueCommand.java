@@ -1,9 +1,23 @@
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.palantir.config.crypto;
 
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.Algorithms;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import java.nio.file.Paths;
@@ -26,7 +40,7 @@ public final class EncryptConfigValueCommand extends Command {
             .type(String.class)
             .dest(KEYFILE)
             .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
-            .help("The location of the key file");
+            .help("The location of the (private) key file");
 
         subparser.addArgument("-v", "--value")
             .required(true)
@@ -41,8 +55,11 @@ public final class EncryptConfigValueCommand extends Command {
         String value = namespace.getString(VALUE);
 
         KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.fromPath(Paths.get(keyfile));
-        EncryptedConfigValue ecv = EncryptedConfigValues.getEncryptedConfigValue(value, keyWithAlgorithm);
+        Algorithm algorithm = Algorithms.getInstance(keyWithAlgorithm.getAlgorithm());
 
-        System.out.println(ecv);
+        EncryptedValue encryptedValue = algorithm.getEncryptedValue(value, keyWithAlgorithm);
+
+        // print the resulting encrypted value to the console
+        System.out.println(encryptedValue);
     }
 }

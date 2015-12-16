@@ -13,3 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.palantir.config.crypto.algorithm;
+
+import com.palantir.config.crypto.EncryptedValue;
+import com.palantir.config.crypto.KeyWithAlgorithm;
+
+/**
+ * Explicitly support a defined set of algorithms, so we can choose sane defaults etc.
+ */
+public interface Algorithm {
+
+    KeyWithAlgorithm generateKey();
+
+    EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa);
+
+    String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa);
+}

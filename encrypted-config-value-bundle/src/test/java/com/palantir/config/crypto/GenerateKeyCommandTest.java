@@ -1,5 +1,17 @@
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.palantir.config.crypto;
@@ -21,32 +33,27 @@ public final class GenerateKeyCommandTest {
     public void weGenerateAValidKey() throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
         String algorithm = "AES";
-        int keySize = 128;
 
         Namespace namespace = new Namespace(ImmutableMap.of(
                 GenerateKeyCommand.ALGORITHM, algorithm,
-                GenerateKeyCommand.KEYSIZE, keySize,
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 
         command.run(null, namespace);
 
         KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.fromPath(tempFilePath);
         assertThat(keyWithAlgorithm.getAlgorithm(), is(algorithm));
-        assertThat(keyWithAlgorithm.getKey().length, is(keySize / 8));
     }
 
     @Test(expected = FileAlreadyExistsException.class)
     public void weDoNotOverwriteAnExistingKeyfile() throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
         String algorithm = "AES";
-        int keySize = 128;
 
         // create the file
         Files.createFile(tempFilePath);
 
         Namespace namespace = new Namespace(ImmutableMap.of(
                 GenerateKeyCommand.ALGORITHM, algorithm,
-                GenerateKeyCommand.KEYSIZE, keySize,
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 
         command.run(null, namespace);
