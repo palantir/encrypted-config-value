@@ -18,22 +18,16 @@ package com.palantir.config.crypto;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import org.immutables.value.Value;
 
 @Value.Immutable
 public abstract class KeyWithAlgorithm {
-    public static final String KEY_PATH_PROPERTY = "palantir.config.key_path";
-    public static final String DEFAULT_KEY_PATH = "var/conf/encrypted-config-value.key";
 
     public abstract String getAlgorithm();
 
@@ -58,11 +52,6 @@ public abstract class KeyWithAlgorithm {
                 .build();
     }
 
-    public static KeyWithAlgorithm randomKey(String algorithmType) throws NoSuchAlgorithmException {
-        Algorithm algorithm = Algorithms.getInstance(algorithmType);
-        return algorithm.generateKey();
-    }
-
     public static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
         checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key in base64>");
 
@@ -76,9 +65,5 @@ public abstract class KeyWithAlgorithm {
     public static KeyWithAlgorithm fromPath(Path keyPath) throws IOException {
         byte[] contents = Files.readAllBytes(keyPath);
         return KeyWithAlgorithm.fromString(new String(contents, StandardCharsets.UTF_8));
-    }
-
-    public static KeyWithAlgorithm fromDefaultPath() throws IOException {
-        return fromPath(Paths.get(System.getProperty(KEY_PATH_PROPERTY, DEFAULT_KEY_PATH)));
     }
 }

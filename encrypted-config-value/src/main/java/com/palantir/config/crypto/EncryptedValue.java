@@ -42,12 +42,14 @@ public abstract class EncryptedValue {
 
     /**
      * Tries to decrypt using the key at the default path.
-     * @see KeyWithAlgorithm#DEFAULT_KEY_PATH
+     * @see KeyPair#DEFAULT_PUBLIC_KEY_PATH
      * @return the decrypted value
      */
     public final String getDecryptedValue() {
         try {
-            KeyWithAlgorithm kwa = KeyWithAlgorithm.fromDefaultPath();
+            KeyPair keyPair = KeyPair.fromDefaultPath();
+            // use private if we have it, else assume symmetric
+            KeyWithAlgorithm kwa = keyPair.privateKey().orElse(keyPair.publicKey());
             return getDecryptedValue(kwa);
         } catch (IOException e) {
             throw new RuntimeException("Was unable to read key", e);
@@ -65,7 +67,7 @@ public abstract class EncryptedValue {
      */
     public static EncryptedValue of(String encryptedValue) {
         checkArgument(encryptedValue.startsWith(PREFIX),
-                "encrypted value must begin with " + PREFIX + " but is " + encryptedValue);
+                "encrypted value must begin with %s but is %s", PREFIX, encryptedValue);
         return fromEncryptedString(encryptedValue.substring(PREFIX.length()));
     }
 

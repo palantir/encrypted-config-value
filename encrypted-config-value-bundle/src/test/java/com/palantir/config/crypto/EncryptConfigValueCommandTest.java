@@ -20,6 +20,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableMap;
+import com.palantir.config.crypto.algorithm.AesAlgorithm;
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.RsaAlgorithm;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -51,12 +54,11 @@ public final class EncryptConfigValueCommandTest {
         System.setOut(originalSystemOut);
     }
 
-    @Test
-    public void weEncryptAndPrintAValue() throws Exception {
+    private void weEncryptAndPrintAValue(Algorithm algorithm) throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.randomKey("AES");
-        keyWithAlgorithm.toFile(tempFilePath);
+        KeyPair keyPair = algorithm.generateKey();
+        keyPair.toFile(tempFilePath);
 
         Namespace namespace = new Namespace(ImmutableMap.of(
                 EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
@@ -67,9 +69,20 @@ public final class EncryptConfigValueCommandTest {
         String output = outContent.toString(CHARSET).trim();
 
         EncryptedValue configValue = EncryptedValue.of(output);
-        String decryptedValue = configValue.getDecryptedValue(keyWithAlgorithm);
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        String decryptedValue = configValue.getDecryptedValue(decryptionKey);
 
         assertThat(decryptedValue, is(plaintext));
+    }
+
+    @Test
+    public void weEncryptAndPrintAValueUsingAes() throws Exception {
+        weEncryptAndPrintAValue(new AesAlgorithm());
+    }
+
+    @Test
+    public void weEncryptAndPrintAValueUsingRsa() throws Exception {
+        weEncryptAndPrintAValue(new RsaAlgorithm());
     }
 
     @Test(expected = NoSuchFileException.class)

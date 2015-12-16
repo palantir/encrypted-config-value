@@ -31,7 +31,7 @@ import org.junit.Test;
 public final class VariableSubstitutionTest {
 
     static {
-        System.setProperty(KeyWithAlgorithm.KEY_PATH_PROPERTY, "src/test/resources/test.key");
+        System.setProperty(KeyPair.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
 
     @ClassRule

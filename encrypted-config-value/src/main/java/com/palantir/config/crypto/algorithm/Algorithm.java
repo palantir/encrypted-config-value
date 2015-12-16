@@ -17,6 +17,7 @@
 package com.palantir.config.crypto.algorithm;
 
 import com.palantir.config.crypto.EncryptedValue;
+import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
 
 /**
@@ -24,9 +25,11 @@ import com.palantir.config.crypto.KeyWithAlgorithm;
  */
 public interface Algorithm {
 
-    KeyWithAlgorithm generateKey();
+    KeyPair generateKey();
 
     EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa);
 
     String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa);
+
+    String getName();
 }

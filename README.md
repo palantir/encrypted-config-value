@@ -10,11 +10,12 @@ A dropwizard bundle which provides a way of using encrypted values in your dropw
 The bundle sets the `ConfigurationSourceProvider` to one capable of parsing encrypted values specified as variables.
 
 The bundle adds the following commands
- - `encrypt-config-value -v <value> [-k <keyfile>]` for encrypting values
- - `generate-random-key -a <algorithm> [-f <keyfile>]` for generating random keys with the specified algorithm.
+ - `encrypt-config-value -v <value> [-k <keyfile>]` for encrypting values. In the case of non-symmetric algorithms (e.g. RSA) specify the private key.
+ - `generate-random-key -a <algorithm> [-f <keyfile>]` for generating random keys with the specified algorithm. In the case of non-symmetric algorithms (e.g. RSA) the private key will have a .private extension.
  
 Currently supported algorithms:
  - AES: (AES/GCM/PKCS5Padding) with random IV
+ - RSA
 
 ###Example Usage
 To use in your app, just add the bundle.

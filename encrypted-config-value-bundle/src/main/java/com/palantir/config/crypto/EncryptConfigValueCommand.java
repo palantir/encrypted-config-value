@@ -39,7 +39,7 @@ public final class EncryptConfigValueCommand extends Command {
             .required(false)
             .type(String.class)
             .dest(KEYFILE)
-            .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
+            .setDefault(KeyPair.DEFAULT_PUBLIC_KEY_PATH)
             .help("The location of the (private) key file");
 
         subparser.addArgument("-v", "--value")
