@@ -20,6 +20,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableMap;
+import com.palantir.config.crypto.algorithm.AesAlgorithm;
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.RsaAlgorithm;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,19 +32,27 @@ import org.junit.Test;
 public final class GenerateKeyCommandTest {
     private final GenerateKeyCommand command = new GenerateKeyCommand();
 
-    @Test
-    public void weGenerateAValidKey() throws Exception {
+    private void weGenerateAValidKey(Algorithm algorithm) throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
-        String algorithm = "AES";
 
         Namespace namespace = new Namespace(ImmutableMap.of(
-                GenerateKeyCommand.ALGORITHM, algorithm,
+                GenerateKeyCommand.ALGORITHM, algorithm.getName(),
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 
         command.run(null, namespace);
 
-        KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.fromPath(tempFilePath);
-        assertThat(keyWithAlgorithm.getAlgorithm(), is(algorithm));
+        KeyPair keyPair = KeyPair.fromPath(tempFilePath);
+        assertThat(keyPair.publicKey().getAlgorithm(), is(algorithm.getName()));
+    }
+
+    @Test
+    public void weGenerateAValidRsaKey() throws Exception {
+        weGenerateAValidKey(new RsaAlgorithm());
+    }
+
+    @Test
+    public void weGenerateAValidAesKey() throws Exception {
+        weGenerateAValidKey(new AesAlgorithm());
     }
 
     @Test(expected = FileAlreadyExistsException.class)

@@ -20,6 +20,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.palantir.config.crypto.algorithm.AesAlgorithm;
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.RsaAlgorithm;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import org.junit.Test;
 
@@ -49,13 +54,61 @@ public final class EncryptedValueTest {
         EncryptedValue.fromEncryptedString(invalid);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void weCannotDecryptWithTheWrongKey() throws NoSuchAlgorithmException {
-        KeyWithAlgorithm key = KeyWithAlgorithm.randomKey("AES");
-        KeyWithAlgorithm otherKey = KeyWithAlgorithm.randomKey("AES");
+    private void weCannotDecryptWithTheWrongKey(Algorithm algorithm) throws NoSuchAlgorithmException {
+        KeyPair keyPair = algorithm.generateKey();
+        KeyPair otherKeyPair = algorithm.generateKey();
 
-        EncryptedValue encryptedValue = new AesAlgorithm().getEncryptedValue(plaintext, key);
+        EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
 
-        encryptedValue.getDecryptedValue(otherKey); //throws
+        KeyWithAlgorithm decryptionKey = otherKeyPair.privateKey().orElse(otherKeyPair.publicKey());
+        encryptedValue.getDecryptedValue(decryptionKey); //throws
     }
+
+    @Test(expected = RuntimeException.class)
+    public void weCannotDecryptWithTheWrongAesKey() throws NoSuchAlgorithmException {
+        weCannotDecryptWithTheWrongKey(new AesAlgorithm());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void weCannotDecryptWithTheWrongRsaKey() throws NoSuchAlgorithmException {
+        weCannotDecryptWithTheWrongKey(new RsaAlgorithm());
+    }
+
+    private void weCanDecryptAValue(Algorithm algorithm) {
+        KeyPair keyPair = algorithm.generateKey();
+        EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
+
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        String decryptedValue = encryptedValue.getDecryptedValue(decryptionKey);
+
+        assertThat(decryptedValue, is(plaintext));
+    }
+
+    private void weCanDecryptUsingAKeyFile(Algorithm algorithm) throws IOException {
+        KeyPair keyPair = algorithm.generateKey();
+
+        Path tempDirectory = Files.createTempDirectory("keys");
+        Path testKeyPath = tempDirectory.resolve("test");
+        keyPair.toFile(testKeyPath);
+        System.setProperty(KeyPair.KEY_PATH_PROPERTY, testKeyPath.toString());
+
+        EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
+        String decryptedValue = encryptedValue.getDecryptedValue();
+
+        assertThat(decryptedValue, is(plaintext));
+    }
+
+    @Test
+    public void weCanDecryptAnAesValue() throws IOException {
+        weCanDecryptAValue(new AesAlgorithm());
+        weCanDecryptUsingAKeyFile(new AesAlgorithm());
+    }
+
+    @Test
+    public void weCanDecryptAnRsaValue() throws IOException {
+        weCanDecryptAValue(new RsaAlgorithm());
+        weCanDecryptUsingAKeyFile(new RsaAlgorithm());
+    }
+
+
 }

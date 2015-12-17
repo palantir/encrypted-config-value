@@ -16,6 +16,8 @@
 
 package com.palantir.config.crypto;
 
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.Algorithms;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import java.nio.file.Path;
@@ -44,21 +46,26 @@ public final class GenerateKeyCommand extends Command {
             .required(false)
             .type(String.class)
             .dest(FILE)
-            .setDefault(KeyWithAlgorithm.DEFAULT_KEY_PATH)
+            .setDefault(KeyPair.DEFAULT_PUBLIC_KEY_PATH)
             .help("The location to write the key.");
     }
 
     @Override
     public void run(Bootstrap<?> bootstrap, Namespace namespace) throws Exception {
-        String algorithm = namespace.getString(ALGORITHM);
+        String algorithmType = namespace.getString(ALGORITHM);
         String file = namespace.getString(FILE);
         Path path = Paths.get(file);
 
-        KeyWithAlgorithm randomKey = KeyWithAlgorithm.randomKey(algorithm);
-        randomKey.toFile(path);
+        Algorithm algorithm = Algorithms.getInstance(algorithmType);
+        KeyPair keyPair = algorithm.generateKey();
+        keyPair.toFile(path);
 
         // print to console, notifying that we did something
         System.out.println("Wrote key to " + path);
+        if (keyPair.privateKey().isPresent()) {
+            Path privatePath = KeyPair.privatePath(path);
+            System.out.println("Wrote private key to " + privatePath);
+        }
     }
 
 }

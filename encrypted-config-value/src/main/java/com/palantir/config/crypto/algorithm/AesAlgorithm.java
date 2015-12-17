@@ -18,20 +18,16 @@ package com.palantir.config.crypto.algorithm;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.palantir.config.crypto.EncryptedValue;
+import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -53,9 +49,9 @@ public final class AesAlgorithm implements Algorithm {
     @Override
     public EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
-                "key must be for AES algorithm but was " + kwa.getAlgorithm());
+                "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        try {
+        return EncryptedValueSupplier.silently(() -> {
             Cipher cipher = getUninitializedCipher();
             Key secretKeySpec = getSecretKeySpec(kwa);
 
@@ -76,25 +72,15 @@ public final class AesAlgorithm implements Algorithm {
 
             String encryptedString =  Base64.getEncoder().encodeToString(outputStream.toByteArray());
             return EncryptedValue.fromEncryptedString(encryptedString);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException("The cipher could not be initialized", e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException("The supplied key was not valid", e);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
-            throw new RuntimeException("The encrypted value was not valid", e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException("The iv parameter was bad", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not concat byte arrays for iv and encrypted bytes", e);
-        }
+        });
     }
 
     @Override
     public String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
-                "key must be for AES algorithm but was " + kwa.getAlgorithm());
+                "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        try {
+        return DecryptedStringSupplier.silently(() -> {
             Cipher cipher = getUninitializedCipher();
             Key secretKeySpec = getSecretKeySpec(kwa);
 
@@ -106,24 +92,22 @@ public final class AesAlgorithm implements Algorithm {
 
             byte[] decrypted = cipher.doFinal(cipherBytes, IV_LENGTH, cipherBytes.length - IV_LENGTH);
             return new String(decrypted, charset);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException("The cipher could not be initialized", e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException("The supplied key was not valid", e);
-        } catch (IllegalBlockSizeException | BadPaddingException e) {
-            throw new RuntimeException("The encrypted value was not valid", e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException("The iv parameter was bad", e);
-        }
+        });
+    }
+
+    // produce a key using up to a 256 bit length
+    private int getKeyLength() throws NoSuchAlgorithmException {
+        return Math.min(Cipher.getMaxAllowedKeyLength("AES"), 256);
     }
 
     @Override
-    public KeyWithAlgorithm generateKey() {
+    public KeyPair generateKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM_TYPE);
-            keyGen.init(128); // TODO: should we try for more if we have the proper JCE?
+            keyGen.init(getKeyLength());
             SecretKey secretKey = keyGen.generateKey();
-            return KeyWithAlgorithm.from(ALGORITHM_TYPE, secretKey.getEncoded());
+            KeyWithAlgorithm kwa = KeyWithAlgorithm.from(ALGORITHM_TYPE, secretKey.getEncoded());
+            return KeyPair.symmetric(kwa);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("No AES algorithm", e);
         }
@@ -133,4 +117,8 @@ public final class AesAlgorithm implements Algorithm {
         return new SecretKeySpec(key.getKey(), key.getAlgorithm());
     }
 
+    @Override
+    public String getName() {
+        return ALGORITHM_TYPE;
+    }
 }

@@ -26,6 +26,8 @@ public final class Algorithms {
         switch (algorithmType) {
             case AesAlgorithm.ALGORITHM_TYPE:
                 return new AesAlgorithm();
+            case RsaAlgorithm.ALGORITHM_TYPE:
+                return new RsaAlgorithm();
             default:
                 throw new IllegalArgumentException("Unknown algorithm type: " + algorithmType);
         }
