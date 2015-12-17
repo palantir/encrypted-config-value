@@ -43,7 +43,7 @@ public final class RsaAlgorithm implements Algorithm {
 
     private Cipher getUninitializedCipher() throws NoSuchAlgorithmException,
         NoSuchPaddingException, NoSuchProviderException {
-        return Cipher.getInstance(ALGORITHM_TYPE);
+        return Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
     }
 
     @Override
