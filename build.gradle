@@ -10,8 +10,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.palantir.git-version' version '0.2.0'
-    id 'org.inferred.processors' version '1.1'
+    id 'com.palantir.git-version' version '0.4.0'
+    id 'org.inferred.processors' version '1.1.2'
 }
 
 apply plugin: 'com.palantir.baseline-config' // provides baselineUpdateConfig task
@@ -40,5 +40,13 @@ subprojects {
         jcenter()
     }
 
+    javadoc {
+        classpath = sourceSets.main.compileClasspath + configurations.processor
+    }
+
     sourceCompatibility = 1.8
+
+    if (System.env.CIRCLE_TEST_REPORTS) {
+        test.reports.junitXml.destination = new File(System.env.CIRCLE_TEST_REPORTS, it.getName())
+    }
 }
