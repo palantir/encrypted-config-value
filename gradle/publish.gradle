@@ -12,6 +12,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     destinationDir rootProject.file("${buildDir}/libs")
 }
 
+tasks.build.dependsOn sourceJar, javadocJar
+
 publishing {
     publications {
         bintray(MavenPublication) {
@@ -27,8 +29,8 @@ publishing {
 }
 
 bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
     pkg {
         repo = 'releases'
         name = 'encrypted-config-value'
@@ -39,10 +41,8 @@ bintray {
 }
 
 bintrayUpload.onlyIf {
-    System.getenv('TRAVIS_TAG') && System.getenv('BINTRAY_USER') && System.getenv('BINTRAY_KEY') && project.version ==~ /\d+\.\d+\.\d+/
+    System.env.BINTRAY_USER && System.env.BINTRAY_KEY && project.version ==~ /\d+\.\d+\.\d+/
 }
 
-bintrayUpload.dependsOn { generatePomFileForBintrayPublication }
-bintrayUpload.dependsOn { sourceJar }
-bintrayUpload.dependsOn { build }
+bintrayUpload.dependsOn 'generatePomFileForBintrayPublication', 'build'
 
