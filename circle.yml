@@ -1,6 +1,8 @@
 machine:
   java:
     version: oraclejdk8
+  environment:
+    TERM: dumb
 
 general:
   artifacts:
@@ -9,11 +11,13 @@ general:
 
 test:
   override:
-    - ./gradlew build:
-        environment:
-          TERM: dumb
+    - ./gradlew build
 
 deployment:
+  develop:
+    branch: develop
+    commands:
+     - ./gradlew -i artifactoryPublish
   release:
     tag: /[0-9]+(\.[0-9]+)+/
     commands:

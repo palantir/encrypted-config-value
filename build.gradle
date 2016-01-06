@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath "com.palantir:gradle-baseline-java:${baselineVersion}"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${bintrayPlugin}"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0"
     }
 }
 
