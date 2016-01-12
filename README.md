@@ -1,9 +1,10 @@
 Encrypted Config Value
 ======================
-[![Build Status](https://circleci.com/gh/palantir/encrypted-config-value.svg?style=svg)](https://circleci.com/gh/palantir/encrypted-config-value)
+[![Build Status](https://circleci.com/gh/palantir/encrypted-config-value.svg?style=shield)](https://circleci.com/gh/palantir/encrypted-config-value)
+[![JCenter Release](https://img.shields.io/github/release/palantir/encrypted-config-value.svg)](
+http://jcenter.bintray.com/com/palantir/config/crypto/)
 
 This repository provides tooling for encrypting certain configuration parameter values in dropwizard apps. This defends against accidental leaks of sensitive information such as copy/pasting a config file - unlike jetty obsfucated passwords, one would also have to share the encryption key to actually reveal the sensitive information.
-
 
 encrypted-config-value-bundle
 -----------------------------
