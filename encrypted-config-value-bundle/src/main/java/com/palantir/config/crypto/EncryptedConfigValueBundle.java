@@ -17,7 +17,6 @@
 package com.palantir.config.crypto;
 
 import io.dropwizard.Bundle;
-import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
