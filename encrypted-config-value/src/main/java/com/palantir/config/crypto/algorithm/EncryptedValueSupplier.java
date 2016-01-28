@@ -27,9 +27,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-@FunctionalInterface
-public interface EncryptedValueSupplier {
-    EncryptedValue get() throws
+public abstract class EncryptedValueSupplier {
+    public abstract EncryptedValue get() throws
         BadPaddingException,
         NoSuchAlgorithmException,
         NoSuchPaddingException,
@@ -40,7 +39,7 @@ public interface EncryptedValueSupplier {
         InvalidKeySpecException,
         IOException;
 
-    static EncryptedValue silently(EncryptedValueSupplier supplier) {
+    public static EncryptedValue silently(EncryptedValueSupplier supplier) {
         try {
             return supplier.get();
         } catch (InvalidKeyException | InvalidKeySpecException e) {

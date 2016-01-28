@@ -35,7 +35,7 @@ public final class GenerateKeyCommandTest {
     private void weGenerateAValidKey(Algorithm algorithm) throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        Namespace namespace = new Namespace(ImmutableMap.of(
+        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
                 GenerateKeyCommand.ALGORITHM, algorithm.getName(),
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 
@@ -63,7 +63,7 @@ public final class GenerateKeyCommandTest {
         // create the file
         Files.createFile(tempFilePath);
 
-        Namespace namespace = new Namespace(ImmutableMap.of(
+        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
                 GenerateKeyCommand.ALGORITHM, algorithm,
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 

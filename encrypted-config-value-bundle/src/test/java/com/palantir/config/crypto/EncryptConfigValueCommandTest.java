@@ -60,7 +60,7 @@ public final class EncryptConfigValueCommandTest {
         KeyPair keyPair = algorithm.generateKey();
         keyPair.toFile(tempFilePath);
 
-        Namespace namespace = new Namespace(ImmutableMap.of(
+        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
                 EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
                 EncryptConfigValueCommand.VALUE, plaintext));
 
@@ -89,7 +89,7 @@ public final class EncryptConfigValueCommandTest {
     public void weFailIfTheKeyfileDoesNotExist() throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        Namespace namespace = new Namespace(ImmutableMap.of(
+        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
                 EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
                 EncryptConfigValueCommand.VALUE, plaintext));
 

@@ -25,9 +25,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-@FunctionalInterface
-public interface DecryptedStringSupplier {
-    String get() throws
+public abstract class DecryptedStringSupplier {
+    public abstract String get() throws
         BadPaddingException,
         IllegalBlockSizeException,
         InvalidAlgorithmParameterException,
@@ -37,7 +36,7 @@ public interface DecryptedStringSupplier {
         NoSuchPaddingException,
         NoSuchProviderException;
 
-    static String silently(DecryptedStringSupplier supplier) {
+    public static String silently(DecryptedStringSupplier supplier) {
         try {
             return supplier.get();
         } catch (InvalidKeyException | InvalidKeySpecException e) {

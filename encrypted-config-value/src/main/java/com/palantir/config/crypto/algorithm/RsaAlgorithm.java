@@ -21,8 +21,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +36,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public final class RsaAlgorithm implements Algorithm {
@@ -47,38 +52,51 @@ public final class RsaAlgorithm implements Algorithm {
     }
 
     @Override
-    public EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa) {
+    public EncryptedValue getEncryptedValue(final String plaintext, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return EncryptedValueSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            PublicKey publicKey = generatePublicKey(kwa);
+        return EncryptedValueSupplier.silently(new EncryptedValueSupplier() {
 
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
+            @Override
+            public EncryptedValue get() throws BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
+                    NoSuchProviderException, IllegalBlockSizeException, InvalidAlgorithmParameterException,
+                    InvalidKeyException,
+                    InvalidKeySpecException, IOException {
+                Cipher cipher = getUninitializedCipher();
+                PublicKey publicKey = generatePublicKey(kwa);
 
-            String encryptedString =  Base64.getEncoder().encodeToString(encrypted);
-            return EncryptedValue.fromEncryptedString(encryptedString);
+                cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+                byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
+
+                String encryptedString =  Base64.getEncoder().encodeToString(encrypted);
+                return EncryptedValue.fromEncryptedString(encryptedString);
+            }
         });
     }
 
     @Override
-    public String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa) {
+    public String getDecryptedString(final EncryptedValue encryptedValue, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return DecryptedStringSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            PrivateKey privateKey = generatePrivateKey(kwa);
+        return DecryptedStringSupplier.silently(new DecryptedStringSupplier() {
+            @Override
+            public String get() throws BadPaddingException, IllegalBlockSizeException,
+                    InvalidAlgorithmParameterException, InvalidKeyException,
+                    InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException,
+                    NoSuchProviderException {
+                Cipher cipher = getUninitializedCipher();
+                PrivateKey privateKey = generatePrivateKey(kwa);
 
-            String ciphertext = encryptedValue.encryptedValue();
-            byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
+                String ciphertext = encryptedValue.encryptedValue();
+                byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
 
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+                cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            byte[] decrypted = cipher.doFinal(cipherBytes);
-            return new String(decrypted, charset);
+                byte[] decrypted = cipher.doFinal(cipherBytes);
+                return new String(decrypted, charset);
+            }
         });
     }
 
