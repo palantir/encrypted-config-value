@@ -21,11 +21,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
-import java.io.IOException;
+import com.palantir.config.crypto.util.Suppliers;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -36,9 +34,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public final class RsaAlgorithm implements Algorithm {
@@ -56,13 +52,9 @@ public final class RsaAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return EncryptedValueSupplier.silently(new EncryptedValueSupplier() {
-
+        return Suppliers.silently(new EncryptedValueSupplier() {
             @Override
-            public EncryptedValue get() throws BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
-                    NoSuchProviderException, IllegalBlockSizeException, InvalidAlgorithmParameterException,
-                    InvalidKeyException,
-                    InvalidKeySpecException, IOException {
+            public EncryptedValue get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 PublicKey publicKey = generatePublicKey(kwa);
 
@@ -80,12 +72,9 @@ public final class RsaAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return DecryptedStringSupplier.silently(new DecryptedStringSupplier() {
+        return Suppliers.silently(new DecryptedStringSupplier() {
             @Override
-            public String get() throws BadPaddingException, IllegalBlockSizeException,
-                    InvalidAlgorithmParameterException, InvalidKeyException,
-                    InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException,
-                    NoSuchProviderException {
+            public String get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 PrivateKey privateKey = generatePrivateKey(kwa);
 

@@ -20,21 +20,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
+import com.palantir.config.crypto.util.Suppliers;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -58,11 +52,9 @@ public final class AesAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        return EncryptedValueSupplier.silently(new EncryptedValueSupplier() {
+        return Suppliers.silently(new EncryptedValueSupplier() {
             @Override
-            public EncryptedValue get() throws BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
-                    NoSuchProviderException, IllegalBlockSizeException, InvalidAlgorithmParameterException,
-                    InvalidKeyException, InvalidKeySpecException, IOException {
+            public EncryptedValue get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 Key secretKeySpec = getSecretKeySpec(kwa);
 
@@ -93,12 +85,9 @@ public final class AesAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        return DecryptedStringSupplier.silently(new DecryptedStringSupplier() {
+        return Suppliers.silently(new DecryptedStringSupplier() {
             @Override
-            public String get() throws BadPaddingException, IllegalBlockSizeException,
-                    InvalidAlgorithmParameterException, InvalidKeyException,
-                    InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException,
-                    NoSuchProviderException {
+            public String get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 Key secretKeySpec = getSecretKeySpec(kwa);
 
