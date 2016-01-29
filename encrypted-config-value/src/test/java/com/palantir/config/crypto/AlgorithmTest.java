@@ -91,8 +91,18 @@ public final class AlgorithmTest {
     public static Collection<Object[]> data() {
         // TODO: produce this for all implementations of algorithm?
 
-        Supplier<Algorithm> aes = AesAlgorithm::new;
-        Supplier<Algorithm> rsa = RsaAlgorithm::new;
+        Supplier<Algorithm> aes = new Supplier<Algorithm>() {
+            @Override
+            public Algorithm get() {
+                return new AesAlgorithm();
+            }
+        };
+        Supplier<Algorithm> rsa = new Supplier<Algorithm>() {
+            @Override
+            public Algorithm get() {
+                return new RsaAlgorithm();
+            }
+        };
 
         return ImmutableList.of(
                 new Object[] {"AES", aes},

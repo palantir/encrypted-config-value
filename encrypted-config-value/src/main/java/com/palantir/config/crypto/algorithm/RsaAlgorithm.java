@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
+import com.palantir.config.crypto.util.Suppliers;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -47,38 +48,44 @@ public final class RsaAlgorithm implements Algorithm {
     }
 
     @Override
-    public EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa) {
+    public EncryptedValue getEncryptedValue(final String plaintext, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return EncryptedValueSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            PublicKey publicKey = generatePublicKey(kwa);
+        return Suppliers.silently(new EncryptedValueSupplier() {
+            @Override
+            public EncryptedValue get() throws Exception {
+                Cipher cipher = getUninitializedCipher();
+                PublicKey publicKey = generatePublicKey(kwa);
 
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
+                cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+                byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
 
-            String encryptedString =  Base64.getEncoder().encodeToString(encrypted);
-            return EncryptedValue.fromEncryptedString(encryptedString);
+                String encryptedString =  Base64.getEncoder().encodeToString(encrypted);
+                return EncryptedValue.fromEncryptedString(encryptedString);
+            }
         });
     }
 
     @Override
-    public String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa) {
+    public String getDecryptedString(final EncryptedValue encryptedValue, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
-        return DecryptedStringSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            PrivateKey privateKey = generatePrivateKey(kwa);
+        return Suppliers.silently(new DecryptedStringSupplier() {
+            @Override
+            public String get() throws Exception {
+                Cipher cipher = getUninitializedCipher();
+                PrivateKey privateKey = generatePrivateKey(kwa);
 
-            String ciphertext = encryptedValue.encryptedValue();
-            byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
+                String ciphertext = encryptedValue.encryptedValue();
+                byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
 
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+                cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            byte[] decrypted = cipher.doFinal(cipherBytes);
-            return new String(decrypted, charset);
+                byte[] decrypted = cipher.doFinal(cipherBytes);
+                return new String(decrypted, charset);
+            }
         });
     }
 

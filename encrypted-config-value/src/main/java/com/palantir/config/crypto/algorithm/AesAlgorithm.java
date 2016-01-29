@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
+import com.palantir.config.crypto.util.Suppliers;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -47,51 +48,58 @@ public final class AesAlgorithm implements Algorithm {
     }
 
     @Override
-    public EncryptedValue getEncryptedValue(String plaintext, KeyWithAlgorithm kwa) {
+    public EncryptedValue getEncryptedValue(final String plaintext, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        return EncryptedValueSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            Key secretKeySpec = getSecretKeySpec(kwa);
+        return Suppliers.silently(new EncryptedValueSupplier() {
+            @Override
+            public EncryptedValue get() throws Exception {
+                Cipher cipher = getUninitializedCipher();
+                Key secretKeySpec = getSecretKeySpec(kwa);
 
-            byte[] ivBytes = new byte[IV_LENGTH];
+                byte[] ivBytes = new byte[IV_LENGTH];
 
-            SecureRandom secureRandom = new SecureRandom();
-            secureRandom.nextBytes(ivBytes);
+                SecureRandom secureRandom = new SecureRandom();
+                secureRandom.nextBytes(ivBytes);
 
-            GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, ivBytes);
+                GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, ivBytes);
 
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmSpecWithIv);
-            byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmSpecWithIv);
+                byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
 
-            // put together the iv and the encrypted bytes
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            outputStream.write(ivBytes);
-            outputStream.write(encrypted);
+                // put together the iv and the encrypted bytes
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                outputStream.write(ivBytes);
+                outputStream.write(encrypted);
 
-            String encryptedString =  Base64.getEncoder().encodeToString(outputStream.toByteArray());
-            return EncryptedValue.fromEncryptedString(encryptedString);
+                String encryptedString =  Base64.getEncoder().encodeToString(outputStream.toByteArray());
+                return EncryptedValue.fromEncryptedString(encryptedString);
+            }
+
         });
     }
 
     @Override
-    public String getDecryptedString(EncryptedValue encryptedValue, KeyWithAlgorithm kwa) {
+    public String getDecryptedString(final EncryptedValue encryptedValue, final KeyWithAlgorithm kwa) {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
-        return DecryptedStringSupplier.silently(() -> {
-            Cipher cipher = getUninitializedCipher();
-            Key secretKeySpec = getSecretKeySpec(kwa);
+        return Suppliers.silently(new DecryptedStringSupplier() {
+            @Override
+            public String get() throws Exception {
+                Cipher cipher = getUninitializedCipher();
+                Key secretKeySpec = getSecretKeySpec(kwa);
 
-            String ciphertext = encryptedValue.encryptedValue();
-            byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
+                String ciphertext = encryptedValue.encryptedValue();
+                byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
 
-            GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, cipherBytes, 0, IV_LENGTH);
-            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);
+                GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, cipherBytes, 0, IV_LENGTH);
+                cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);
 
-            byte[] decrypted = cipher.doFinal(cipherBytes, IV_LENGTH, cipherBytes.length - IV_LENGTH);
-            return new String(decrypted, charset);
+                byte[] decrypted = cipher.doFinal(cipherBytes, IV_LENGTH, cipherBytes.length - IV_LENGTH);
+                return new String(decrypted, charset);
+            }
         });
     }
 

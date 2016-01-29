@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.palantir.config.crypto.algorithm;
+package com.palantir.config.crypto.supplier;
 
-import com.palantir.config.crypto.EncryptedValue;
-import com.palantir.config.crypto.supplier.ThrowingSupplier;
-
-public interface EncryptedValueSupplier extends ThrowingSupplier<EncryptedValue> {}
+public interface ThrowingSupplier<T> {
+    T get() throws Exception;
+}
