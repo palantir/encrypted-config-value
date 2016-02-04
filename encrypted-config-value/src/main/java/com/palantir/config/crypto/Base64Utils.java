@@ -16,7 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import java.util.Base64;
+import com.google.common.io.BaseEncoding;
 
 public final class Base64Utils {
 
@@ -32,9 +32,9 @@ public final class Base64Utils {
         // there are various edge cases
         // the regexes people claim to work are actually incorrect
         // implementations also differ in quite how they handle left-over bits/padding
-        // since we use the java base64 decoder, we'll claim it's valid if we can decode it
+        // since we use the Guava base64 decoder, we'll claim it's valid if we can decode it
         try {
-            Base64.getDecoder().decode(value);
+            BaseEncoding.base64().decode(value);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("value " + value + " is not valid base64", e);
         }

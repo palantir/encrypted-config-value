@@ -60,7 +60,7 @@ public final class EncryptedValueTest {
 
         EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
 
-        KeyWithAlgorithm decryptionKey = otherKeyPair.privateKey().orElse(otherKeyPair.publicKey());
+        KeyWithAlgorithm decryptionKey = otherKeyPair.privateKey().or(otherKeyPair.publicKey());
         encryptedValue.getDecryptedValue(decryptionKey); //throws
     }
 
@@ -78,7 +78,7 @@ public final class EncryptedValueTest {
         KeyPair keyPair = algorithm.generateKey();
         EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
 
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
         String decryptedValue = encryptedValue.getDecryptedValue(decryptionKey);
 
         assertThat(decryptedValue, is(plaintext));

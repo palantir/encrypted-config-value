@@ -69,7 +69,7 @@ public final class EncryptConfigValueCommandTest {
         String output = outContent.toString(CHARSET).trim();
 
         EncryptedValue configValue = EncryptedValue.of(output);
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
         String decryptedValue = configValue.getDecryptedValue(decryptionKey);
 
         assertThat(decryptedValue, is(plaintext));

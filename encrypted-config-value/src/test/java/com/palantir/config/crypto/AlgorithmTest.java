@@ -20,13 +20,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.RsaAlgorithm;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.function.Supplier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -59,7 +59,7 @@ public final class AlgorithmTest {
 
         EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
 
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
         String decrypted = algorithm.getDecryptedString(encryptedValue, decryptionKey);
 
         assertThat(decrypted, is(plaintext));
@@ -79,7 +79,7 @@ public final class AlgorithmTest {
         assertThat(encrypted1.encryptedValue(), is(not(encrypted2.encryptedValue())));
 
         // we should naturally decrypt back to the same thing - the plaintext
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().orElse(keyPair.publicKey());
+        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
         String decryptedString1 = algorithm.getDecryptedString(encrypted1, decryptionKey);
         String decryptedString2 = algorithm.getDecryptedString(encrypted2, decryptionKey);
 
