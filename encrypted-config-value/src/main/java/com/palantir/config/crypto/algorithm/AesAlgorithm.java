@@ -17,6 +17,7 @@ package com.palantir.config.crypto.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.io.BaseEncoding;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
@@ -27,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -73,7 +73,7 @@ public final class AesAlgorithm implements Algorithm {
                 outputStream.write(ivBytes);
                 outputStream.write(encrypted);
 
-                String encryptedString =  Base64.getEncoder().encodeToString(outputStream.toByteArray());
+                String encryptedString = BaseEncoding.base64().encode(outputStream.toByteArray());
                 return EncryptedValue.fromEncryptedString(encryptedString);
             }
 
@@ -92,7 +92,7 @@ public final class AesAlgorithm implements Algorithm {
                 Key secretKeySpec = getSecretKeySpec(kwa);
 
                 String ciphertext = encryptedValue.encryptedValue();
-                byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
+                byte[] cipherBytes = BaseEncoding.base64().decode(ciphertext);
 
                 GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, cipherBytes, 0, IV_LENGTH);
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);

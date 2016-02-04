@@ -18,6 +18,7 @@ package com.palantir.config.crypto.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.io.BaseEncoding;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
@@ -33,7 +34,6 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
@@ -61,7 +61,7 @@ public final class RsaAlgorithm implements Algorithm {
                 cipher.init(Cipher.ENCRYPT_MODE, publicKey);
                 byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
 
-                String encryptedString =  Base64.getEncoder().encodeToString(encrypted);
+                String encryptedString = BaseEncoding.base64().encode(encrypted);
                 return EncryptedValue.fromEncryptedString(encryptedString);
             }
         });
@@ -79,7 +79,7 @@ public final class RsaAlgorithm implements Algorithm {
                 PrivateKey privateKey = generatePrivateKey(kwa);
 
                 String ciphertext = encryptedValue.encryptedValue();
-                byte[] cipherBytes = Base64.getDecoder().decode(ciphertext);
+                byte[] cipherBytes = BaseEncoding.base64().decode(ciphertext);
 
                 cipher.init(Cipher.DECRYPT_MODE, privateKey);
 

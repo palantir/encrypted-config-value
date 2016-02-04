@@ -49,7 +49,7 @@ public abstract class EncryptedValue {
         try {
             KeyPair keyPair = KeyPair.fromDefaultPath();
             // use private if we have it, else assume symmetric
-            KeyWithAlgorithm kwa = keyPair.privateKey().orElse(keyPair.publicKey());
+            KeyWithAlgorithm kwa = keyPair.privateKey().or(keyPair.publicKey());
             return getDecryptedValue(kwa);
         } catch (IOException e) {
             throw new RuntimeException("Was unable to read key", e);

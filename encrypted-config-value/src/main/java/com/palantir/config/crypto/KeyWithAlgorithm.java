@@ -18,12 +18,12 @@ package com.palantir.config.crypto;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Base64;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -35,8 +35,7 @@ public abstract class KeyWithAlgorithm {
 
     @Override
     public final String toString() {
-        byte[] encodedKey = Base64.getEncoder().encode(getKey());
-        String encodedKeyString = new String(encodedKey, StandardCharsets.UTF_8);
+        String encodedKeyString = BaseEncoding.base64().encode(getKey());
         return getAlgorithm() + ":" + encodedKeyString;
     }
 
@@ -58,7 +57,7 @@ public abstract class KeyWithAlgorithm {
         String[] tokens = keyWithAlgorithm.split(":", 2);
         Base64Utils.checkIsBase64(tokens[1]);
 
-        byte[] decodedKey = Base64.getDecoder().decode(tokens[1].getBytes(StandardCharsets.UTF_8));
+        byte[] decodedKey = BaseEncoding.base64().decode(tokens[1]);
         return KeyWithAlgorithm.from(tokens[0], decodedKey);
     }
 
