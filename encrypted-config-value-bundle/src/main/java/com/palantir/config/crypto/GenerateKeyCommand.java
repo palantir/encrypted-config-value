@@ -40,14 +40,14 @@ public final class GenerateKeyCommand extends Command {
             .required(true)
             .type(String.class)
             .dest(ALGORITHM)
-            .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator)");
+            .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator for a list of valid algorithms)");
 
         subparser.addArgument("-f", "--file")
             .required(false)
             .type(String.class)
             .dest(FILE)
             .setDefault(KeyPair.DEFAULT_PUBLIC_KEY_PATH)
-            .help("The location to write the key.");
+            .help("The location to write the key");
     }
 
     @Override
