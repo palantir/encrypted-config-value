@@ -30,7 +30,7 @@ public final class EncryptConfigValueCommand extends Command {
     public static final String VALUE = "value";
 
     protected EncryptConfigValueCommand() {
-        super("encrypt-config-value", "Encrypts a config value so that it can be stored securely");
+        super("encrypt-config-value", "Encrypts a configuration value so it can be stored securely");
     }
 
     @Override
