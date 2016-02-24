@@ -18,6 +18,8 @@ package com.palantir.config.crypto;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +36,7 @@ public abstract class KeyWithAlgorithm {
     public abstract byte[] getKey();
 
     @Override
+    @JsonValue
     public final String toString() {
         String encodedKeyString = BaseEncoding.base64().encode(getKey());
         return getAlgorithm() + ":" + encodedKeyString;
@@ -51,6 +54,7 @@ public abstract class KeyWithAlgorithm {
                 .build();
     }
 
+    @JsonCreator
     public static KeyWithAlgorithm fromString(String keyWithAlgorithm) {
         checkArgument(keyWithAlgorithm.contains(":"), "Key must be in the format <algorithm>:<key in base64>");
 
