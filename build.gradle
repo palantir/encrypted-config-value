@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id 'com.palantir.git-version' version '0.4.0'
     id 'org.inferred.processors' version '1.1.2'
+    id 'com.palantir.jacoco-full-report' version '0.3.0'
 }
 
 apply plugin: 'com.palantir.baseline-config' // provides baselineUpdateConfig task
@@ -29,6 +30,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'jacoco'
     apply plugin: 'com.palantir.baseline-checkstyle'
     apply plugin: 'com.palantir.baseline-eclipse'
     apply plugin: 'com.palantir.baseline-findbugs'
@@ -46,6 +48,20 @@ subprojects {
     }
 
     sourceCompatibility = 1.7
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+        }
+        // Ignore Immutables-generated code from coverage checks
+        afterEvaluate {
+            classDirectories = files(classDirectories.files.collect {
+                // Exclusion path is project-relative and has a base of compiled classes
+                fileTree(dir: it, exclude: '**/Immutable*.class')
+            })
+        }
+    }
+    tasks.jacocoTestReport.dependsOn(tasks.test)
 
     if (System.env.CIRCLE_TEST_REPORTS) {
         test.reports.junitXml.destination = new File(System.env.CIRCLE_TEST_REPORTS, it.getName())

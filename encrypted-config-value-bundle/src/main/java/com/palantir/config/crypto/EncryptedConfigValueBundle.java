@@ -16,19 +16,28 @@
 
 package com.palantir.config.crypto;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.palantir.config.crypto.jackson.JsonNodeStringReplacer;
+import com.palantir.config.crypto.jackson.JsonNodeVisitor;
 import io.dropwizard.Bundle;
+import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public final class EncryptedConfigValueBundle implements Bundle {
 
+    // Generically capture configuration type T from Bootstrap<T>, though we don't actually care about it
+    private static <T extends Configuration> void setConfigurationFactoryFactory(
+            Bootstrap<T> bootstrap,
+            final JsonNodeVisitor<JsonNode> replacer) {
+        bootstrap.setConfigurationFactoryFactory(new SubstitutingConfigurationFactory.Factory<T>(replacer));
+    }
+
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
         bootstrap.addCommand(new GenerateKeyCommand());
         bootstrap.addCommand(new EncryptConfigValueCommand());
-        bootstrap.setConfigurationSourceProvider(
-                new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
-                            new DecryptingVariableSubstitutor()));
+        setConfigurationFactoryFactory(bootstrap, new JsonNodeStringReplacer(new DecryptingVariableSubstitutor()));
     }
 
     @Override
