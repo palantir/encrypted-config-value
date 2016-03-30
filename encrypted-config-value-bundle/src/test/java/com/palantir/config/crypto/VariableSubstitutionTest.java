@@ -16,17 +16,24 @@
 
 package com.palantir.config.crypto;
 
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import java.io.IOException;
+import java.util.List;
+import org.immutables.value.Value;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -47,15 +54,21 @@ public final class VariableSubstitutionTest {
         assertEquals("don't use quotes", RULE.getConfiguration().getEncryptedWithSingleQuote());
         assertEquals("double quote is \"", RULE.getConfiguration().getEncryptedWithDoubleQuote());
         assertEquals("[oh dear", RULE.getConfiguration().getEncryptedMalformedYaml());
+
+        assertThat(RULE.getConfiguration().getArrayWithSomeEncryptedValues(),
+                contains("value", "value", "other value", "[oh dear"));
+        assertThat(RULE.getConfiguration().getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user")))
+                .and(hasProperty("password", equalTo("value"))));
     }
 
-    @Test
-    public void honk() throws IOException {
-        KeyPair kp = KeyPair.fromDefaultPath();
-        KeyWithAlgorithm publicKey = kp.publicKey();
-        Algorithm algo = Algorithms.getInstance(publicKey.getAlgorithm());
-        EncryptedValue encryptedValue = algo.getEncryptedValue("[oh dear", publicKey);
-        System.out.println(encryptedValue.encryptedValue());
+    @Value.Immutable
+    @JsonSerialize(as = ImmutablePerson.class)
+    @JsonDeserialize(as = ImmutablePerson.class)
+    public interface Person {
+        String getUsername();
+
+        String getPassword();
     }
 
     public static final class TestConfig extends Configuration {
@@ -64,18 +77,24 @@ public final class VariableSubstitutionTest {
         private final String encryptedWithSingleQuote;
         private final String encryptedWithDoubleQuote;
         private final String encryptedMalformedYaml;
+        private final List<String> arrayWithSomeEncryptedValues;
+        private final Person pojoWithEncryptedValues;
 
         public TestConfig(
                 @JsonProperty("unencrypted") String unencrypted,
                 @JsonProperty("encrypted") String encrypted,
                 @JsonProperty("encryptedWithSingleQuote") String encryptedWithSingleQuote,
                 @JsonProperty("encryptedWithDoubleQuote") String encryptedWithDoubleQuote,
-                @JsonProperty("encryptedMalformedYaml") String encryptedMalformedYaml) {
+                @JsonProperty("encryptedMalformedYaml") String encryptedMalformedYaml,
+                @JsonProperty("arrayWithSomeEncryptedValues") List<String> arrayWithSomeEncryptedValues,
+                @JsonProperty("pojoWithEncryptedValues") Person pojoWithEncryptedValues) {
             this.unencrypted = unencrypted;
             this.encrypted = encrypted;
             this.encryptedWithSingleQuote = encryptedWithSingleQuote;
             this.encryptedWithDoubleQuote = encryptedWithDoubleQuote;
             this.encryptedMalformedYaml = encryptedMalformedYaml;
+            this.arrayWithSomeEncryptedValues = arrayWithSomeEncryptedValues;
+            this.pojoWithEncryptedValues = pojoWithEncryptedValues;
         }
 
         public String getUnencrypted() {
@@ -96,6 +115,14 @@ public final class VariableSubstitutionTest {
 
         public String getEncryptedMalformedYaml() {
             return encryptedMalformedYaml;
+        }
+
+        public List<String> getArrayWithSomeEncryptedValues() {
+            return arrayWithSomeEncryptedValues;
+        }
+
+        public Person getPojoWithEncryptedValues() {
+            return pojoWithEncryptedValues;
         }
     }
 
