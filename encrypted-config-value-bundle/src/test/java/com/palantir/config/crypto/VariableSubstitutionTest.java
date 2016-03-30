@@ -19,6 +19,8 @@ package com.palantir.config.crypto;
 import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.palantir.config.crypto.algorithm.Algorithm;
+import com.palantir.config.crypto.algorithm.Algorithms;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
@@ -42,17 +44,38 @@ public final class VariableSubstitutionTest {
     public void testCanDecryptValueInConfig() throws IOException {
         assertEquals("value", RULE.getConfiguration().getUnencrypted());
         assertEquals("value", RULE.getConfiguration().getEncrypted());
+        assertEquals("don't use quotes", RULE.getConfiguration().getEncryptedWithSingleQuote());
+        assertEquals("double quote is \"", RULE.getConfiguration().getEncryptedWithDoubleQuote());
+        assertEquals("[oh dear", RULE.getConfiguration().getEncryptedMalformedYaml());
+    }
+
+    @Test
+    public void honk() throws IOException {
+        KeyPair kp = KeyPair.fromDefaultPath();
+        KeyWithAlgorithm publicKey = kp.publicKey();
+        Algorithm algo = Algorithms.getInstance(publicKey.getAlgorithm());
+        EncryptedValue encryptedValue = algo.getEncryptedValue("[oh dear", publicKey);
+        System.out.println(encryptedValue.encryptedValue());
     }
 
     public static final class TestConfig extends Configuration {
         private final String unencrypted;
         private final String encrypted;
+        private final String encryptedWithSingleQuote;
+        private final String encryptedWithDoubleQuote;
+        private final String encryptedMalformedYaml;
 
         public TestConfig(
                 @JsonProperty("unencrypted") String unencrypted,
-                @JsonProperty("encrypted") String encrypted) {
+                @JsonProperty("encrypted") String encrypted,
+                @JsonProperty("encryptedWithSingleQuote") String encryptedWithSingleQuote,
+                @JsonProperty("encryptedWithDoubleQuote") String encryptedWithDoubleQuote,
+                @JsonProperty("encryptedMalformedYaml") String encryptedMalformedYaml) {
             this.unencrypted = unencrypted;
             this.encrypted = encrypted;
+            this.encryptedWithSingleQuote = encryptedWithSingleQuote;
+            this.encryptedWithDoubleQuote = encryptedWithDoubleQuote;
+            this.encryptedMalformedYaml = encryptedMalformedYaml;
         }
 
         public String getUnencrypted() {
@@ -61,6 +84,18 @@ public final class VariableSubstitutionTest {
 
         public String getEncrypted() {
             return encrypted;
+        }
+
+        public String getEncryptedWithSingleQuote() {
+            return encryptedWithSingleQuote;
+        }
+
+        public String getEncryptedWithDoubleQuote() {
+            return encryptedWithDoubleQuote;
+        }
+
+        public String getEncryptedMalformedYaml() {
+            return encryptedMalformedYaml;
         }
     }
 
