@@ -63,6 +63,17 @@ subprojects {
     }
     tasks.jacocoTestReport.dependsOn(tasks.test)
 
+    task resolveDependencies {
+        description = 'Forces the resolution of all dependencies in all configurations'
+        group = 'build'
+
+        doLast {
+            configurations.all { c ->
+                c.resolve()
+            }
+        }
+    }
+
     if (System.env.CIRCLE_TEST_REPORTS) {
         test.reports.junitXml.destination = new File(System.env.CIRCLE_TEST_REPORTS, it.getName())
     }
