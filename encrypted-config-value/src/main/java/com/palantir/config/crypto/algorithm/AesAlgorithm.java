@@ -44,7 +44,7 @@ public final class AesAlgorithm implements Algorithm {
     private static final Charset charset = StandardCharsets.UTF_8;
 
     private Cipher getUninitializedCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        return Cipher.getInstance("AES/GCM/PKCS5Padding");
+        return Cipher.getInstance("AES/GCM/NoPadding");
     }
 
     @Override
