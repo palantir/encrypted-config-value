@@ -34,7 +34,6 @@ public final class EncryptedValueTest {
 
     @Test
     public void weCanConstructFromAValidString() {
-        System.out.println(aesKey);
         String valid = "enc:QjR4AHIYoIzvjEHf53XETM3QYnCl1mgFYC51Q7x4ebwM+h3PHVqSt/"
                 + "1un/+KvpJ2mZfMH0tifu+htRVxEPyXmt88lyKB83NpesNJEoLFLL+wBWCkppaLRuc/1w==";
 
@@ -109,6 +108,5 @@ public final class EncryptedValueTest {
         weCanDecryptAValue(new RsaAlgorithm());
         weCanDecryptUsingAKeyFile(new RsaAlgorithm());
     }
-
 
 }

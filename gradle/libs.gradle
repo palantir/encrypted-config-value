@@ -22,4 +22,3 @@ project.ext.libs = [
     'slf4j': 'org.slf4j:slf4j-api:1.7.12',
     'wsRsApi': 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 ]
-
