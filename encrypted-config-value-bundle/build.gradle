@@ -10,6 +10,7 @@ dependencies {
     testCompile libs.dropwizard.testing
     testCompile libs.hamcrest
     testCompile libs.junit
+    testRuntime libs.bouncycastle
 
     processor libs.immutables
 }

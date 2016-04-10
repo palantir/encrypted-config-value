@@ -1,4 +1,6 @@
 machine:
+  services:
+    - docker
   java:
     version: oraclejdk8
   environment:
@@ -16,6 +18,7 @@ dependencies:
 test:
   override:
     - ./gradlew build
+    - ./gradlew jacocoTestReportDockerTestRunner
 
 deployment:
   develop:
