@@ -1,4 +1,6 @@
 machine:
+  services:
+    - docker
   java:
     version: oraclejdk8
   environment:
@@ -12,10 +14,12 @@ general:
 dependencies:
   override:
     - ./gradlew resolveDependencies
+    - ./gradlew buildDockerTestRunner createGradleCacheVolume
 
 test:
   override:
     - ./gradlew build
+    - ./gradlew jacocoTestReportDockerTestRunner
 
 deployment:
   develop:

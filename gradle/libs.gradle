@@ -1,4 +1,5 @@
 project.ext.libs = [
+    'bouncycastle': 'org.bouncycastle:bcprov-jdk15on:1.50',
     'dropwizard': [
         'testing': 'io.dropwizard:dropwizard-testing:0.9.1',
         'core': 'io.dropwizard:dropwizard-core:0.9.1'
