@@ -12,10 +12,20 @@ general:
     - encrypted-config-value-bundle/build/libs
 
 dependencies:
+  cache_directories:
+    - "~/docker"
   override:
     - ./gradlew resolveDependencies
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - ./gradlew buildDockerTestRunner
+    - |
+       mkdir -p ~/docker
+       IMAGES=$(echo "$(docker images -f "dangling=false")" | tail -n+2 | sed -e 's/^\([[:graph:]]*\)[[:space:]]*\([[:graph:]]*\).*$/\1:\2/g' | sed -e 's/<none>:<none>//g' | tr '\n' ' ')
+       docker save $IMAGES > ~/docker/image.tar
 
 test:
+  pre:
+    - docker run --rm -v encrypted-config-value-gradle-data:/gradleData -v /home/ubuntu/.gradle:/root/.gradle busybox cp -r /root/.gradle/. /gradleData/
   override:
     - ./gradlew build
     - ./gradlew jacocoTestReportDockerTestRunner
