@@ -11,7 +11,6 @@ buildscript {
 }
 
 plugins {
-    id 'com.palantir.docker-test-runner' version '0.1.0'
     id 'com.palantir.git-version' version '0.4.0'
     id 'org.inferred.processors' version '1.1.2'
     id 'com.palantir.jacoco-full-report' version '0.3.0'
