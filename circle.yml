@@ -22,11 +22,14 @@ test:
     - ./gradlew jacocoTestReportDockerTestRunner
 
 deployment:
-  develop:
-    branch: develop
-    commands:
-     - ./gradlew -i artifactoryPublish
+  # disable until we work through OJO publishing issues with Bintray
+  #develop:
+  #  branch: develop
+  #  owner: palantir/encrypted-config-value
+  #  commands:
+  #   - ./gradlew -i artifactoryPublish
   release:
     tag: /[0-9]+(\.[0-9]+)+/
+    owner: palantir/encrypted-config-value
     commands:
       - ./gradlew -i bintrayUpload
