@@ -17,7 +17,7 @@ The bundle adds the following commands
  - `generate-random-key -a <algorithm> [-f <keyfile>]` for generating random keys with the specified algorithm. In the case of non-symmetric algorithms (e.g. RSA) the private key will have a .private extension.
  
 Currently supported algorithms:
- - AES: (AES/GCM/PKCS5Padding) with random IV
+ - AES: (AES/GCM/NoPadding) with random IV
  - RSA
 
 ###Example Usage
