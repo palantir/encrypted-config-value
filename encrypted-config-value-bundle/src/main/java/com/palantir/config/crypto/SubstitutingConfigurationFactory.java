@@ -29,8 +29,10 @@
 
 package com.palantir.config.crypto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.jackson.JsonNodeVisitor;
 import com.palantir.config.crypto.jackson.JsonNodeVisitors;
 import io.dropwizard.configuration.ConfigurationException;
@@ -68,8 +70,13 @@ public final class SubstitutingConfigurationFactory<T> extends ConfigurationFact
 
     @Override
     protected T build(JsonNode node, String path) throws IOException, ConfigurationException {
-        JsonNode substitutedNode = JsonNodeVisitors.dispatch(node, substitutor);
-        return super.build(substitutedNode, path);
+        try {
+            JsonNode substitutedNode = JsonNodeVisitors.dispatch(ImmutableList.<String>of(), node, substitutor);
+            return super.build(substitutedNode, path);
+        } catch (JsonProcessingException e) {
+            String error = e.getMessage();
+            throw new ConfigurationDecryptionException(path, ImmutableList.of(error));
+        }
     }
 
     /**

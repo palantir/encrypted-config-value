@@ -16,6 +16,7 @@
 
 package com.palantir.config.crypto.jackson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.BinaryNode;
 import com.fasterxml.jackson.databind.node.BooleanNode;
@@ -23,25 +24,26 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.ImmutableList;
 
 public interface JsonNodeVisitor<T> {
 
-    T visitArray(ArrayNode arrayNode);
+    T visitArray(ImmutableList<String> location, ArrayNode arrayNode) throws JsonProcessingException;
 
-    T visitBinary(BinaryNode binaryNode);
+    T visitBinary(ImmutableList<String> location, BinaryNode binaryNode) throws JsonProcessingException;
 
-    T visitBoolean(BooleanNode booleanNode);
+    T visitBoolean(ImmutableList<String> location, BooleanNode booleanNode) throws JsonProcessingException;
 
-    T visitNull();
+    T visitNull(ImmutableList<String> location) throws JsonProcessingException;
 
-    T visitMissing();
+    T visitMissing(ImmutableList<String> location) throws JsonProcessingException;
 
-    T visitNumeric(NumericNode numericNode);
+    T visitNumeric(ImmutableList<String> location, NumericNode numericNode) throws JsonProcessingException;
 
-    T visitObject(ObjectNode objectNode);
+    T visitObject(ImmutableList<String> location, ObjectNode objectNode) throws JsonProcessingException;
 
-    T visitPojo(POJONode pojoNode);
+    T visitPojo(ImmutableList<String> location, POJONode pojoNode) throws JsonProcessingException;
 
-    T visitText(TextNode textNode);
+    T visitText(ImmutableList<String> location, TextNode textNode) throws JsonProcessingException;
 
 }
