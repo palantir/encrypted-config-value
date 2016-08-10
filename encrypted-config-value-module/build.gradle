@@ -2,15 +2,9 @@ apply from: "${rootDir}/gradle/libs.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
-    compile libs.commonslang3
     compile libs.guava
     compile libs.jackson.databind
-
-    testCompile libs.hamcrest
-    testCompile libs.junit
-    testRuntime libs.bouncycastle
-
-    processor libs.immutables
+    compile project(':encrypted-config-value')
 }
 
 tasks.check.dependsOn(javadoc)

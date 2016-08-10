@@ -21,5 +21,6 @@ project.ext.libs = [
     'junit': 'junit:junit:4.12',
     'mockwebserver': 'com.squareup.okhttp:mockwebserver:2.5.0',
     'slf4j': 'org.slf4j:slf4j-api:1.7.12',
-    'wsRsApi': 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    'wsRsApi': 'javax.ws.rs:javax.ws.rs-api:2.0.1',
+    'commonslang3': 'org.apache.commons:commons-lang3:3.4'
 ]
