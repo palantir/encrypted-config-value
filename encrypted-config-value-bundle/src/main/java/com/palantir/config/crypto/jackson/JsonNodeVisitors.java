@@ -16,6 +16,7 @@
 
 package com.palantir.config.crypto.jackson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.BinaryNode;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.google.common.collect.ImmutableList;
 
 public final class JsonNodeVisitors {
     private JsonNodeVisitors() {
@@ -32,26 +34,27 @@ public final class JsonNodeVisitors {
 
     // Check switch at compile time and use throw after switch as default case
     @SuppressWarnings("checkstyle:missingswitchdefault")
-    public static <T> T dispatch(JsonNode node, JsonNodeVisitor<T> visitor) {
+    public static <T> T dispatch(ImmutableList<String> location, JsonNode node, JsonNodeVisitor<T> visitor)
+                throws JsonProcessingException {
         switch (node.getNodeType()) {
             case ARRAY:
-                return visitor.visitArray((ArrayNode) node);
+                return visitor.visitArray(location, (ArrayNode) node);
             case BINARY:
-                return visitor.visitBinary((BinaryNode) node);
+                return visitor.visitBinary(location, (BinaryNode) node);
             case BOOLEAN:
-                return visitor.visitBoolean((BooleanNode) node);
+                return visitor.visitBoolean(location, (BooleanNode) node);
             case MISSING:
-                return visitor.visitMissing();
+                return visitor.visitMissing(location);
             case NULL:
-                return visitor.visitNull();
+                return visitor.visitNull(location);
             case NUMBER:
-                return visitor.visitNumeric((NumericNode) node);
+                return visitor.visitNumeric(location, (NumericNode) node);
             case OBJECT:
-                return visitor.visitObject((ObjectNode) node);
+                return visitor.visitObject(location, (ObjectNode) node);
             case POJO:
-                return visitor.visitPojo((POJONode) node);
+                return visitor.visitPojo(location, (POJONode) node);
             case STRING:
-                return visitor.visitText((TextNode) node);
+                return visitor.visitText(location, (TextNode) node);
         }
         throw new IllegalArgumentException("Unexpected node type " + node.getNodeType());
     }

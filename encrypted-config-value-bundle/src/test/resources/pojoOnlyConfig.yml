@@ -1,0 +1,3 @@
+pojoWithEncryptedValues:
+  username: some-user
+  password: ${enc:INNv4cGkVF45MLWZhgVZdIsgQ4zKvbMoJ978Es3MIKgrtz5eeTuOCLM1vPbQm97ejz2EK6M=}
