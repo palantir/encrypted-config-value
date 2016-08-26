@@ -3,7 +3,6 @@ apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/jdk7-bouncy-castle.gradle"
 
 dependencies {
-    compile libs.commonslang3
     compile libs.guava
     compile libs.jackson.databind
 

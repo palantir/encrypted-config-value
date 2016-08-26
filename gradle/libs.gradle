@@ -18,6 +18,7 @@ project.ext.libs = [
     'immutables': 'org.immutables:value:2.0.21',
     'jackson': [
         'databind': 'com.fasterxml.jackson.core:jackson-databind:2.6.1',
+        'dataformat': 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.1',
         'guava': 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.6.1',
         'jdk7': 'com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.6.1'
     ],

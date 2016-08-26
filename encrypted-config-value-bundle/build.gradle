@@ -6,7 +6,8 @@ dependencies {
     compile libs.guava
     compile libs.jackson.databind
     compile libs.dropwizard_0_9_1.core
-    compile project(':encrypted-config-value')
+
+    compile project(':encrypted-config-value-module')
 
     testCompile libs.dropwizard_0_9_1.testing
     testCompile libs.hamcrest
