@@ -1,0 +1,18 @@
+apply plugin: 'com.palantir.docker-test-runner'
+
+dockerTestRunner {
+    dockerRunner name: 'openjdk-7-bouncy-castle',
+                 dockerFile: file(rootDir.absolutePath + '/test-environments/openjdk-7-bouncy-castle.dockerfile')
+
+    jacocoConfig = {
+        classDirectories = project.files(classDirectories.files.collect {
+            // Exclusion path is project-relative and has a base of compiled classes
+            project.fileTree(dir: it, exclude: '**/Immutable*.class')
+        })
+    }
+
+    if (System.env.CIRCLE_TEST_REPORTS) {
+        runArgs.put('-v', "${System.env.CIRCLE_TEST_REPORTS}:/reports")
+        runArgs.put('-e', 'CIRCLE_TEST_REPORTS=/reports')
+    }
+}

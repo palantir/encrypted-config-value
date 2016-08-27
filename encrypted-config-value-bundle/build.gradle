@@ -1,5 +1,6 @@
 apply from: "${rootDir}/gradle/libs.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
+apply from: "${rootDir}/gradle/jdk7-bouncy-castle.gradle"
 
 dependencies {
     compile libs.guava
@@ -16,3 +17,4 @@ dependencies {
 }
 
 tasks.check.dependsOn(javadoc)
+sourceCompatibility = 1.7
