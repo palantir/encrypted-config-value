@@ -4,15 +4,16 @@ apply from: "${rootDir}/gradle/publish.gradle"
 dependencies {
     compile libs.guava
     compile libs.jackson.databind
-    compile libs.dropwizard_0_9_1.core
+    compile libs.dropwizard_1_0_0.core
     compile project(':encrypted-config-value')
 
-    testCompile libs.dropwizard_0_9_1.testing
+    testCompile libs.dropwizard_1_0_0.testing
     testCompile libs.hamcrest
     testCompile libs.junit
-    testRuntime libs.bouncycastle
 
     processor libs.immutables
 }
 
 tasks.check.dependsOn(javadoc)
+
+sourceCompatibility = 1.8
