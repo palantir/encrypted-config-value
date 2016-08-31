@@ -1,4 +1,4 @@
 include 'encrypted-config-value'
 include 'encrypted-config-value-bundle'
-include 'encrypted-config-value-bundle-dw-1.0'
+include 'encrypted-config-value-bundle-dropwizard1'
 include 'encrypted-config-value-module'

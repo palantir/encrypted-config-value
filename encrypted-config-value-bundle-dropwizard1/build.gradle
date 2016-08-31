@@ -16,3 +16,4 @@ dependencies {
 
 tasks.check.dependsOn(javadoc)
 
+sourceCompatibility = 1.8
