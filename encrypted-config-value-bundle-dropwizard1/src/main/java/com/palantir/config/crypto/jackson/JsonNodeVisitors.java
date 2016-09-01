@@ -30,8 +30,6 @@ public final class JsonNodeVisitors {
         // utilities
     }
 
-    // Check switch at compile time and use throw after switch as default case
-    @SuppressWarnings("checkstyle:missingswitchdefault")
     public static <T> T dispatch(JsonNode node, JsonNodeVisitor<T> visitor) {
         switch (node.getNodeType()) {
             case ARRAY:
@@ -52,7 +50,8 @@ public final class JsonNodeVisitors {
                 return visitor.visitPojo((POJONode) node);
             case STRING:
                 return visitor.visitText((TextNode) node);
+            default:
+                throw new IllegalArgumentException("Unexpected node type " + node.getNodeType());
         }
-        throw new IllegalArgumentException("Unexpected node type " + node.getNodeType());
     }
 }
