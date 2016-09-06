@@ -10,6 +10,7 @@ general:
   artifacts:
     - encrypted-config-value/build/libs
     - encrypted-config-value-bundle/build/libs
+    - encrypted-config-value-bundle-dropwizard1/build/libs
 
 dependencies:
   override:

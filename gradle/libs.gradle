@@ -1,8 +1,12 @@
 project.ext.libs = [
     'bouncycastle': 'org.bouncycastle:bcprov-jdk15on:1.50',
-    'dropwizard': [
+    'dropwizard_0_9_1': [
         'testing': 'io.dropwizard:dropwizard-testing:0.9.1',
         'core': 'io.dropwizard:dropwizard-core:0.9.1'
+    ],
+    'dropwizard_1_0_0': [
+        'testing': 'io.dropwizard:dropwizard-testing:1.0.0',
+        'core': 'io.dropwizard:dropwizard-core:1.0.0'
     ],
     'feign': [
         'jackson': 'com.netflix.feign:feign-jackson:8.11.0',
