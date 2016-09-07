@@ -9,6 +9,7 @@ dependencies {
 
     testCompile libs.hamcrest
     testCompile libs.junit
+    testCompile libs.mockito
     testRuntime libs.bouncycastle
 
     processor libs.immutables
