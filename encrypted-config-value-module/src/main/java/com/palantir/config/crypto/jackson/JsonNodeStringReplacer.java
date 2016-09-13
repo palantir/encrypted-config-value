@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.palantir.config.crypto.util.StringSubstitutionException;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.lang3.text.StrSubstitutor;
@@ -41,8 +42,14 @@ public final class JsonNodeStringReplacer implements JsonNodeVisitor<JsonNode> {
     @Override
     public JsonNode visitArray(ArrayNode arrayNode) {
         ArrayNode newArrayNode = arrayNode.arrayNode();
+        int index = 0;
         for (JsonNode node : arrayNode) {
-            newArrayNode.add(JsonNodeVisitors.dispatch(node, this));
+            try {
+                newArrayNode.add(JsonNodeVisitors.dispatch(node, this));
+            } catch (StringSubstitutionException e) {
+                throw e.extend(index);
+            }
+            index++;
         }
         return newArrayNode;
     }
@@ -80,7 +87,11 @@ public final class JsonNodeStringReplacer implements JsonNodeVisitor<JsonNode> {
             Map.Entry<String, JsonNode> entry = entryIterator.next();
             String field = entry.getKey();
             JsonNode node = entry.getValue();
-            newObjectNode.set(field, JsonNodeVisitors.dispatch(node, this));
+            try {
+                newObjectNode.set(field, JsonNodeVisitors.dispatch(node, this));
+            } catch (StringSubstitutionException e) {
+                throw e.extend(field);
+            }
         }
         return newObjectNode;
     }
