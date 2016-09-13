@@ -31,8 +31,10 @@ package com.palantir.config.crypto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.jackson.JsonNodeVisitor;
 import com.palantir.config.crypto.jackson.JsonNodeVisitors;
+import com.palantir.config.crypto.util.StringSubstitutionException;
 import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.configuration.ConfigurationFactoryFactory;
@@ -68,8 +70,16 @@ public final class SubstitutingConfigurationFactory<T> extends ConfigurationFact
 
     @Override
     protected T build(JsonNode node, String path) throws IOException, ConfigurationException {
-        JsonNode substitutedNode = JsonNodeVisitors.dispatch(node, substitutor);
-        return super.build(substitutedNode, path);
+        try {
+            JsonNode substitutedNode = JsonNodeVisitors.dispatch(node, substitutor);
+            return super.build(substitutedNode, path);
+        } catch (StringSubstitutionException e) {
+            String error = String.format(
+                    "The value '%s' for field '%s' could not be replaced",
+                    e.getValue(),
+                    e.getField());
+            throw new ConfigurationDecryptionException(path, ImmutableList.of(error), e);
+        }
     }
 
     /**
