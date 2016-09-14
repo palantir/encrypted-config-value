@@ -17,6 +17,9 @@
 package com.palantir.config.crypto.util;
 
 public class StringSubstitutionException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
     private final String value;
     private final StringBuilder fieldBuilder;
     private final boolean lastExtensionWasArrayIndex;
