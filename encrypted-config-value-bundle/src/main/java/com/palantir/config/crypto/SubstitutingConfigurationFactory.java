@@ -75,10 +75,11 @@ public final class SubstitutingConfigurationFactory<T> extends ConfigurationFact
             return super.build(substitutedNode, path);
         } catch (StringSubstitutionException e) {
             String error = String.format(
-                    "The value '%s' for field '%s' could not be replaced",
+                    "The value '%s' for field '%s' could not be replaced with its unencrypted value",
                     e.getValue(),
                     e.getField());
-            throw new ConfigurationDecryptionException(path, ImmutableList.of(error), e);
+            String underlyingError = String.format("Underlying error - %s", e.getMessage());
+            throw new ConfigurationDecryptionException(path, ImmutableList.of(error, underlyingError), e);
         }
     }
 
