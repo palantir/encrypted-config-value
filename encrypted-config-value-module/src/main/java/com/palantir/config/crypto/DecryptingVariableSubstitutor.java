@@ -29,6 +29,10 @@ public final class DecryptingVariableSubstitutor extends StrSubstitutor {
     private static final class DecryptingStringLookup extends StrLookup<String> {
         @Override
         public String lookup(String encryptedValue) {
+            if (!EncryptedValue.isEncryptedValue(encryptedValue)) {
+                return null;
+            }
+
             try {
                 return EncryptedValue.of(encryptedValue).getDecryptedValue();
             } catch (RuntimeException e) {
