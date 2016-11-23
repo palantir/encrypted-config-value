@@ -31,6 +31,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DecryptingVariableSubstitutorTest {
+
     private static final Algorithm ALGORITHM = Algorithms.getInstance("RSA");
     private static final KeyPair KEY_PAIR = ALGORITHM.generateKey();
     private static String previousProperty;
@@ -59,14 +60,19 @@ public class DecryptingVariableSubstitutorTest {
     }
 
     @Test
-    public final void invalidVariablesThrowStringSubstitutionException() {
+    public final void invalidEncryptedVariablesThrowStringSubstitutionException() {
         try {
-            substitutor.replace("${abc}");
+            substitutor.replace("${enc:invalid-contents}");
             fail();
         } catch (StringSubstitutionException e) {
-            assertThat(e.getValue(), is("abc"));
+            assertThat(e.getValue(), is("enc:invalid-contents"));
             assertThat(e.getField(), is(""));
         }
+    }
+
+    @Test
+    public final void nonEncryptedVariablesAreNotModified() {
+        assertThat(substitutor.replace("${abc}"), is("${abc}"));
     }
 
     @Test

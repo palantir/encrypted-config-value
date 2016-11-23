@@ -61,12 +61,16 @@ public abstract class EncryptedValue {
         return PREFIX + encryptedValue();
     }
 
+    public static boolean isEncryptedValue(String encryptedValue) {
+        return encryptedValue.startsWith(PREFIX);
+    }
+
     /**
      * @param encryptedValue - a string of the form "prefix:encrypted-string-in-base-64".
      * @return an EncryptedConfigValue for this encrypted string
      */
     public static EncryptedValue of(String encryptedValue) {
-        checkArgument(encryptedValue.startsWith(PREFIX),
+        checkArgument(isEncryptedValue(encryptedValue),
                 "encrypted value must begin with %s but is %s", PREFIX, encryptedValue);
         return fromEncryptedString(encryptedValue.substring(PREFIX.length()));
     }
