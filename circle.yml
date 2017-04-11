@@ -6,21 +6,15 @@ machine:
   environment:
     TERM: dumb
 
-general:
-  artifacts:
-    - encrypted-config-value/build/libs
-    - encrypted-config-value-bundle/build/libs
-    - encrypted-config-value-bundle-dropwizard1/build/libs
-
 dependencies:
   override:
-    - ./gradlew resolveDependencies
-    - ./gradlew buildDockerTestRunner createGradleCacheVolume
+    - ./gradlew --parallel resolveDependencies
+    - ./gradlew --parallel buildDockerTestRunner createGradleCacheVolume
 
 test:
   override:
-    - ./gradlew build
-    - ./gradlew jacocoTestReportDockerTestRunner
+    - ./gradlew --parallel build
+    - ./gradlew --parallel jacocoTestReportDockerTestRunner
 
 deployment:
   # disable until we work through OJO publishing issues with Bintray
@@ -33,4 +27,4 @@ deployment:
     tag: /[0-9]+(\.[0-9]+)+/
     owner: palantir
     commands:
-      - ./gradlew -i bintrayUpload
+      - ./gradlew --parallel -i bintrayUpload
