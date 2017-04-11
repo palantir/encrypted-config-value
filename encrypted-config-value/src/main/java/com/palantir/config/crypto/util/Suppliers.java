@@ -24,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
+import javax.crypto.AEADBadTagException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -36,10 +37,11 @@ public final class Suppliers {
     public static <T> T silently(ThrowingSupplier<T> supplier) {
         try {
             return supplier.get();
-        catch (AEADBadTagException e) {
+        } catch (AEADBadTagException e) {
             throw new RuntimeException(
-                "couldn't verify the message's authentication tag. either the message was tampered with, or the key is invalid",
-                e).
+                "couldn't verify the message's authentication tag "
+                + "- either the message was tampered with, or the key is invalid",
+                e);
         } catch (InvalidKeyException | InvalidKeySpecException e) {
             throw new RuntimeException("the key was invalid", e);
         } catch (NoSuchPaddingException | BadPaddingException e) {
