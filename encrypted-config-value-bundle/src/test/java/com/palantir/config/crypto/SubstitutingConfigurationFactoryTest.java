@@ -37,7 +37,7 @@ public class SubstitutingConfigurationFactoryTest {
 
 
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void before() throws IOException {
         previousProperty = System.getProperty(KeyPair.KEY_PATH_PROPERTY);
         System.setProperty(KeyPair.KEY_PATH_PROPERTY, "src/test/resources/test.key");
 
@@ -50,7 +50,7 @@ public class SubstitutingConfigurationFactoryTest {
     }
 
     @AfterClass
-    public static void tearDown() {
+    public static void after() {
         if (previousProperty != null) {
             System.setProperty(KeyPair.KEY_PATH_PROPERTY, previousProperty);
         }

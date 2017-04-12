@@ -1,17 +1,23 @@
-apply from: "${rootDir}/gradle/libs.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
+apply from: "${rootDir}/gradle/immutables-processors.gradle"
+
+dependencyRecommendations {
+    strategy OverrideTransitives
+    map recommendations: [
+        'com.fasterxml.jackson.core:*': '2.7.6',
+        'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml': '2.7.6'
+    ]
+}
 
 dependencies {
-    compile libs.guava
-    compile libs.jackson.databind
-    compile libs.dropwizard_1_0_0.core
     compile project(':encrypted-config-value-module')
+    compile 'com.google.guava:guava'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'io.dropwizard:dropwizard-core:1.0.0'
 
-    testCompile libs.dropwizard_1_0_0.testing
-    testCompile libs.hamcrest
-    testCompile libs.junit
-
-    processor libs.immutables
+    testCompile 'org.hamcrest:hamcrest-all'
+    testCompile 'junit:junit'
+    testCompile 'io.dropwizard:dropwizard-testing:1.0.0'
 }
 
 tasks.check.dependsOn(javadoc)

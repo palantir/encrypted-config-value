@@ -53,7 +53,7 @@ public class JsonNodeStringReplacerTest {
     private JsonNodeStringReplacer jsonNodeStringReplacer;
 
     @Before
-    public final void setUp() {
+    public final void before() {
         jsonNodeStringReplacer = new JsonNodeStringReplacer(strSubstitutor);
     }
 

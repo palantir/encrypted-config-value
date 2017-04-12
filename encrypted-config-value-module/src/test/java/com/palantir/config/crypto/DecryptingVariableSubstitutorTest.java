@@ -39,7 +39,7 @@ public class DecryptingVariableSubstitutorTest {
     private final DecryptingVariableSubstitutor substitutor = new DecryptingVariableSubstitutor();
 
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void beforeClass() throws IOException {
         previousProperty = System.getProperty(KeyPair.KEY_PATH_PROPERTY);
 
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
@@ -48,7 +48,7 @@ public class DecryptingVariableSubstitutorTest {
     }
 
     @AfterClass
-    public static void tearDown() {
+    public static void afterClass() {
         if (previousProperty != null) {
             System.setProperty(KeyPair.KEY_PATH_PROPERTY, previousProperty);
         }

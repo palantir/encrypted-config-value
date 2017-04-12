@@ -1,19 +1,19 @@
-apply from: "${rootDir}/gradle/libs.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/jdk7-bouncy-castle.gradle"
+apply from: "${rootDir}/gradle/immutables-processors.gradle"
 
 dependencies {
-    compile libs.commonslang3
-    compile libs.guava
-    compile libs.jackson.databind
-    compile libs.jackson.dataformat
     compile project(':encrypted-config-value')
+    compile 'com.google.guava:guava'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    compile 'org.apache.commons:commons-lang3'
 
-    testCompile libs.hamcrest
-    testCompile libs.junit
-    testRuntime libs.bouncycastle
+    testCompile 'org.hamcrest:hamcrest-all'
+    testCompile 'junit:junit'
+    testCompile 'org.mockito:mockito-core'
 
-    processor libs.immutables
+    testRuntime 'org.bouncycastle:bcprov-jdk15on'
 }
 
 tasks.check.dependsOn(javadoc)
