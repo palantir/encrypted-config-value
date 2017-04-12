@@ -1,5 +1,4 @@
 apply from: "${rootDir}/gradle/publish.gradle"
-apply from: "${rootDir}/gradle/jdk7-bouncy-castle.gradle"
 apply from: "${rootDir}/gradle/immutables-processors.gradle"
 
 dependencies {
@@ -12,8 +11,6 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-all'
     testCompile 'junit:junit'
     testCompile 'org.mockito:mockito-core'
-
-    testRuntime 'org.bouncycastle:bcprov-jdk15on'
 }
 
 tasks.check.dependsOn(javadoc)
