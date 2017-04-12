@@ -32,7 +32,7 @@ apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'org.inferred.processors'
 
 dependencies {
-    baseline group: 'com.palantir.baseline', name: 'gradle-baseline-java-config', version: '0.13.0-rc3', ext: 'zip'
+    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.13.0-rc3:zip'
 }
 
 allprojects {
