@@ -1,6 +1,4 @@
 machine:
-  services:
-    - docker
   java:
     version: oraclejdk8
   environment:
@@ -19,8 +17,7 @@ dependencies:
 
 test:
   override:
-    - ./gradlew build
-    - ./gradlew jacocoTestReportDockerTestRunner
+    - ./gradlew check
 
 deployment:
   # disable until we work through OJO publishing issues with Bintray
