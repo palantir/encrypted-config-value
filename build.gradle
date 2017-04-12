@@ -75,7 +75,7 @@ subprojects {
         classpath = sourceSets.main.compileClasspath + configurations.processor
     }
 
-    sourceCompatibility = 1.7
+    sourceCompatibility = 1.8
 
     jacocoTestReport {
         reports {
