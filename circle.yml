@@ -13,7 +13,6 @@ general:
 dependencies:
   override:
     - ./gradlew resolveConfigurations
-    - ./gradlew buildDockerTestRunner createGradleCacheVolume
 
 test:
   override:
