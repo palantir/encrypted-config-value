@@ -25,6 +25,7 @@ plugins {
 }
 
 repositories {
+    jcenter()
     maven { url "http://palantir.bintray.com/releases" }
 }
 
