@@ -16,9 +16,9 @@
 
 package com.palantir.config.crypto.algorithm;
 
-import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
+import com.palantir.config.crypto.value.EncryptedValue;
 
 /**
  * Explicitly support a defined set of algorithms, so we can choose sane defaults etc.

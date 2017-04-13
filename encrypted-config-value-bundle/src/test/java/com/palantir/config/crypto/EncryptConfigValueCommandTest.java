@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.RsaAlgorithm;
+import com.palantir.config.crypto.value.EncryptedValue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -68,7 +69,7 @@ public final class EncryptConfigValueCommandTest {
 
         String output = outContent.toString(CHARSET).trim();
 
-        EncryptedValue configValue = EncryptedValue.of(output);
+        EncryptedValue configValue = EncryptedValue.deserialize(output);
         KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
         String decryptedValue = configValue.getDecryptedValue(decryptionKey);
 

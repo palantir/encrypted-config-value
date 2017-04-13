@@ -17,17 +17,21 @@ package com.palantir.config.crypto.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.io.BaseEncoding;
-import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
 import com.palantir.config.crypto.util.Suppliers;
-import java.io.ByteArrayOutputStream;
+import com.palantir.config.crypto.value.AesEncryptedValue;
+import com.palantir.config.crypto.value.EncryptedValue;
+import com.palantir.config.crypto.value.EncryptedValueVisitor;
+import com.palantir.config.crypto.value.ImmutableAesEncryptedValue;
+import com.palantir.config.crypto.value.LegacyEncryptedValue;
+import com.palantir.config.crypto.value.RsaEncryptedValue;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -40,7 +44,7 @@ public final class AesAlgorithm implements Algorithm {
     public static final String ALGORITHM_TYPE = "AES";
 
     private static final int GCM_AUTH_TAG_LENGTH = 128;
-    private static final int IV_LENGTH = 256 / Byte.SIZE;
+    private static final int IV_LENGTH = 96 / Byte.SIZE;
     private static final Charset charset = StandardCharsets.UTF_8;
 
     private Cipher getUninitializedCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
@@ -68,13 +72,17 @@ public final class AesAlgorithm implements Algorithm {
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmSpecWithIv);
                 byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
 
-                // put together the iv and the encrypted bytes
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                outputStream.write(ivBytes);
-                outputStream.write(encrypted);
+                // the tag is appended to the buffer, so yank it off the end.
+                int tagBytes = GCM_AUTH_TAG_LENGTH / Byte.SIZE;
+                byte[] ct = Arrays.copyOfRange(encrypted, 0, encrypted.length - tagBytes);
+                byte[] tag = Arrays.copyOfRange(encrypted, encrypted.length - tagBytes, encrypted.length);
 
-                String encryptedString = BaseEncoding.base64().encode(outputStream.toByteArray());
-                return EncryptedValue.fromEncryptedString(encryptedString);
+                return ImmutableAesEncryptedValue.builder()
+                        .mode(AesEncryptedValue.Mode.GCM)
+                        .iv(ivBytes)
+                        .ciphertext(ct)
+                        .tag(tag)
+                        .build();
             }
 
         });
@@ -85,19 +93,37 @@ public final class AesAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for AES algorithm but was %s", kwa.getAlgorithm());
 
+        final AesEncryptedValue value = encryptedValue.accept(new EncryptedValueVisitor<AesEncryptedValue>() {
+            @Override
+            public AesEncryptedValue visit(LegacyEncryptedValue legacyEncryptedValue) {
+                return AesEncryptedValue.fromLegacy(legacyEncryptedValue);
+            }
+
+            @Override
+            public AesEncryptedValue visit(AesEncryptedValue aesEncryptedValue) {
+                return aesEncryptedValue;
+            }
+
+            @Override
+            public AesEncryptedValue visit(RsaEncryptedValue rsaEncryptedValue) {
+                throw new IllegalArgumentException("Cannot AES decrypt a value encrypted with RSA");
+            }
+        });
+
         return Suppliers.silently(new DecryptedStringSupplier() {
             @Override
             public String get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 Key secretKeySpec = getSecretKeySpec(kwa);
 
-                String ciphertext = encryptedValue.encryptedValue();
-                byte[] cipherBytes = BaseEncoding.base64().decode(ciphertext);
+                // Java expects the tag at the end of the encrypted bytes.
+                byte[] ct = Arrays.copyOf(value.getCiphertext(), value.getCiphertext().length + value.getTag().length);
+                System.arraycopy(value.getTag(), 0, ct, value.getCiphertext().length, value.getTag().length);
 
-                GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(GCM_AUTH_TAG_LENGTH, cipherBytes, 0, IV_LENGTH);
+                GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(value.getTag().length * Byte.SIZE, value.getIv());
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);
 
-                byte[] decrypted = cipher.doFinal(cipherBytes, IV_LENGTH, cipherBytes.length - IV_LENGTH);
+                byte[] decrypted = cipher.doFinal(ct);
                 return new String(decrypted, charset);
             }
         });

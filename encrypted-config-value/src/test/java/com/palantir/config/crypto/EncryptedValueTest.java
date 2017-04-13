@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.RsaAlgorithm;
+import com.palantir.config.crypto.value.EncryptedValue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,11 +61,21 @@ public final class EncryptedValueTest {
                     + "IRhPpqFUQzq03mgmFZtAqyhXl62o2w=");
 
     @Test
-    public void weCanConstructFromAValidAesString() {
+    public void weCanConstructFromAValidLegacyAesString() {
         String valid = "enc:QjR4AHIYoIzvjEHf53XETM3QYnCl1mgFYC51Q7x4ebwM+h3PHVqSt/"
                 + "1un/+KvpJ2mZfMH0tifu+htRVxEPyXmt88lyKB83NpesNJEoLFLL+wBWCkppaLRuc/1w==";
 
-        EncryptedValue encryptedValue = EncryptedValue.of(valid);
+        EncryptedValue encryptedValue = EncryptedValue.deserialize(valid);
+        assertThat(encryptedValue.getDecryptedValue(aesKey), is(plaintext));
+    }
+
+    @Test
+    public void weCanConstructFromAValidString() {
+        String valid = "enc:eyJ0eXBlIjoiQUVTIiwibW9kZSI6IkdDTSIsIml2IjoiazhKTEJpVV"
+                + "hHWmYyQk1aUSIsImNpcGhlcnRleHQiOiI1U1R3Z0hTaHB0Q1ErNCtmT0lMRC8xRHM5R3pp"
+                + "K1RXSkZwckpHWGdUVXVRRmx4Nnd0a0lwNVFUcE1RPT0iLCJ0YWciOiJZTUNURlY2b2dsemxwV3FOVlp3YVp3PT0ifQ==";
+
+        EncryptedValue encryptedValue = EncryptedValue.deserialize(valid);
         assertThat(encryptedValue.getDecryptedValue(aesKey), is(plaintext));
     }
 
@@ -77,7 +88,7 @@ public final class EncryptedValueTest {
                 + "qVr2DaTwtV3htxtCB36Jk6Lg5abdcc9B/ZqV7lfUIddGEuXFzhz8KIIGtwVVXqi"
                 + "s15Dw1ECSNJhicHZp43vSYN9y9NJTnvTAhCQ==";
 
-        EncryptedValue encryptedValue = EncryptedValue.of(valid);
+        EncryptedValue encryptedValue = EncryptedValue.deserialize(valid);
         assertThat(encryptedValue.getDecryptedValue(rsaPrivKey), is(plaintext));
     }
 
@@ -90,13 +101,13 @@ public final class EncryptedValueTest {
     @Test(expected = IllegalArgumentException.class)
     public void weFailToConstructWithInvalidPrefix() {
         String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
-        EncryptedValue.of(invalid); // throws
+        EncryptedValue.deserialize(invalid); // throws
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void weFailToConstructWithAnInvalidEncryptedValue() {
-        String invalid = "enc:verysecret";
-        EncryptedValue.fromEncryptedString(invalid);
+        String invalid = "enc:verysecret!";
+        EncryptedValue.deserialize(invalid);
     }
 
     private void weCannotDecryptWithTheWrongKey(Algorithm algorithm) throws NoSuchAlgorithmException {
@@ -106,7 +117,7 @@ public final class EncryptedValueTest {
         EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
 
         KeyWithAlgorithm decryptionKey = otherKeyPair.privateKey().or(otherKeyPair.publicKey());
-        encryptedValue.getDecryptedValue(decryptionKey); //throws
+        encryptedValue.getDecryptedValue(decryptionKey); // throws
     }
 
     @Test(expected = RuntimeException.class)

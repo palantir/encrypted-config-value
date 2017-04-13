@@ -17,6 +17,7 @@
 package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.util.StringSubstitutionException;
+import com.palantir.config.crypto.value.EncryptedValue;
 import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -34,7 +35,8 @@ public final class DecryptingVariableSubstitutor extends StrSubstitutor {
             }
 
             try {
-                return EncryptedValue.of(encryptedValue).getDecryptedValue();
+                EncryptedValue value = EncryptedValue.deserialize(encryptedValue);
+                return value.getDecryptedValue();
             } catch (RuntimeException e) {
                 throw new StringSubstitutionException(e, encryptedValue);
             }
