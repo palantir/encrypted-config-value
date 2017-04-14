@@ -28,6 +28,7 @@ public final class Base64Utils {
      * Checks whether the given value is valid base-64 and otherwise throws IllegalArgumentException.
      * @param value  the value to check
      */
+    @SuppressWarnings("CheckReturnValue")
     public static void checkIsBase64(String value) {
         // there are various edge cases
         // the regexes people claim to work are actually incorrect

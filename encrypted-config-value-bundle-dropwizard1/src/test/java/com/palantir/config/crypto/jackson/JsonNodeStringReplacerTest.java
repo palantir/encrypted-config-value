@@ -44,7 +44,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JsonNodeStringReplacerTest {
+public final class JsonNodeStringReplacerTest {
+
     @Mock
     private StrSubstitutor strSubstitutor;
     @Mock
@@ -53,19 +54,19 @@ public class JsonNodeStringReplacerTest {
     private JsonNodeStringReplacer jsonNodeStringReplacer;
 
     @Before
-    public final void setUp() {
+    public void before() {
         jsonNodeStringReplacer = new JsonNodeStringReplacer(strSubstitutor);
     }
 
     @Test
-    public final void visitTextDelegatesToStrSubstitutor() {
+    public void visitTextDelegatesToStrSubstitutor() {
         TextNode textNode = new TextNode("abc");
         when(strSubstitutor.replace("abc")).thenReturn("def");
         assertThat(jsonNodeStringReplacer.visitText(textNode)).isEqualTo(new TextNode("def"));
     }
 
     @Test
-    public final void visitArrayDispatchesToChildren() {
+    public void visitArrayDispatchesToChildren() {
         ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
         arrayNode.add("abc");
         arrayNode.add(1);
@@ -80,7 +81,7 @@ public class JsonNodeStringReplacerTest {
     }
 
     @Test
-    public final void visitArrayExtendsStringSubstitutionException() {
+    public void visitArrayExtendsStringSubstitutionException() {
         ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
         arrayNode.add(1);
         arrayNode.add(2);
@@ -101,7 +102,7 @@ public class JsonNodeStringReplacerTest {
     }
 
     @Test
-    public final void visitObjectDispatchesToChildren() {
+    public void visitObjectDispatchesToChildren() {
         ObjectNode objectNode = new ObjectNode(
                 JsonNodeFactory.instance,
                 ImmutableMap.<String, JsonNode>of(
@@ -120,7 +121,7 @@ public class JsonNodeStringReplacerTest {
     }
 
     @Test
-    public final void visitObjectExtendsStringSubstitutionException() {
+    public void visitObjectExtendsStringSubstitutionException() {
         ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
         arrayNode.add(1);
         arrayNode.add(2);
@@ -147,36 +148,36 @@ public class JsonNodeStringReplacerTest {
     }
 
     @Test
-    public final void visitBinaryPassesThrough() {
+    public void visitBinaryPassesThrough() {
         BinaryNode binaryNode = mock(BinaryNode.class);
         assertThat(jsonNodeStringReplacer.visitBinary(binaryNode)).isEqualTo(binaryNode);
     }
 
     @Test
-    public final void visitBooleanPassesThrough() {
+    public void visitBooleanPassesThrough() {
         BooleanNode booleanNode = mock(BooleanNode.class);
         assertThat(jsonNodeStringReplacer.visitBoolean(booleanNode)).isEqualTo(booleanNode);
     }
 
     @Test
-    public final void visitNumericPassesThrough() {
+    public void visitNumericPassesThrough() {
         NumericNode numericNode = mock(NumericNode.class);
         assertThat(jsonNodeStringReplacer.visitNumeric(numericNode)).isEqualTo(numericNode);
     }
 
     @Test
-    public final void visitPojoPassesThrough() {
+    public void visitPojoPassesThrough() {
         POJONode pojoNode = mock(POJONode.class);
         assertThat(jsonNodeStringReplacer.visitPojo(pojoNode)).isEqualTo(pojoNode);
     }
 
     @Test
-    public final void visitNullReturnsNullNodeInstance() {
+    public void visitNullReturnsNullNodeInstance() {
         assertThat(jsonNodeStringReplacer.visitNull()).isEqualTo(NullNode.getInstance());
     }
 
     @Test
-    public final void visitMissingReturnsMissingNodeInstance() {
+    public void visitMissingReturnsMissingNodeInstance() {
         assertThat(jsonNodeStringReplacer.visitMissing()).isEqualTo(MissingNode.getInstance());
     }
 }
