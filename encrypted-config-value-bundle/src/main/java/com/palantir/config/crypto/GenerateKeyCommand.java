@@ -17,11 +17,11 @@
 package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
@@ -40,13 +40,13 @@ public final class GenerateKeyCommand extends Command {
             .required(true)
             .type(String.class)
             .dest(ALGORITHM)
-            .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator for a list of valid algorithms)");
+            .help("The algorithm to use. Supported values: " + Arrays.toString(Algorithm.values()));
 
         subparser.addArgument("-f", "--file")
             .required(false)
             .type(String.class)
             .dest(FILE)
-            .setDefault(KeyPair.DEFAULT_PUBLIC_KEY_PATH)
+            .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
             .help("The location to write the key");
     }
 
@@ -56,15 +56,14 @@ public final class GenerateKeyCommand extends Command {
         String file = namespace.getString(FILE);
         Path path = Paths.get(file);
 
-        Algorithm algorithm = Algorithms.getInstance(algorithmType);
-        KeyPair keyPair = algorithm.generateKey();
-        keyPair.toFile(path);
+        Algorithm algorithm = Algorithm.valueOf(algorithmType);
+        KeyPair keyPair = algorithm.newKeyPair();
+        KeyPairFiles keyPairFiles = KeyFileUtils.keyPairToFile(keyPair, path);
 
         // print to console, notifying that we did something
         System.out.println("Wrote key to " + path);
-        if (keyPair.privateKey().isPresent()) {
-            Path privatePath = KeyPair.privatePath(path);
-            System.out.println("Wrote private key to " + privatePath);
+        if (!keyPairFiles.pathsEqual()) {
+            System.out.println("Wrote private key to " + keyPairFiles.decryptionKeyFile());
         }
     }
 

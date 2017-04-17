@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.palantir.config.crypto.KeyPair;
+import com.palantir.config.crypto.KeyFileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -29,12 +29,11 @@ public class EncryptedConfigMapperUtilsTest {
     private static final ObjectMapper MAPPER = new YAMLMapper();
 
     static {
-        System.setProperty(KeyPair.KEY_PATH_PROPERTY, "src/test/resources/test.key");
+        System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
 
     @Test
     public final void testCanDecryptValueInConfig() throws IOException {
-
         TestConfig config = EncryptedConfigMapperUtils.getConfig(CONFIG_FILE, TestConfig.class, MAPPER);
 
         assertEquals("value", config.getUnencrypted());
@@ -113,6 +112,5 @@ public class EncryptedConfigMapperUtilsTest {
             return pojoWithEncryptedValues;
         }
     }
-
 
 }

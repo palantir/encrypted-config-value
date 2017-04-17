@@ -19,27 +19,23 @@ package com.palantir.config.crypto;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
 
-public final class KeyWithAlgorithmTest {
+public final class KeyWithTypeTest {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String kwaString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
-    private static final KeyWithAlgorithm kwa = KeyWithAlgorithm.fromString(kwaString);
+    private static final String kwtString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
+    private static final KeyWithType kwt = KeyWithType.fromString(kwtString);
 
     @Test
-    public void testSerialization()
-            throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-        String serialized = mapper.writeValueAsString(kwa);
+    public void testSerialization() throws IOException {
+        String serialized = mapper.writeValueAsString(kwt);
 
-        String expectedSerialization = String.format("\"%s\"", kwaString);
+        String expectedSerialization = String.format("\"%s\"", kwtString);
         assertThat(serialized, is(expectedSerialization));
 
-        KeyWithAlgorithm deserialized = mapper.readValue(serialized, KeyWithAlgorithm.class);
-        assertThat(deserialized, is(kwa));
+        KeyWithType deserialized = mapper.readValue(serialized, KeyWithType.class);
+        assertThat(deserialized.toString(), is(kwt.toString()));
     }
 }

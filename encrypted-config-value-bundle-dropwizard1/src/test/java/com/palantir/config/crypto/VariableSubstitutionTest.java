@@ -35,12 +35,12 @@ import org.junit.Test;
 public final class VariableSubstitutionTest {
 
     static {
-        System.setProperty(KeyPair.KEY_PATH_PROPERTY, "src/test/resources/test.key");
+        System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
 
     @ClassRule
     public static final DropwizardAppRule<TestConfig> RULE =
-            new DropwizardAppRule<TestConfig>(TestApplication.class, "src/test/resources/testConfig.yml");
+            new DropwizardAppRule(TestApplication.class, "src/test/resources/testConfig.yml");
 
     @Test
     public void testCanDecryptValueInConfig() throws IOException {

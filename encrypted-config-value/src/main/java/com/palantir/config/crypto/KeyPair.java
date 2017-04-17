@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,65 +16,29 @@
 
 package com.palantir.config.crypto;
 
-import com.google.common.base.Optional;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.immutables.value.Value;
 
 /**
- * A public and private key. For symmetric keys, the private key will be absent.
+ * An encryption and decryption key. For symmetric keys, both keys will be the same.
  */
 @Value.Immutable
 public abstract class KeyPair {
-    public static final String KEY_PATH_PROPERTY = "palantir.config.key_path";
-    public static final String DEFAULT_PUBLIC_KEY_PATH = "var/conf/encrypted-config-value.key";
 
-    public abstract KeyWithAlgorithm publicKey();
+    public abstract KeyWithType encryptionKey();
 
-    public abstract Optional<KeyWithAlgorithm> privateKey();
+    public abstract KeyWithType decryptionKey();
 
-    public final void toFile(Path path) throws IOException {
-        publicKey().toFile(path);
-
-        if (privateKey().isPresent()) {
-            KeyWithAlgorithm privateKey = privateKey().get();
-            Path privatePath = privatePath(path);
-            privateKey.toFile(privatePath);
-        }
-    }
-
-    public static Path privatePath(Path path) {
-        Path privatePath = path.resolveSibling(path.getFileName() + ".private");
-        return privatePath;
-    }
-
-    public static KeyPair of(KeyWithAlgorithm publicKey, KeyWithAlgorithm privateKey) {
+    public static KeyPair of(KeyWithType encryptionKey, KeyWithType decryptionKey) {
         return ImmutableKeyPair.builder()
-                .publicKey(publicKey)
-                .privateKey(privateKey)
+                .encryptionKey(encryptionKey)
+                .decryptionKey(decryptionKey)
                 .build();
     }
 
-    public static KeyPair symmetric(KeyWithAlgorithm symmetric) {
+    public static KeyPair symmetric(KeyWithType key) {
         return ImmutableKeyPair.builder()
-                .publicKey(symmetric)
+                .encryptionKey(key)
+                .decryptionKey(key)
                 .build();
-    }
-
-    public static KeyPair fromPath(Path path) throws IOException {
-        KeyWithAlgorithm publicKey = KeyWithAlgorithm.fromPath(path);
-
-        Path privatePath = privatePath(path);
-        if (!privatePath.toFile().exists()) {
-            return KeyPair.symmetric(publicKey);
-        }
-
-        KeyWithAlgorithm privateKey = KeyWithAlgorithm.fromPath(privatePath);
-        return KeyPair.of(publicKey, privateKey);
-    }
-
-    public static KeyPair fromDefaultPath() throws IOException {
-        return fromPath(Paths.get(System.getProperty(KEY_PATH_PROPERTY, DEFAULT_PUBLIC_KEY_PATH)));
     }
 }

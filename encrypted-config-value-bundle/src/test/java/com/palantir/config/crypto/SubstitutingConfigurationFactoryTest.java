@@ -35,13 +35,12 @@ public class SubstitutingConfigurationFactoryTest {
     private static String previousProperty;
     private static SubstitutingConfigurationFactory<TestConfig> factory;
 
-
     @BeforeClass
     public static void before() throws IOException {
-        previousProperty = System.getProperty(KeyPair.KEY_PATH_PROPERTY);
-        System.setProperty(KeyPair.KEY_PATH_PROPERTY, "src/test/resources/test.key");
+        previousProperty = System.getProperty(KeyFileUtils.KEY_PATH_PROPERTY);
+        System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
 
-        factory = new SubstitutingConfigurationFactory<TestConfig>(
+        factory = new SubstitutingConfigurationFactory(
                 TestConfig.class,
                 Validators.newValidator(),
                 Jackson.newObjectMapper(),
@@ -52,7 +51,7 @@ public class SubstitutingConfigurationFactoryTest {
     @AfterClass
     public static void after() {
         if (previousProperty != null) {
-            System.setProperty(KeyPair.KEY_PATH_PROPERTY, previousProperty);
+            System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, previousProperty);
         }
     }
 
@@ -68,8 +67,6 @@ public class SubstitutingConfigurationFactoryTest {
         assertThat(config.getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
         assertThat(config.getPojoWithEncryptedValues()).isEqualTo(Person.of("some-user", "value"));
-
-
     }
 
     @Test
