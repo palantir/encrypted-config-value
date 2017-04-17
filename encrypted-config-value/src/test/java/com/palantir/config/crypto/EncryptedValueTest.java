@@ -31,14 +31,60 @@ import org.junit.Test;
 public final class EncryptedValueTest {
     private static final String plaintext = "my secret. I don't want anyone to know this";
     private static final KeyWithAlgorithm aesKey = KeyWithAlgorithm.fromString("AES:rqrvWpLld+wKLOyxJYxQVg==");
+    private static final KeyWithAlgorithm rsaPubKey =
+            KeyWithAlgorithm.fromString("RSA:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzfqeBMGXjHTqrOc+Ew1"
+                    + "nEWjLdNxBBKtHXh5WmFDth6ZrUeQ832a07k2zDC7nhoFfIcI+XJ14Wfp93jBvOo2dixrWFpm8qODcEz407Y89"
+                    + "u7/L5C87sGB7Fsauo2wqeupXjoY2BWHn6Z9JgNtuEuFaQR0jTkxJd8+loORQGiBfU+1UZ0/8WWLdihTVnpYGQ"
+                    + "Z4M1khOgdYPZ1iKK8Vh6wsoAqSjkxoHyqFWKkIU/qSrpLLcSFeZBP1F33/RkPM0i6AnoxKFakHvJ8G6yypooT"
+                    + "9ZH438YfarRHAQf+AbPhkFuNZJAuw2lS//+XGHFY9E+YCcz0sWJ6JJg8pfvr5Aa9mGbQIDAQAB");
+    private static final KeyWithAlgorithm rsaPrivKey =
+            KeyWithAlgorithm.fromString("RSA:MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDN+p4EwZeMdOq"
+                    + "s5z4TDWcRaMt03EEEq0deHlaYUO2HpmtR5DzfZrTuTbMMLueGgV8hwj5cnXhZ+n3eMG86jZ2LGtYWmbyo4NwT"
+                    + "PjTtjz27v8vkLzuwYHsWxq6jbCp66leOhjYFYefpn0mA224S4VpBHSNOTEl3z6Wg5FAaIF9T7VRnT/xZYt2KF"
+                    + "NWelgZBngzWSE6B1g9nWIorxWHrCygCpKOTGgfKoVYqQhT+pKukstxIV5kE/UXff9GQ8zSLoCejEoVqQe8nwb"
+                    + "rLKmihP1kfjfxh9qtEcBB/4Bs+GQW41kkC7DaVL//5cYcVj0T5gJzPSxYnokmDyl++vkBr2YZtAgMBAAECggE"
+                    + "AEer8NgO1MDW3eGUBRF0FG0GXeUnzqflQUwKmm8dmckdqzIvjM7fWg2hk6+lkoJG+ecxQ6nOUVZdxvZNPCbPq"
+                    + "AYDLINoszDALVO0zY3rzbtKnZOkq8xPhgUC1TmgJZfnetfo81skGiI8fsMLl12SdGk7zlEsUlQSOLunNgghQ4"
+                    + "pb5dpMfhyp0Q4ThmlfCBhY/XsRm9KLF98Il94QO9orYCJnVjOos/lWd6UKuLWEOf3CL/ucIaUAkUmu8PMO/AH"
+                    + "X9xW6vNIr76rvdasocUjv3KpFtV5gQX3IhKhehuQlW758a/EeNL725QhjfesF7tKPtsSPWzQ8dyFjHWF6xn21"
+                    + "4jQKBgQD+1Zj7yHF57/nfHEvXRyhkbaDkqU/uGNFUTGg0TvucAS9sas8CjJ7WHBrUfjfWWxrCNqAY2sfpxlUd"
+                    + "+0di3aWrUwyM1h91dYAhYk5NHnzkjhSi4wcbwHjN+BRPRMjgp+BsF/ZySpZK/tHUbCUgyQHWtJvkpHdiHcTDZ"
+                    + "h5wII9/4wKBgQDO68/I6qmoTpHRxF9zpOePTnwjWBwJ7r3qlTnFoQJGNEusDglI2GiaD3lRSxF1TfKnivUYbE"
+                    + "hrHbMXbfn2lOwPlHtpjESVAseWU6Qmz6r/TITk4M8kIEzo+yomM6QeBJwd4JAgjot456sT5X+Vv0NCtfweB0e"
+                    + "x2geZsK4X9MERbwKBgGlVPsvr+UOutrjLCGouhnqkedmqRlijN3tBrdzZPNUqBEErEO/70fesXEay+T+IHtJi"
+                    + "I+DCJdnyWeJvp/0sorrjNA/OvegeLl0eNkFYNcV/GPaPIrQM5aI1RafSRbneijwD16E8RU0wcOj93objrvfhZ"
+                    + "YKnnJUYuukNf81XGBmDAoGAXDJj/eDZQV3oyS+XXD7A0nClDVaH/8D5rBlbiXxJOCC7CumiJ2wNh3+XjapGGB"
+                    + "9oHFDlDkHJLrkoACuHceA/Il4Fcy0FreN0LL4N6SEkzuY4XIbypOUjf7fRuv3NhXaGXSWe8nKxIGkRKCdc5ss"
+                    + "22/WcZYDW6B7+vfMkTxZGJE8CgYEAv67Q70wtHRsl/3tnVUTgzBeB9HipilEinkkCUkDqYEf3pH6dhlmtkPi9"
+                    + "YHvV38VH7AT6zqiI86mlPE7iQKEkBrYajrGEQ0UrqkjebVyN3wTwtKBXfhDkg4f2E58tcQrsaiGfMYG2/F8/B"
+                    + "IRhPpqFUQzq03mgmFZtAqyhXl62o2w=");
 
     @Test
-    public void weCanConstructFromAValidString() {
+    public void weCanConstructFromAValidAesString() {
         String valid = "enc:QjR4AHIYoIzvjEHf53XETM3QYnCl1mgFYC51Q7x4ebwM+h3PHVqSt/"
                 + "1un/+KvpJ2mZfMH0tifu+htRVxEPyXmt88lyKB83NpesNJEoLFLL+wBWCkppaLRuc/1w==";
 
         EncryptedValue encryptedValue = EncryptedValue.of(valid);
         assertThat(encryptedValue.getDecryptedValue(aesKey), is(plaintext));
+    }
+
+    @Test
+    public void weCanConstructFromAValidRsaString() {
+        String valid = "enc:GNOe/P/KQ8fvuhhBVNMZQ2jDu+cdv7im1N4GamZ64u9LhvoiLP6RiS"
+                + "FnHFRcbIupEIxJQ1IM/9cJ0DpUsxPpObH+vV0fCZZ/Aqrb08s46hodTPDLU76JN"
+                + "rtaxlCssXYxFN/Ni8k95pKauwPxRfvTP0SUf7o9rsZrY6LdV9+M3y6mNrEIKevA"
+                + "ZQZtNmvXriclQGV1CwRzV/0sNVuTfNqNw0lDsI4hcvC26DhLrXla8jCUiKEYDFA"
+                + "qVr2DaTwtV3htxtCB36Jk6Lg5abdcc9B/ZqV7lfUIddGEuXFzhz8KIIGtwVVXqi"
+                + "s15Dw1ECSNJhicHZp43vSYN9y9NJTnvTAhCQ==";
+
+        EncryptedValue encryptedValue = EncryptedValue.of(valid);
+        assertThat(encryptedValue.getDecryptedValue(rsaPrivKey), is(plaintext));
+    }
+
+    @Test
+    public void weCanDecryptValueEncryptedUsingExistingRsaKey() {
+        EncryptedValue encryptedValue = new RsaAlgorithm().getEncryptedValue(plaintext, rsaPubKey);
+        assertThat(encryptedValue.getDecryptedValue(rsaPrivKey), is(plaintext));
     }
 
     @Test(expected = IllegalArgumentException.class)
