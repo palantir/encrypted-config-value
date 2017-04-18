@@ -18,6 +18,7 @@ package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.Algorithms;
+import com.palantir.config.crypto.value.EncryptedValue;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import java.nio.file.Paths;
@@ -60,6 +61,6 @@ public final class EncryptConfigValueCommand extends Command {
         EncryptedValue encryptedValue = algorithm.getEncryptedValue(value, keyWithAlgorithm);
 
         // print the resulting encrypted value to the console
-        System.out.println(encryptedValue);
+        System.out.println(encryptedValue.serialize());
     }
 }

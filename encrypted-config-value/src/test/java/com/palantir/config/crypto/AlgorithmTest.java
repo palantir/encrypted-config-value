@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.RsaAlgorithm;
+import com.palantir.config.crypto.value.EncryptedValue;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import org.junit.Test;
@@ -76,7 +77,7 @@ public final class AlgorithmTest {
         // we don't want to leak that certain values are the same
         assertThat(encrypted1, is(not(encrypted2)));
         // paranoia, let's say the equals method is badly behaved
-        assertThat(encrypted1.encryptedValue(), is(not(encrypted2.encryptedValue())));
+        assertThat(encrypted1.serialize(), is(not(encrypted2.serialize())));
 
         // we should naturally decrypt back to the same thing - the plaintext
         KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());

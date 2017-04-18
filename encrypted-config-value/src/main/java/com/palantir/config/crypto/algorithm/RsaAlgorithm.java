@@ -18,11 +18,15 @@ package com.palantir.config.crypto.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.io.BaseEncoding;
-import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithAlgorithm;
 import com.palantir.config.crypto.util.Suppliers;
+import com.palantir.config.crypto.value.AesEncryptedValue;
+import com.palantir.config.crypto.value.EncryptedValue;
+import com.palantir.config.crypto.value.EncryptedValueVisitor;
+import com.palantir.config.crypto.value.ImmutableRsaEncryptedValue;
+import com.palantir.config.crypto.value.LegacyEncryptedValue;
+import com.palantir.config.crypto.value.RsaEncryptedValue;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -61,8 +65,7 @@ public final class RsaAlgorithm implements Algorithm {
                 cipher.init(Cipher.ENCRYPT_MODE, publicKey);
                 byte[] encrypted = cipher.doFinal(plaintext.getBytes(charset));
 
-                String encryptedString = BaseEncoding.base64().encode(encrypted);
-                return EncryptedValue.fromEncryptedString(encryptedString);
+                return ImmutableRsaEncryptedValue.of(encrypted);
             }
         });
     }
@@ -72,14 +75,30 @@ public final class RsaAlgorithm implements Algorithm {
         checkArgument(kwa.getAlgorithm().equals(ALGORITHM_TYPE),
                 "key must be for RSA algorithm but was %s", kwa.getAlgorithm());
 
+        final RsaEncryptedValue value = encryptedValue.accept(new EncryptedValueVisitor<RsaEncryptedValue>() {
+            @Override
+            public RsaEncryptedValue visit(LegacyEncryptedValue legacyEncryptedValue) {
+                return RsaEncryptedValue.fromLegacy(legacyEncryptedValue);
+            }
+
+            @Override
+            public RsaEncryptedValue visit(AesEncryptedValue aesEncryptedValue) {
+                throw new IllegalArgumentException("Cannot RSA decrypt a value encrypted with AES");
+            }
+
+            @Override
+            public RsaEncryptedValue visit(RsaEncryptedValue rsaEncryptedValue) {
+                return rsaEncryptedValue;
+            }
+        });
+
         return Suppliers.silently(new DecryptedStringSupplier() {
             @Override
             public String get() throws Exception {
                 Cipher cipher = getUninitializedCipher();
                 PrivateKey privateKey = generatePrivateKey(kwa);
 
-                String ciphertext = encryptedValue.encryptedValue();
-                byte[] cipherBytes = BaseEncoding.base64().decode(ciphertext);
+                byte[] cipherBytes = value.getCiphertext();
 
                 cipher.init(Cipher.DECRYPT_MODE, privateKey);
 

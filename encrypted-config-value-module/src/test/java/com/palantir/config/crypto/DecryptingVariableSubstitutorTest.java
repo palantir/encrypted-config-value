@@ -77,10 +77,10 @@ public class DecryptingVariableSubstitutorTest {
 
     @Test
     public final void variableIsDecrypted() throws Exception {
-        assertThat(substitutor.replace("${enc:" + encrypt("abc") + "}"), is("abc"));
+        assertThat(substitutor.replace("${" + encrypt("abc") + "}"), is("abc"));
     }
 
     private String encrypt(String value) {
-        return ALGORITHM.getEncryptedValue(value, KEY_PAIR.publicKey()).encryptedValue();
+        return ALGORITHM.getEncryptedValue(value, KEY_PAIR.publicKey()).serialize();
     }
 }
