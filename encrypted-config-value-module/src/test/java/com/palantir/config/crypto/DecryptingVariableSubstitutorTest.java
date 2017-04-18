@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
 import com.palantir.config.crypto.util.StringSubstitutionException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,25 +31,25 @@ import org.junit.Test;
 
 public class DecryptingVariableSubstitutorTest {
 
-    private static final Algorithm ALGORITHM = Algorithms.getInstance("RSA");
-    private static final KeyPair KEY_PAIR = ALGORITHM.generateKey();
+    private static final Algorithm ALGORITHM = Algorithm.RSA;
+    private static final KeyPair KEY_PAIR = ALGORITHM.newKeyPair();
     private static String previousProperty;
 
     private final DecryptingVariableSubstitutor substitutor = new DecryptingVariableSubstitutor();
 
     @BeforeClass
     public static void beforeClass() throws IOException {
-        previousProperty = System.getProperty(KeyPair.KEY_PATH_PROPERTY);
+        previousProperty = System.getProperty(KeyFileUtils.KEY_PATH_PROPERTY);
 
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
-        KEY_PAIR.toFile(tempFilePath);
-        System.setProperty(KeyPair.KEY_PATH_PROPERTY, tempFilePath.toAbsolutePath().toString());
+        KeyFileUtils.keyPairToFile(KEY_PAIR, tempFilePath);
+        System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, tempFilePath.toAbsolutePath().toString());
     }
 
     @AfterClass
     public static void afterClass() {
         if (previousProperty != null) {
-            System.setProperty(KeyPair.KEY_PATH_PROPERTY, previousProperty);
+            System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, previousProperty);
         }
     }
 
@@ -81,6 +80,6 @@ public class DecryptingVariableSubstitutorTest {
     }
 
     private String encrypt(String value) {
-        return ALGORITHM.getEncryptedValue(value, KEY_PAIR.publicKey()).serialize();
+        return ALGORITHM.newEncrypter().encrypt(KEY_PAIR.encryptionKey(), value).toString();
     }
 }

@@ -20,10 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.RsaAlgorithm;
-import com.palantir.config.crypto.value.EncryptedValue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -58,10 +55,10 @@ public final class EncryptConfigValueCommandTest {
     private void weEncryptAndPrintAValue(Algorithm algorithm) throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        KeyPair keyPair = algorithm.generateKey();
-        keyPair.toFile(tempFilePath);
+        KeyPair keyPair = algorithm.newKeyPair();
+        KeyFileUtils.keyPairToFile(keyPair, tempFilePath);
 
-        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
+        Namespace namespace = new Namespace(ImmutableMap.of(
                 EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
                 EncryptConfigValueCommand.VALUE, plaintext));
 
@@ -69,28 +66,28 @@ public final class EncryptConfigValueCommandTest {
 
         String output = outContent.toString(CHARSET).trim();
 
-        EncryptedValue configValue = EncryptedValue.deserialize(output);
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
-        String decryptedValue = configValue.getDecryptedValue(decryptionKey);
+        EncryptedValue configValue = EncryptedValue.fromString(output);
+        KeyWithType decryptionKey = keyPair.decryptionKey();
+        String decryptedValue = configValue.decrypt(decryptionKey);
 
         assertThat(decryptedValue, is(plaintext));
     }
 
     @Test
     public void weEncryptAndPrintAValueUsingAes() throws Exception {
-        weEncryptAndPrintAValue(new AesAlgorithm());
+        weEncryptAndPrintAValue(Algorithm.AES);
     }
 
     @Test
     public void weEncryptAndPrintAValueUsingRsa() throws Exception {
-        weEncryptAndPrintAValue(new RsaAlgorithm());
+        weEncryptAndPrintAValue(Algorithm.RSA);
     }
 
     @Test(expected = NoSuchFileException.class)
     public void weFailIfTheKeyfileDoesNotExist() throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
+        Namespace namespace = new Namespace(ImmutableMap.of(
                 EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
                 EncryptConfigValueCommand.VALUE, plaintext));
 

@@ -14,54 +14,73 @@
  * limitations under the License.
  */
 
-package com.palantir.config.crypto.value;
+package com.palantir.config.crypto;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
 import com.google.common.io.BaseEncoding;
-import com.palantir.config.crypto.KeyPair;
-import com.palantir.config.crypto.KeyWithAlgorithm;
-import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
+import com.palantir.config.crypto.algorithm.aes.AesEncryptedValue;
+import com.palantir.config.crypto.algorithm.rsa.RsaEncryptedValue;
 import java.io.IOException;
 
+/**
+ * A value that has been encrypted using an algorithm with specific parameters. The value can be decrypted when provided
+ * with a key that has a type that is capable of performing decryption for the algorithm used to encrypt this value.
+ * The serializable String form is "enc:base64-encoded-value".
+ *
+ * An {@link EncryptedValue} has a legacy format and a current format.
+ *
+ * In the legacy format, the base64-encoded-value is the base64-encoded ciphertext bytes. The value does not contain any
+ * information about the algorithm or parameters used to encrypt it and blindly uses any key provided to attempt to
+ * decrypt the ciphertext.
+ *
+ * In the current format, the base64-encoded-value is the base64-encoded JSON representation of the concrete
+ * {@link EncryptedValue} subclass of the value. The subclass contains information about the algorithm used to encrypt
+ * the value, along with any relevant parameters for the algorithm.
+ */
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AesEncryptedValue.class),
-        @JsonSubTypes.Type(value = RsaEncryptedValue.class)
+        @JsonSubTypes.Type(value = AesEncryptedValue.class, name = "AES"),
+        @JsonSubTypes.Type(value = RsaEncryptedValue.class, name = "RSA")
         })
-@JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 public abstract class EncryptedValue {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String PREFIX = "enc:";
 
+    @JsonIgnore
     public abstract <T> T accept(EncryptedValueVisitor<T> visitor);
+
+    @JsonIgnore
+    public abstract String decrypt(KeyWithType kwa);
 
     public static boolean isEncryptedValue(String value) {
         return value.startsWith(PREFIX);
     }
 
-    public static EncryptedValue deserialize(String value) {
+    public static EncryptedValue fromString(String value) {
         if (!value.startsWith(PREFIX)) {
-            throw new IllegalArgumentException("Missing enc: prefix: " + value);
+            throw new IllegalArgumentException("Missing \"enc:\" prefix: " + value);
         }
 
         String suffix = value.substring(PREFIX.length());
+
         byte[] bytes = BaseEncoding.base64().decode(suffix);
 
-        // this is a bit dubious but hopefully we can remove the legacy stuff soonish
+        // this is a bit dubious, but hopefully we can remove the legacy stuff soon-ish
         try {
             return MAPPER.readValue(bytes, EncryptedValue.class);
         } catch (IOException e) {
+            // TODO(nmiyake): add logging in this case?
+            // if reading as JSON fails, assume that it is a legacy value
             return ImmutableLegacyEncryptedValue.of(bytes);
         }
     }
 
-    @JsonIgnore
-    public final String serialize() {
+    public final String toString() {
         byte[] bytes = accept(new EncryptedValueVisitor<byte[]>() {
             @Override
             public byte[] visit(LegacyEncryptedValue legacyEncryptedValue) {
@@ -70,46 +89,22 @@ public abstract class EncryptedValue {
 
             @Override
             public byte[] visit(AesEncryptedValue aesEncryptedValue) {
-                try {
-                    return MAPPER.writeValueAsBytes(aesEncryptedValue);
-                } catch (JsonProcessingException e) {
-                    throw Throwables.propagate(e);
-                }
+                return getJsonBytes(aesEncryptedValue);
             }
 
             @Override
             public byte[] visit(RsaEncryptedValue rsaEncryptedValue) {
-                try {
-                    return MAPPER.writeValueAsBytes(rsaEncryptedValue);
-                } catch (JsonProcessingException e) {
-                    throw Throwables.propagate(e);
-                }
+                return getJsonBytes(rsaEncryptedValue);
             }
         });
-
         return PREFIX + BaseEncoding.base64().encode(bytes);
     }
 
-    @JsonIgnore
-    public final String getDecryptedValue(KeyWithAlgorithm kwa) {
-        Algorithm algorithm = Algorithms.getInstance(kwa.getAlgorithm());
-        return algorithm.getDecryptedString(this, kwa);
-    }
-
-    /**
-     * Tries to decrypt using the key at the default path.
-     * @see KeyPair#DEFAULT_PUBLIC_KEY_PATH
-     * @return the decrypted value
-     */
-    @JsonIgnore
-    public final String getDecryptedValue() {
+    private static byte[] getJsonBytes(Object value) {
         try {
-            KeyPair keyPair = KeyPair.fromDefaultPath();
-            // use private if we have it, else assume symmetric
-            KeyWithAlgorithm kwa = keyPair.privateKey().or(keyPair.publicKey());
-            return getDecryptedValue(kwa);
-        } catch (IOException e) {
-            throw new RuntimeException("Was unable to read key", e);
+            return MAPPER.writeValueAsBytes(value);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 }

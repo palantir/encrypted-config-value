@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,14 @@
 
 package com.palantir.config.crypto.algorithm;
 
-public final class Algorithms {
 
-    private Algorithms() {
-        /* do not instantiate */
-    }
+import com.palantir.config.crypto.Key;
+import com.palantir.config.crypto.KeyWithType;
 
-    public static Algorithm getInstance(String algorithmType) {
-        switch (algorithmType) {
-            case AesAlgorithm.ALGORITHM_TYPE:
-                return new AesAlgorithm();
-            case RsaAlgorithm.ALGORITHM_TYPE:
-                return new RsaAlgorithm();
-            default:
-                throw new IllegalArgumentException("Unknown algorithm type: " + algorithmType);
-        }
-    }
+public interface KeyGenerator {
+    /**
+     * Creates a {@link KeyWithType} based on the provided key content bytes. The provided bytes should correspond to
+     * the bytes returned by {@link Key#bytes()}. The type of the key is supplied by the implementor of the interface.
+     */
+    KeyWithType keyFromBytes(byte[] key);
 }

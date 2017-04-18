@@ -20,12 +20,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
-import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.RsaAlgorithm;
-import com.palantir.config.crypto.value.EncryptedValue;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import org.junit.Test;
@@ -37,52 +33,48 @@ import org.junit.runners.Parameterized.Parameters;
 public final class AlgorithmTest {
     private static final String plaintext = "Some top secret plaintext for testing things";
 
-    private final Supplier<Algorithm> algorithmSupplier;
+    private final Algorithm algorithm;
 
-    public AlgorithmTest(String name, Supplier<Algorithm> algorithmSupplier) {
-        this.algorithmSupplier = algorithmSupplier;
+    public AlgorithmTest(String name, Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
 
     @Test
     public void weGenerateRandomKeys() {
-        Algorithm algorithm = this.algorithmSupplier.get();
-
-        KeyPair keyPair1 = algorithm.generateKey();
-        KeyPair keyPair2 = algorithm.generateKey();
+        KeyPair keyPair1 = algorithm.newKeyPair();
+        KeyPair keyPair2 = algorithm.newKeyPair();
 
         assertThat(keyPair1, is(not(keyPair2)));
     }
 
     @Test
     public void weCanEncryptAndDecrypt() throws NoSuchAlgorithmException {
-        Algorithm algorithm = this.algorithmSupplier.get();
-        KeyPair keyPair = algorithm.generateKey();
+        KeyPair keyPair = algorithm.newKeyPair();
 
-        EncryptedValue encryptedValue = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
+        EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
 
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
-        String decrypted = algorithm.getDecryptedString(encryptedValue, decryptionKey);
+        KeyWithType decryptionKey = keyPair.decryptionKey();
+        String decrypted = encryptedValue.decrypt(decryptionKey);
 
         assertThat(decrypted, is(plaintext));
     }
 
     @Test
     public void theSameStringEncryptsToDifferentCiphertexts() throws NoSuchAlgorithmException {
-        Algorithm algorithm = this.algorithmSupplier.get();
-        KeyPair keyPair = algorithm.generateKey();
+        KeyPair keyPair = algorithm.newKeyPair();
 
-        EncryptedValue encrypted1 = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
-        EncryptedValue encrypted2 = algorithm.getEncryptedValue(plaintext, keyPair.publicKey());
+        EncryptedValue encrypted1 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
+        EncryptedValue encrypted2 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
 
         // we don't want to leak that certain values are the same
         assertThat(encrypted1, is(not(encrypted2)));
         // paranoia, let's say the equals method is badly behaved
-        assertThat(encrypted1.serialize(), is(not(encrypted2.serialize())));
+        assertThat(encrypted1.toString(), is(not(encrypted2.toString())));
 
         // we should naturally decrypt back to the same thing - the plaintext
-        KeyWithAlgorithm decryptionKey = keyPair.privateKey().or(keyPair.publicKey());
-        String decryptedString1 = algorithm.getDecryptedString(encrypted1, decryptionKey);
-        String decryptedString2 = algorithm.getDecryptedString(encrypted2, decryptionKey);
+        KeyWithType decryptionKey = keyPair.decryptionKey();
+        String decryptedString1 = encrypted1.decrypt(decryptionKey);
+        String decryptedString2 = encrypted2.decrypt(decryptionKey);
 
         assertThat(decryptedString1, is(plaintext));
         assertThat(decryptedString2, is(plaintext));
@@ -90,24 +82,9 @@ public final class AlgorithmTest {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        // TODO(bduffield): produce this for all implementations of algorithm?
-
-        Supplier<Algorithm> aes = new Supplier<Algorithm>() {
-            @Override
-            public Algorithm get() {
-                return new AesAlgorithm();
-            }
-        };
-        Supplier<Algorithm> rsa = new Supplier<Algorithm>() {
-            @Override
-            public Algorithm get() {
-                return new RsaAlgorithm();
-            }
-        };
-
         return ImmutableList.of(
-                new Object[] {"AES", aes},
-                new Object[] {"RSA", rsa}
+                new Object[] {"AES", Algorithm.AES},
+                new Object[] {"RSA", Algorithm.RSA}
                 );
     }
 }

@@ -17,8 +17,6 @@
 package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.Algorithms;
-import com.palantir.config.crypto.value.EncryptedValue;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
 import java.nio.file.Paths;
@@ -40,7 +38,7 @@ public final class EncryptConfigValueCommand extends Command {
             .required(false)
             .type(String.class)
             .dest(KEYFILE)
-            .setDefault(KeyPair.DEFAULT_PUBLIC_KEY_PATH)
+            .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
             .help("The location of the (public) key file");
 
         subparser.addArgument("-v", "--value")
@@ -55,12 +53,12 @@ public final class EncryptConfigValueCommand extends Command {
         String keyfile = namespace.getString(KEYFILE);
         String value = namespace.getString(VALUE);
 
-        KeyWithAlgorithm keyWithAlgorithm = KeyWithAlgorithm.fromPath(Paths.get(keyfile));
-        Algorithm algorithm = Algorithms.getInstance(keyWithAlgorithm.getAlgorithm());
+        KeyWithType keyWithType = KeyFileUtils.keyWithTypeFromPath(Paths.get(keyfile));
+        Algorithm algorithm = keyWithType.getType().getAlgorithm();
 
-        EncryptedValue encryptedValue = algorithm.getEncryptedValue(value, keyWithAlgorithm);
+        EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyWithType, value);
 
         // print the resulting encrypted value to the console
-        System.out.println(encryptedValue.serialize());
+        System.out.println(encryptedValue);
     }
 }

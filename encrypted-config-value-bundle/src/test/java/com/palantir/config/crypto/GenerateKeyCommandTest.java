@@ -20,9 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.config.crypto.algorithm.AesAlgorithm;
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.RsaAlgorithm;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,24 +33,24 @@ public final class GenerateKeyCommandTest {
     private void weGenerateAValidKey(Algorithm algorithm) throws Exception {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
-                GenerateKeyCommand.ALGORITHM, algorithm.getName(),
+        Namespace namespace = new Namespace(ImmutableMap.of(
+                GenerateKeyCommand.ALGORITHM, algorithm.toString(),
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 
         command.run(null, namespace);
 
-        KeyPair keyPair = KeyPair.fromPath(tempFilePath);
-        assertThat(keyPair.publicKey().getAlgorithm(), is(algorithm.getName()));
+        KeyPair keyPair = KeyFileUtils.keyPairFromPath(tempFilePath);
+        assertThat(keyPair.encryptionKey().getType().getAlgorithm(), is(algorithm));
     }
 
     @Test
     public void weGenerateAValidRsaKey() throws Exception {
-        weGenerateAValidKey(new RsaAlgorithm());
+        weGenerateAValidKey(Algorithm.RSA);
     }
 
     @Test
     public void weGenerateAValidAesKey() throws Exception {
-        weGenerateAValidKey(new AesAlgorithm());
+        weGenerateAValidKey(Algorithm.AES);
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -63,7 +61,7 @@ public final class GenerateKeyCommandTest {
         // create the file
         Files.createFile(tempFilePath);
 
-        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
+        Namespace namespace = new Namespace(ImmutableMap.of(
                 GenerateKeyCommand.ALGORITHM, algorithm,
                 GenerateKeyCommand.FILE, tempFilePath.toString()));
 

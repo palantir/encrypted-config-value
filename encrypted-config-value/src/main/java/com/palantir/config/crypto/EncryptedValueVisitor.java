@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.palantir.config.crypto.value;
+package com.palantir.config.crypto;
 
-import org.immutables.value.Value;
+import com.palantir.config.crypto.algorithm.aes.AesEncryptedValue;
+import com.palantir.config.crypto.algorithm.rsa.RsaEncryptedValue;
 
-@Value.Immutable
-public abstract class LegacyEncryptedValue extends EncryptedValue {
-    @Value.Parameter
-    public abstract byte[] getCiphertext();
+public interface EncryptedValueVisitor<T> {
+    T visit(LegacyEncryptedValue legacyEncryptedValue);
 
-    @Override
-    public final <T> T accept(EncryptedValueVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
+    T visit(AesEncryptedValue aesEncryptedValue);
+
+    T visit(RsaEncryptedValue rsaEncryptedValue);
 }

@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
-package com.palantir.config.crypto.value;
+package com.palantir.config.crypto;
 
-public interface EncryptedValueVisitor<T> {
-    T visit(LegacyEncryptedValue legacyEncryptedValue);
+import java.nio.file.Path;
+import org.immutables.value.Value;
 
-    T visit(AesEncryptedValue aesEncryptedValue);
+/**
+ * An encryption and decryption key. For symmetric keys, both keys will be the same.
+ */
+@Value.Immutable
+public abstract class KeyPairFiles {
 
-    T visit(RsaEncryptedValue rsaEncryptedValue);
+    public abstract Path encryptionKeyFile();
+
+    public abstract Path decryptionKeyFile();
+
+    /**
+     * Returns true if the encryption key and decryption key paths are the same.
+     */
+    @Value.Derived
+    public boolean pathsEqual() {
+        return encryptionKeyFile().equals(decryptionKeyFile());
+    }
+
 }

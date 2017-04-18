@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto.util;
 
-import com.google.common.base.Throwables;
 import com.palantir.config.crypto.supplier.ThrowingSupplier;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -55,7 +54,7 @@ public final class Suppliers {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 }
