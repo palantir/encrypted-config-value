@@ -73,10 +73,6 @@ public final class AppConfiguration {
 }
 ```
 
-Java 7 Compatibility
---------------------
-This project has source compatibility with Java 7. The non-symmetric algorithm (e.g. RSA) operations work in a standard Java 7 runtime, but the symmetric algorithm implementation that is currently used ("AES/GCM/NoPadding") is not present in the standard cipher suite of Java 7 -- in order to use this capability, the runtime will need a security provider that supports this cipher. This project does not recommend any specific provider or make any compatibility guarantees, but testing has shown that the Bouncy Castle Provider (versions 1.50+) supports the cipher suites required for the symmetric encryption algorithm used by this project in Java 7 environments.
-
 License
 -------
 This repository is made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
