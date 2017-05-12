@@ -37,7 +37,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableRsaEncryptedValue.class)
 @JsonSerialize(as = RsaEncryptedValue.class)
-@Value.Style(additionalJsonAnnotations = JsonSerialize.class)
 public abstract class RsaEncryptedValue extends EncryptedValue {
 
     public enum Mode {

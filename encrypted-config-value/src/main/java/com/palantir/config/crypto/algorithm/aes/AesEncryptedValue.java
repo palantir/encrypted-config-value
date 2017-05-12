@@ -34,7 +34,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableAesEncryptedValue.class)
 @JsonSerialize(as = AesEncryptedValue.class)
-@Value.Style(additionalJsonAnnotations = JsonSerialize.class)
 public abstract class AesEncryptedValue extends EncryptedValue {
     public enum Mode {
         GCM,
