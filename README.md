@@ -21,6 +21,20 @@ Currently supported algorithms:
  - RSA
 
 ### Example Usage
+
+Maven artifacts are published to JCenter. Example Gradle dependency configuration:
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // adds EncryptedConfigValueBundle for Dropwizard apps
+    compile "com.palantir.config.crypto:encrypted-config-value-bundle:$version"
+}
+```
+
 To use in your app, just add the bundle:
 
 ```java
