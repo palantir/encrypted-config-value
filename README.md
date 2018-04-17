@@ -21,6 +21,22 @@ Currently supported algorithms:
  - RSA
 
 ### Example Usage
+
+Maven artifacts are published to JCenter. Dropwizard bundles are separated into two different packages: one for Dropwizard 1.x and one for Dropwizard 0.9.x and below. Example Gradle dependency configuration:
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // adds EncryptedConfigValueBundle for Dropwizard 1.x apps
+    compile "com.palantir.config.crypto:encrypted-config-value-bundle-dropwizard1:$version"
+    // or, adds EncryptedConfigValueBundle for Drowizard <= 0.9.x apps
+    compile "com.palantir.config.crypto:encrypted-config-value-bundle:$version"
+}
+```
+
 To use in your app, just add the bundle:
 
 ```java
