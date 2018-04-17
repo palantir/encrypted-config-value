@@ -32,3 +32,12 @@ jobs:
           if [[ $TAG =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
             ./gradlew -i bintrayUpload
           fi
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            # run on all branches and tags
+            tags:
+              only: /.*/
