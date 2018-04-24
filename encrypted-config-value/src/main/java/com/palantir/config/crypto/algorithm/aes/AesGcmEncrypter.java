@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
+ * (c) Copyright 2018 Palantir Technologies Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.palantir.config.crypto.algorithm.aes;
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Encrypter;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
+@Immutable
 public enum AesGcmEncrypter implements Encrypter {
     INSTANCE;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Palantir Technologies, Inc. All rights reserved.
+ * (c) Copyright 2018 Palantir Technologies Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 package com.palantir.config.crypto.algorithm;
 
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
 
+@Immutable
 public interface Encrypter {
     /**
      * Creates an {@link EncryptedValue} that is the result of encrypting the provided plaintext using the provided key.
