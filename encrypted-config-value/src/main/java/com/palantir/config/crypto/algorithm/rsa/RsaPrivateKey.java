@@ -16,6 +16,7 @@
 
 package com.palantir.config.crypto.algorithm.rsa;
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.ImmutableKeyWithType;
 import com.palantir.config.crypto.Key;
 import com.palantir.config.crypto.KeyWithType;
@@ -44,6 +45,7 @@ public final class RsaPrivateKey implements Key {
         return privateKey.getEncoded();
     }
 
+    @Immutable
     public enum RsaPrivateKeyGenerator implements KeyGenerator {
         INSTANCE;
 

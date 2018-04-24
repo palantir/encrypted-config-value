@@ -17,6 +17,7 @@
 package com.palantir.config.crypto.algorithm.rsa;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Encrypter;
@@ -32,6 +33,7 @@ import javax.crypto.spec.PSource;
 /**
  * Encrypts values using RSA-OAEP-MDF1. Uses SHA-256 as the hash function for both OAEP and MDF1.
  */
+@Immutable
 public enum RsaOaepEncrypter implements Encrypter {
     INSTANCE;
 
@@ -49,6 +51,7 @@ public enum RsaOaepEncrypter implements Encrypter {
         }
 
         @JsonValue
+        @Override
         public String toString() {
             return name;
         }

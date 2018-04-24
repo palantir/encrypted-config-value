@@ -17,9 +17,11 @@
 package com.palantir.config.crypto.algorithm;
 
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.Key;
 import com.palantir.config.crypto.KeyWithType;
 
+@Immutable
 public interface KeyGenerator {
     /**
      * Creates a {@link KeyWithType} based on the provided key content bytes. The provided bytes should correspond to

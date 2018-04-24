@@ -17,9 +17,11 @@
 package com.palantir.config.crypto.algorithm;
 
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
 
+@Immutable
 public interface Encrypter {
     /**
      * Creates an {@link EncryptedValue} that is the result of encrypting the provided plaintext using the provided key.

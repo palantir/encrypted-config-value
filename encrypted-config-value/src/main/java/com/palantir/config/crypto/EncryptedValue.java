@@ -80,6 +80,7 @@ public abstract class EncryptedValue {
         }
     }
 
+    @Override
     public final String toString() {
         byte[] bytes = accept(new EncryptedValueVisitor<byte[]>() {
             @Override

@@ -16,6 +16,7 @@
 
 package com.palantir.config.crypto.algorithm.aes;
 
+import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Encrypter;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
+@Immutable
 public enum AesGcmEncrypter implements Encrypter {
     INSTANCE;
 

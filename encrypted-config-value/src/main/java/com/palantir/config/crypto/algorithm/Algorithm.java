@@ -17,7 +17,6 @@
 package com.palantir.config.crypto.algorithm;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.base.Supplier;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.algorithm.aes.AesGcmEncrypter;
 import com.palantir.config.crypto.algorithm.aes.AesKeyPair;
@@ -30,28 +29,35 @@ import com.palantir.config.crypto.algorithm.rsa.RsaOaepEncrypter;
  * algorithm with a supported key.
  */
 public enum Algorithm {
-    AES("AES", () -> AesKeyPair.newKeyPair(), () -> AesGcmEncrypter.INSTANCE),
-    RSA("RSA", () -> RsaKeyPair.newKeyPair(), () -> RsaOaepEncrypter.INSTANCE);
+    AES("AES", AesGcmEncrypter.INSTANCE) {
+        @Override
+        public KeyPair newKeyPair() {
+            return AesKeyPair.newKeyPair();
+        }
+    },
+    RSA("RSA", RsaOaepEncrypter.INSTANCE) {
+        @Override
+        public KeyPair newKeyPair() {
+            return RsaKeyPair.newKeyPair();
+        }
+    };
 
     private final String name;
-    private final Supplier<KeyPair> keyPairGenerator;
-    private final Supplier<Encrypter> encrypterGenerator;
+    private final Encrypter encrypter;
 
-    Algorithm(String name, Supplier<KeyPair> keyPairGenerator, Supplier<Encrypter> cipherGenerator) {
+    Algorithm(String name, Encrypter cipher) {
         this.name = name;
-        this.keyPairGenerator = keyPairGenerator;
-        this.encrypterGenerator = cipherGenerator;
+        this.encrypter = cipher;
     }
 
-    public KeyPair newKeyPair() {
-        return keyPairGenerator.get();
-    }
+    public abstract KeyPair newKeyPair();
 
     public Encrypter newEncrypter() {
-        return encrypterGenerator.get();
+        return encrypter;
     }
 
     @JsonValue
+    @Override
     public String toString() {
         return name;
     }

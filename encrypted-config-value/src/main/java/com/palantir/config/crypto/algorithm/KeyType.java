@@ -52,6 +52,7 @@ public enum KeyType {
         this.algorithm = algorithm;
     }
 
+    @Override
     public String toString() {
         return name;
     }
