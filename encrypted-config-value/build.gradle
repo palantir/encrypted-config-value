@@ -2,7 +2,7 @@ apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/immutables-processors.gradle"
 
 dependencies {
-    compileOnly 'com.google.errorprone:error_prone_annotations'
+    compile 'com.google.errorprone:error_prone_annotations'
     compile 'com.google.guava:guava'
     compile 'com.fasterxml.jackson.core:jackson-databind'
 
