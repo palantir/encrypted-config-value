@@ -5,6 +5,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'gradle.plugin.com.palantir:gradle-circle-style:1.1.2'
         classpath 'com.netflix.nebula:nebula-dependency-recommender:5.2.0'
         classpath 'com.netflix.nebula:nebula-publishing-plugin:7.0.6'
         classpath 'gradle.plugin.com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.2.0'
@@ -29,6 +30,7 @@ repositories {
 apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'org.inferred.processors'
+apply plugin: 'com.palantir.circle.style'
 
 dependencies {
     baseline 'com.palantir.baseline:gradle-baseline-java-config:0.19.1@zip'
