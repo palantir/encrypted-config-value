@@ -47,7 +47,7 @@ public abstract class KeyWithType {
         checkArgument(keyWithType.contains(":"), "Key must be in the format <type>:<key in base64>");
 
         String[] tokens = keyWithType.split(":", 2);
-        byte[] decodedKey = BaseEncoding.base64().decode(tokens[1]);
+        byte[] decodedKey = BaseEncoding.base64().decode(tokens[1].trim());
 
         // legacy RSA key format
         if (tokens[0].equals("RSA")) {

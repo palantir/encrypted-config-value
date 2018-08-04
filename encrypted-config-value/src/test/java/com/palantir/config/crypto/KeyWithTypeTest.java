@@ -25,11 +25,24 @@ import org.junit.Test;
 
 public final class KeyWithTypeTest {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String kwtString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
-    private static final KeyWithType kwt = KeyWithType.fromString(kwtString);
 
     @Test
     public void testSerialization() throws IOException {
+        String kwtString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
+        KeyWithType kwt = KeyWithType.fromString(kwtString);
+        String serialized = mapper.writeValueAsString(kwt);
+
+        String expectedSerialization = String.format("\"%s\"", kwtString);
+        assertThat(serialized, is(expectedSerialization));
+
+        KeyWithType deserialized = mapper.readValue(serialized, KeyWithType.class);
+        assertThat(deserialized.toString(), is(kwt.toString()));
+    }
+
+    @Test
+    public void testSerializationNewLine() throws IOException {
+        String kwtString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
+        KeyWithType kwt = KeyWithType.fromString(kwtString + "\n");
         String serialized = mapper.writeValueAsString(kwt);
 
         String expectedSerialization = String.format("\"%s\"", kwtString);
