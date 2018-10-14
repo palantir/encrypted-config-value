@@ -1,3 +1,4 @@
+rootProject.name = 'encrypted-config-value'
 include 'encrypted-config-value'
 include 'encrypted-config-value-bundle'
 include 'encrypted-config-value-bundle-dropwizard1'
