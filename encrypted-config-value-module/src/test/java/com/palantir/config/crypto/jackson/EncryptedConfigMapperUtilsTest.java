@@ -31,7 +31,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.palantir.config.crypto.KeyFileUtils;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import org.immutables.value.Value;
@@ -65,7 +64,7 @@ public class EncryptedConfigMapperUtilsTest {
 
     @Test
     public final void testCanDecryptValueInConfigFileContent() throws IOException {
-        String configFileContent = new String(Files.readAllBytes(CONFIG_FILE.toPath()), StandardCharsets.UTF_8);
+        byte[] configFileContent = Files.readAllBytes(CONFIG_FILE.toPath());
         TestConfig config = EncryptedConfigMapperUtils.getConfig(configFileContent, TestConfig.class, MAPPER);
 
         assertEquals("value", config.getUnencrypted());

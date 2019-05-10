@@ -37,9 +37,9 @@ public final class EncryptedConfigMapperUtils {
         return mapper.treeToValue(substitutedNode, clazz);
     }
 
-    public static <T> T getConfig(String configFileContent, Class<T> clazz, ObjectMapper mapper)
+    public static <T> T getConfig(byte[] configFileContent, Class<T> clazz, ObjectMapper mapper)
             throws JsonParseException, JsonMappingException, IOException {
-        JsonNode configNode = mapper.readValue(configFileContent, JsonNode.class);
+        JsonNode configNode = mapper.readTree(configFileContent);
         JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
         return mapper.treeToValue(substitutedNode, clazz);
     }
