@@ -31,6 +31,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.palantir.config.crypto.KeyFileUtils;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import org.immutables.value.Value;
 import org.junit.Test;
@@ -59,6 +61,24 @@ public class EncryptedConfigMapperUtilsTest {
         assertThat(config.getPojoWithEncryptedValues(),
                 both(hasProperty("username", equalTo("some-user")))
                 .and(hasProperty("password", equalTo("value"))));
+    }
+
+    @Test
+    public final void testCanDecryptValueInConfigFileContent() throws IOException {
+        String configFileContent = new String(Files.readAllBytes(CONFIG_FILE.toPath()), StandardCharsets.UTF_8);
+        TestConfig config = EncryptedConfigMapperUtils.getConfig(configFileContent, TestConfig.class, MAPPER);
+
+        assertEquals("value", config.getUnencrypted());
+        assertEquals("value", config.getEncrypted());
+        assertEquals("don't use quotes", config.getEncryptedWithSingleQuote());
+        assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
+        assertEquals("[oh dear", config.getEncryptedMalformedYaml());
+
+        assertThat(config.getArrayWithSomeEncryptedValues(),
+                contains("value", "value", "other value", "[oh dear"));
+        assertThat(config.getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user")))
+                        .and(hasProperty("password", equalTo("value"))));
     }
 
     @Value.Immutable
