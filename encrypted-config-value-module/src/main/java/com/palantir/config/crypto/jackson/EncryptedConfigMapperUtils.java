@@ -25,16 +25,22 @@ import java.io.File;
 import java.io.IOException;
 
 public final class EncryptedConfigMapperUtils {
+    private static final JsonNodeStringReplacer JSON_NODE_STRING_REPLACER =
+            new JsonNodeStringReplacer(new DecryptingVariableSubstitutor());
 
     private EncryptedConfigMapperUtils() {}
 
     public static <T> T getConfig(File configFile, Class<T> clazz, ObjectMapper mapper)
             throws JsonParseException, JsonMappingException, IOException {
         JsonNode configNode = mapper.readValue(configFile, JsonNode.class);
-        JsonNode substitutedNode = JsonNodeVisitors.dispatch(
-                mapper.valueToTree(configNode),
-                new JsonNodeStringReplacer(new DecryptingVariableSubstitutor()));
+        JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
         return mapper.treeToValue(substitutedNode, clazz);
     }
 
+    public static <T> T getConfig(String configFileContent, Class<T> clazz, ObjectMapper mapper)
+            throws JsonParseException, JsonMappingException, IOException {
+        JsonNode configNode = mapper.readTree(configFileContent);
+        JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
+        return mapper.treeToValue(substitutedNode, clazz);
+    }
 }
