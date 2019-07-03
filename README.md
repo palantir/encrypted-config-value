@@ -1,3 +1,7 @@
+<p align="right">
+<a href="https://autorelease.general.dmz.palantir.tech/palantir/encrypted-config-value"><img src="https://img.shields.io/badge/Perform%20an-Autorelease-success.svg" alt="Autorelease"></a>
+</p>
+
 Encrypted Config Value
 ======================
 [![Build Status](https://circleci.com/gh/palantir/encrypted-config-value.svg?style=shield)](https://circleci.com/gh/palantir/encrypted-config-value)
