@@ -5,9 +5,10 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.netflix.nebula:gradle-info-plugin:5.2.0'
         classpath 'gradle.plugin.com.palantir:gradle-circle-style:1.1.2'
         classpath 'com.netflix.nebula:nebula-dependency-recommender:6.0.0'
-        classpath 'com.netflix.nebula:nebula-publishing-plugin:9.5.0'
+        classpath 'com.netflix.nebula:nebula-publishing-plugin:14.1.1'
         classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
         classpath 'com.palantir.gradle.docker:gradle-docker:0.12.0'
         classpath 'com.palantir.baseline:gradle-baseline-java:0.20.1'
