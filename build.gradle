@@ -5,7 +5,6 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.palantir:gradle-circle-style:1.1.2'
         classpath 'com.netflix.nebula:nebula-dependency-recommender:6.0.0'
         classpath 'com.netflix.nebula:nebula-publishing-plugin:9.5.0'
         classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
@@ -17,9 +16,7 @@ buildscript {
 
 plugins {
     id 'com.palantir.git-version' version '0.5.2'
-    id 'org.inferred.processors' version '2.2.0'
-    id 'com.palantir.jacoco-full-report' version '0.3.0'
-    id 'org.unbroken-dome.test-sets' version '1.5.2'
+    id 'org.inferred.processors' version '3.3.0'
 }
 
 repositories {
@@ -30,7 +27,6 @@ repositories {
 apply plugin: 'com.palantir.baseline-config'
 apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'org.inferred.processors'
-apply plugin: 'com.palantir.circle.style'
 
 dependencies {
     baseline 'com.palantir.baseline:gradle-baseline-java-config:0.20.1@zip'
@@ -57,7 +53,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'jacoco'
     apply plugin: 'com.palantir.baseline-checkstyle'
     apply plugin: 'com.palantir.baseline-eclipse'
     apply plugin: 'com.palantir.baseline-error-prone'
@@ -77,20 +72,6 @@ subprojects {
 
     sourceCompatibility = 1.8
 
-    jacocoTestReport {
-        reports {
-            xml.enabled = true
-        }
-        // Ignore Immutables-generated code from coverage checks
-        afterEvaluate {
-            classDirectories = files(classDirectories.files.collect {
-                // Exclusion path is project-relative and has a base of compiled classes
-                fileTree(dir: it, exclude: '**/Immutable*.class')
-            })
-        }
-    }
-    tasks.jacocoTestReport.dependsOn(tasks.test)
-    tasks.check.dependsOn(tasks.jacocoTestReport)
     tasks.check.dependsOn(javadoc)
 
     if (System.env.CIRCLECI) {
