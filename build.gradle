@@ -77,10 +77,6 @@ subprojects {
 
     tasks.check.dependsOn(javadoc)
 
-    if (System.env.CIRCLECI) {
-        test.reports.junitXml.destination = new File(System.env.TESTS_DIR, it.getName())
-    }
-
     compileJava {
         options.compilerArgs += [
             '-XepDisableWarningsInGeneratedCode',
