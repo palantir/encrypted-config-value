@@ -1,7 +1,9 @@
 buildscript {
     repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://palantir.bintray.com/releases' }
         jcenter()
-        maven { url "http://palantir.bintray.com/releases" }
     }
 
     dependencies {
@@ -19,8 +21,9 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
+    maven { url 'https://palantir.bintray.com/releases' }
     jcenter()
-    maven { url "http://palantir.bintray.com/releases" }
 }
 
 apply plugin: 'com.palantir.external-publish'
@@ -61,8 +64,9 @@ subprojects {
     apply plugin: 'maven-publish'
 
     repositories {
+        mavenCentral()
+        maven { url 'https://palantir.bintray.com/releases' }
         jcenter()
-        maven { url "http://palantir.bintray.com/releases" }
     }
 
     javadoc {
