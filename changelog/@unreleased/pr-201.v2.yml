@@ -1,0 +1,5 @@
+type: break
+break:
+  description: The `encrypted-config-value-bundle` supporting the ancient Dropwizard 0.x is removed.
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/201
