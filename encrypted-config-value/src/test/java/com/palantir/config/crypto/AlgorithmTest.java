@@ -35,7 +35,7 @@ public final class AlgorithmTest {
 
     private final Algorithm algorithm;
 
-    public AlgorithmTest(String name, Algorithm algorithm) {
+    public AlgorithmTest(String _name, Algorithm algorithm) {
         this.algorithm = algorithm;
     }
 
