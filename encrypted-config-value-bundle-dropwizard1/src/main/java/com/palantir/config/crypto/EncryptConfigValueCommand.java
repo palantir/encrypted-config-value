@@ -28,7 +28,7 @@ public final class EncryptConfigValueCommand extends Command {
     public static final String KEYFILE = "keyfile";
     public static final String VALUE = "value";
 
-    protected EncryptConfigValueCommand() {
+    EncryptConfigValueCommand() {
         super("encrypt-config-value", "Encrypts a configuration value so it can be stored securely");
     }
 
@@ -49,7 +49,7 @@ public final class EncryptConfigValueCommand extends Command {
     }
 
     @Override
-    public void run(Bootstrap<?> bootstrap, Namespace namespace) throws Exception {
+    public void run(Bootstrap<?> _bootstrap, Namespace namespace) throws Exception {
         String keyfile = namespace.getString(KEYFILE);
         String value = namespace.getString(VALUE);
 

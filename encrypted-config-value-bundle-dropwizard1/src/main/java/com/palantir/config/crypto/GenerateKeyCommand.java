@@ -19,17 +19,18 @@ package com.palantir.config.crypto;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import io.dropwizard.cli.Command;
 import io.dropwizard.setup.Bootstrap;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class GenerateKeyCommand extends Command {
 
     public static final String FILE = "file";
     public static final String ALGORITHM = "algorithm";
 
-    protected GenerateKeyCommand() {
+    GenerateKeyCommand() {
         super("generate-random-key", "Generates a random key for encrypting config values");
     }
 
@@ -50,7 +51,7 @@ public final class GenerateKeyCommand extends Command {
     }
 
     @Override
-    public void run(Bootstrap<?> bootstrap, Namespace namespace) throws Exception {
+    public void run(Bootstrap<?> _bootstrap, Namespace namespace) throws Exception {
         String algorithmType = namespace.getString(ALGORITHM);
         String file = namespace.getString(FILE);
         Path path = Paths.get(file);
