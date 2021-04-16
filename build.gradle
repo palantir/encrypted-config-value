@@ -8,10 +8,9 @@ buildscript {
 
     dependencies {
         classpath 'com.palantir.gradle.externalpublish:gradle-external-publish-plugin:1.0.1'
-        classpath 'com.netflix.nebula:nebula-dependency-recommender:6.0.0'
-        classpath 'com.palantir.configurationresolver:gradle-configuration-resolver-plugin:0.3.0'
         classpath 'com.palantir.gradle.docker:gradle-docker:0.12.0'
-        classpath 'com.palantir.baseline:gradle-baseline-java:0.20.1'
+        classpath 'com.palantir.baseline:gradle-baseline-java:3.76.0'
+        classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:1.28.0'
     }
 }
 
@@ -26,40 +25,18 @@ repositories {
     jcenter()
 }
 
+apply plugin: 'com.palantir.baseline'
+apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.external-publish'
-apply plugin: 'com.palantir.baseline-config'
-apply plugin: 'com.palantir.baseline-idea'
 apply plugin: 'org.inferred.processors'
 
-dependencies {
-    baseline 'com.palantir.baseline:gradle-baseline-java-config:0.20.1@zip'
-}
-
 allprojects {
-    apply plugin: 'nebula.dependency-recommender'
-    apply plugin: 'com.palantir.configuration-resolver'
-
     version gitVersion()
     group 'com.palantir.config.crypto'
-
-    dependencyRecommendations {
-        strategy OverrideTransitives
-        propertiesFile file: project.rootProject.file('version.props')
-    }
-
-    configurations.all {
-        resolutionStrategy {
-            failOnVersionConflict()
-        }
-    }
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'com.palantir.baseline-checkstyle'
-    apply plugin: 'com.palantir.baseline-eclipse'
-    apply plugin: 'com.palantir.baseline-error-prone'
-    apply plugin: 'com.palantir.baseline-idea'
     apply plugin: 'org.inferred.processors'
     apply plugin: 'maven-publish'
 
@@ -69,19 +46,7 @@ subprojects {
         jcenter()
     }
 
-    javadoc {
-        classpath = sourceSets.main.compileClasspath + configurations.processor
-    }
-
     sourceCompatibility = 1.8
 
     tasks.check.dependsOn(javadoc)
-
-    compileJava {
-        options.compilerArgs += [
-            '-XepDisableWarningsInGeneratedCode',
-            '-Xep:OptionalEquality:WARN',
-            '-Werror' 
-        ]
-    }
 }

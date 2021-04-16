@@ -1,23 +1,15 @@
 apply plugin: 'com.palantir.external-publish-jar'
 apply from: "${rootDir}/gradle/immutables-processors.gradle"
 
-dependencyRecommendations {
-    strategy OverrideTransitives
-    map recommendations: [
-        'com.fasterxml.jackson.core:*': '2.7.6',
-        'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml': '2.7.6'
-    ]
-}
-
 dependencies {
     compile project(':encrypted-config-value-module')
     compile 'com.google.guava:guava'
     compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile 'io.dropwizard:dropwizard-core:1.0.0'
+    compile 'io.dropwizard:dropwizard-core'
 
     testCompile 'org.hamcrest:hamcrest-all'
     testCompile 'junit:junit'
-    testCompile 'io.dropwizard:dropwizard-testing:1.0.0'
+    testCompile 'io.dropwizard:dropwizard-testing'
 }
 
 tasks.check.dependsOn(javadoc)

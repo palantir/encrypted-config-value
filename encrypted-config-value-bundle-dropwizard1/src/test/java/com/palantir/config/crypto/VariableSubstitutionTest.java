@@ -64,7 +64,7 @@ public final class VariableSubstitutionTest {
         }
 
         @Override
-        public void run(TestConfig configuration, Environment environment) throws Exception {}
+        public void run(TestConfig _configuration, Environment _environment) throws Exception {}
     }
 
 }

@@ -1,0 +1,11 @@
+# Danger! Multiple jars contain identically named classes. This may cause different behaviour depending on classpath ordering.
+# Run ./gradlew checkClassUniqueness --write-locks to update this file
+
+## runtimeClasspath
+[javax.inject:javax.inject, org.glassfish.hk2.external:javax.inject]
+  - javax.inject.Inject
+  - javax.inject.Named
+  - javax.inject.Provider
+  - javax.inject.Qualifier
+  - javax.inject.Scope
+  - javax.inject.Singleton

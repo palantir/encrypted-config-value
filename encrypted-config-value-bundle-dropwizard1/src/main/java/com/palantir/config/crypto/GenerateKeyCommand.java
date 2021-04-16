@@ -29,28 +29,29 @@ public final class GenerateKeyCommand extends Command {
     public static final String FILE = "file";
     public static final String ALGORITHM = "algorithm";
 
-    protected GenerateKeyCommand() {
+    GenerateKeyCommand() {
         super("generate-random-key", "Generates a random key for encrypting config values");
     }
 
     @Override
     public void configure(Subparser subparser) {
         subparser.addArgument("-a", "--algorithm")
-            .required(true)
-            .type(String.class)
-            .dest(ALGORITHM)
-            .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator for a list of valid algorithms)");
+                .required(true)
+                .type(String.class)
+                .dest(ALGORITHM)
+                .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator for a list of valid algorithms)");
 
         subparser.addArgument("-f", "--file")
-            .required(false)
-            .type(String.class)
-            .dest(FILE)
-            .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
-            .help("The location to write the key");
+                .required(false)
+                .type(String.class)
+                .dest(FILE)
+                .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
+                .help("The location to write the key");
     }
 
     @Override
-    public void run(Bootstrap<?> bootstrap, Namespace namespace) throws Exception {
+    @SuppressWarnings("BanSystemOut")
+    public void run(Bootstrap<?> _bootstrap, Namespace namespace) throws Exception {
         String algorithmType = namespace.getString(ALGORITHM);
         String file = namespace.getString(FILE);
         Path path = Paths.get(file);

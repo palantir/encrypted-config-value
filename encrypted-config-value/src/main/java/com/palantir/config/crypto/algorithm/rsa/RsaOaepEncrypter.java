@@ -66,7 +66,7 @@ public enum RsaOaepEncrypter implements Encrypter {
             OAEPParameterSpec oaepParams = new OAEPParameterSpec(OAEP_HASH_ALG.toString(), "MGF1",
                     new MGF1ParameterSpec(
                             MDF1_HASH_ALG.toString()), PSource.PSpecified.DEFAULT);
-            cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, publicKey, oaepParams);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey, oaepParams);
             byte[] encrypted = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
 
             return ImmutableRsaEncryptedValue.builder()
