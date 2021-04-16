@@ -5,5 +5,5 @@ apply plugin: 'org.inferred.processors'
 dependencies {
     compileOnly "org.immutables:value::annotations"
 
-    processor 'org.immutables:value'
+    annotationProcessor 'org.immutables:value'
 }

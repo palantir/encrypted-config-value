@@ -52,10 +52,6 @@ subprojects {
         jcenter()
     }
 
-    javadoc {
-        classpath = sourceSets.main.compileClasspath + configurations.processor
-    }
-
     sourceCompatibility = 1.8
 
     tasks.check.dependsOn(javadoc)
