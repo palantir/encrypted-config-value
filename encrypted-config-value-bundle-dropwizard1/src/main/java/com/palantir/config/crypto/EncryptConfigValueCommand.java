@@ -35,20 +35,21 @@ public final class EncryptConfigValueCommand extends Command {
     @Override
     public void configure(Subparser subparser) {
         subparser.addArgument("-k", "--keyfile")
-            .required(false)
-            .type(String.class)
-            .dest(KEYFILE)
-            .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
-            .help("The location of the (public) key file");
+                .required(false)
+                .type(String.class)
+                .dest(KEYFILE)
+                .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
+                .help("The location of the (public) key file");
 
         subparser.addArgument("-v", "--value")
-            .required(true)
-            .type(String.class)
-            .dest(VALUE)
-            .help("The value to encrypt");
+                .required(true)
+                .type(String.class)
+                .dest(VALUE)
+                .help("The value to encrypt");
     }
 
     @Override
+    @SuppressWarnings("BanSystemOut")
     public void run(Bootstrap<?> _bootstrap, Namespace namespace) throws Exception {
         String keyfile = namespace.getString(KEYFILE);
         String value = namespace.getString(VALUE);
