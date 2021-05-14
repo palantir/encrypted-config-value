@@ -16,7 +16,7 @@ com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.6 (1 constraints: 32
 com.fasterxml.jackson.module:jackson-module-afterburner:2.7.6 (1 constraints: 890ebe4f)
 com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.7.6 (1 constraints: 4e17fd25)
 com.google.code.findbugs:jsr305:3.0.2 (3 constraints: 6f1c31e5)
-com.google.errorprone:error_prone_annotations:2.6.0 (2 constraints: 230f2287)
+com.google.errorprone:error_prone_annotations:2.7.1 (2 constraints: 250f6487)
 com.google.guava:failureaccess:1.0.1 (1 constraints: 140ae1b4)
 com.google.guava:guava:30.1.1-jre (4 constraints: 40311ebc)
 com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 constraints: bd17c918)
