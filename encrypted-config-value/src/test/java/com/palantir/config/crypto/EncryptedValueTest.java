@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public final class EncryptedValueTest {
                 + "1un/+KvpJ2mZfMH0tifu+htRVxEPyXmt88lyKB83NpesNJEoLFLL+wBWCkppaLRuc/1w==";
 
         EncryptedValue encryptedValue = EncryptedValue.fromString(valid);
-        assertThat(encryptedValue.decrypt(aesKey), is(plaintext));
+        assertThat(encryptedValue.decrypt(aesKey)).isEqualTo(plaintext);
     }
 
     @Test
@@ -73,7 +72,7 @@ public final class EncryptedValueTest {
                 + "K1RXSkZwckpHWGdUVXVRRmx4Nnd0a0lwNVFUcE1RPT0iLCJ0YWciOiJZTUNURlY2b2dsemxwV3FOVlp3YVp3PT0ifQ==";
 
         EncryptedValue encryptedValue = EncryptedValue.fromString(valid);
-        assertThat(encryptedValue.decrypt(aesKey), is(plaintext));
+        assertThat(encryptedValue.decrypt(aesKey)).isEqualTo(plaintext);
     }
 
     @Test
@@ -86,13 +85,13 @@ public final class EncryptedValueTest {
                 + "s15Dw1ECSNJhicHZp43vSYN9y9NJTnvTAhCQ==";
 
         EncryptedValue encryptedValue = EncryptedValue.fromString(valid);
-        assertThat(encryptedValue.decrypt(rsaPrivKey), is(plaintext));
+        assertThat(encryptedValue.decrypt(rsaPrivKey)).isEqualTo(plaintext);
     }
 
     @Test
     public void weCanDecryptValueEncryptedUsingExistingRsaKey() {
         EncryptedValue encryptedValue = Algorithm.RSA.newEncrypter().encrypt(rsaPubKey, plaintext);
-        assertThat(encryptedValue.decrypt(rsaPrivKey), is(plaintext));
+        assertThat(encryptedValue.decrypt(rsaPrivKey)).isEqualTo(plaintext);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -134,7 +133,7 @@ public final class EncryptedValueTest {
         KeyWithType decryptionKey = keyPair.decryptionKey();
         String decryptedValue = encryptedValue.decrypt(decryptionKey);
 
-        assertThat(decryptedValue, is(plaintext));
+        assertThat(decryptedValue).isEqualTo(plaintext);
     }
 
     private void weCanDecryptUsingAKeyFile(Algorithm algorithm) throws IOException {
@@ -148,7 +147,7 @@ public final class EncryptedValueTest {
         EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
         String decryptedValue = encryptedValue.decrypt(keyPair.decryptionKey());
 
-        assertThat(decryptedValue, is(plaintext));
+        assertThat(decryptedValue).isEqualTo(plaintext);
     }
 
     @Test
