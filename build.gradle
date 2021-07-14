@@ -9,7 +9,7 @@ buildscript {
         classpath 'com.palantir.gradle.externalpublish:gradle-external-publish-plugin:1.2.1'
         classpath 'com.palantir.gradle.docker:gradle-docker:0.12.0'
         classpath 'com.palantir.baseline:gradle-baseline-java:3.97.0'
-        classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:1.30.0'
+        classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:2.0.0'
     }
 }
 
