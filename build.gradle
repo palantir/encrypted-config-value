@@ -2,7 +2,6 @@ buildscript {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -20,7 +19,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 apply plugin: 'com.palantir.baseline'
@@ -40,7 +38,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     sourceCompatibility = 1.8
