@@ -25,9 +25,9 @@ import com.palantir.config.crypto.util.StringSubstitutionException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class DecryptingVariableSubstitutorTest {
 
@@ -37,7 +37,7 @@ public class DecryptingVariableSubstitutorTest {
 
     private final DecryptingVariableSubstitutor substitutor = new DecryptingVariableSubstitutor();
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws IOException {
         previousProperty = System.getProperty(KeyFileUtils.KEY_PATH_PROPERTY);
 
@@ -46,7 +46,7 @@ public class DecryptingVariableSubstitutorTest {
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, tempFilePath.toAbsolutePath().toString());
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         if (previousProperty != null) {
             System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, previousProperty);
