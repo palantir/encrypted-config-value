@@ -66,10 +66,11 @@ public enum KeyType {
     }
 
     public void checkKeyArgument(KeyWithType kwt, Class<? extends Key> keyClazz) {
-        checkArgument(kwt.getType().equals(this),
-                "key must be for %s algorithm but was %s", this, kwt.getType());
-        checkArgument(keyClazz.isAssignableFrom(kwt.getKey().getClass()), "key must be of type %s but was %s", keyClazz,
+        checkArgument(kwt.getType().equals(this), "key must be for %s algorithm but was %s", this, kwt.getType());
+        checkArgument(
+                keyClazz.isAssignableFrom(kwt.getKey().getClass()),
+                "key must be of type %s but was %s",
+                keyClazz,
                 kwt.getKey().getClass());
     }
-
 }

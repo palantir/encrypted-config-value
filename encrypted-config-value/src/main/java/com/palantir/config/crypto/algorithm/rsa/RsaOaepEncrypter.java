@@ -63,9 +63,11 @@ public enum RsaOaepEncrypter implements Encrypter {
         final PublicKey publicKey = ((RsaPublicKey) kwt.getKey()).getPublicKey();
         return Suppliers.silently(() -> {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
-            OAEPParameterSpec oaepParams = new OAEPParameterSpec(OAEP_HASH_ALG.toString(), "MGF1",
-                    new MGF1ParameterSpec(
-                            MDF1_HASH_ALG.toString()), PSource.PSpecified.DEFAULT);
+            OAEPParameterSpec oaepParams = new OAEPParameterSpec(
+                    OAEP_HASH_ALG.toString(),
+                    "MGF1",
+                    new MGF1ParameterSpec(MDF1_HASH_ALG.toString()),
+                    PSource.PSpecified.DEFAULT);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey, oaepParams);
             byte[] encrypted = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
 

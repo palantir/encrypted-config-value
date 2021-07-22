@@ -52,7 +52,7 @@ public final class KeyFileUtils {
 
         Path decryptionKeyPath = path;
         if (keyPair.encryptionKey() != keyPair.decryptionKey()) {
-            decryptionKeyPath  = privatePath(path);
+            decryptionKeyPath = privatePath(path);
             keyWithTypeToFile(keyPair.decryptionKey(), decryptionKeyPath);
         }
         return ImmutableKeyPairFiles.builder()
@@ -85,6 +85,5 @@ public final class KeyFileUtils {
         return privatePath;
     }
 
-    private KeyFileUtils() {
-    }
+    private KeyFileUtils() {}
 }

@@ -34,14 +34,16 @@ public final class EncryptConfigValueCommand extends Command {
 
     @Override
     public void configure(Subparser subparser) {
-        subparser.addArgument("-k", "--keyfile")
+        subparser
+                .addArgument("-k", "--keyfile")
                 .required(false)
                 .type(String.class)
                 .dest(KEYFILE)
                 .setDefault(KeyFileUtils.DEFAULT_PUBLIC_KEY_PATH)
                 .help("The location of the (public) key file");
 
-        subparser.addArgument("-v", "--value")
+        subparser
+                .addArgument("-v", "--value")
                 .required(true)
                 .type(String.class)
                 .dest(VALUE)

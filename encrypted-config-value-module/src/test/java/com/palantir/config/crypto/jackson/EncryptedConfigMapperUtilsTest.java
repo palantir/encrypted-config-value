@@ -56,11 +56,10 @@ public class EncryptedConfigMapperUtilsTest {
         assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
         assertEquals("[oh dear", config.getEncryptedMalformedYaml());
 
-        assertThat(config.getArrayWithSomeEncryptedValues(),
-                contains("value", "value", "other value", "[oh dear"));
-        assertThat(config.getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                .and(hasProperty("password", equalTo("value"))));
+        assertThat(config.getArrayWithSomeEncryptedValues(), contains("value", "value", "other value", "[oh dear"));
+        assertThat(
+                config.getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user"))).and(hasProperty("password", equalTo("value"))));
     }
 
     @Test
@@ -74,11 +73,10 @@ public class EncryptedConfigMapperUtilsTest {
         assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
         assertEquals("[oh dear", config.getEncryptedMalformedYaml());
 
-        assertThat(config.getArrayWithSomeEncryptedValues(),
-                contains("value", "value", "other value", "[oh dear"));
-        assertThat(config.getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                        .and(hasProperty("password", equalTo("value"))));
+        assertThat(config.getArrayWithSomeEncryptedValues(), contains("value", "value", "other value", "[oh dear"));
+        assertThat(
+                config.getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user"))).and(hasProperty("password", equalTo("value"))));
     }
 
     @Value.Immutable
@@ -144,5 +142,4 @@ public class EncryptedConfigMapperUtilsTest {
             return pojoWithEncryptedValues;
         }
     }
-
 }

@@ -53,8 +53,8 @@ public enum AesGcmEncrypter implements Encrypter {
 
             // Java always appends tag to ciphertext, so split apart manually
             byte[] ciphertext = Arrays.copyOfRange(encrypted, 0, encrypted.length - (TAG_SIZE_BITS / Byte.SIZE));
-            byte[] tag = Arrays.copyOfRange(encrypted, encrypted.length - (TAG_SIZE_BITS / Byte.SIZE),
-                    encrypted.length);
+            byte[] tag =
+                    Arrays.copyOfRange(encrypted, encrypted.length - (TAG_SIZE_BITS / Byte.SIZE), encrypted.length);
 
             return ImmutableAesEncryptedValue.builder()
                     .iv(ivBytes)

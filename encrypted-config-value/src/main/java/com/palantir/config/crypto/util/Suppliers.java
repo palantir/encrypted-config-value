@@ -38,9 +38,9 @@ public final class Suppliers {
             return supplier.get();
         } catch (AEADBadTagException e) {
             throw new RuntimeException(
-                "couldn't verify the message's authentication tag "
-                + "- either the message was tampered with, or the key is invalid",
-                e);
+                    "couldn't verify the message's authentication tag "
+                            + "- either the message was tampered with, or the key is invalid",
+                    e);
         } catch (InvalidKeyException | InvalidKeySpecException e) {
             throw new RuntimeException("the key was invalid", e);
         } catch (NoSuchPaddingException | BadPaddingException e) {
