@@ -16,12 +16,10 @@
 
 package com.palantir.config.crypto.jackson;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import org.assertj.core.api.HamcrestCondition;
 import org.immutables.value.Value;
 import org.junit.Test;
 
@@ -50,17 +49,15 @@ public class EncryptedConfigMapperUtilsTest {
     public final void testCanDecryptValueInConfig() throws IOException {
         TestConfig config = EncryptedConfigMapperUtils.getConfig(CONFIG_FILE, TestConfig.class, MAPPER);
 
-        assertEquals("value", config.getUnencrypted());
-        assertEquals("value", config.getEncrypted());
-        assertEquals("don't use quotes", config.getEncryptedWithSingleQuote());
-        assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
-        assertEquals("[oh dear", config.getEncryptedMalformedYaml());
+        assertThat(config.getUnencrypted()).isEqualTo("value");
+        assertThat(config.getEncrypted()).isEqualTo("value");
+        assertThat(config.getEncryptedWithSingleQuote()).isEqualTo("don't use quotes");
+        assertThat(config.getEncryptedWithDoubleQuote()).isEqualTo("double quote is \"");
+        assertThat(config.getEncryptedMalformedYaml()).isEqualTo("[oh dear");
 
-        assertThat(config.getArrayWithSomeEncryptedValues(),
-                contains("value", "value", "other value", "[oh dear"));
-        assertThat(config.getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                .and(hasProperty("password", equalTo("value"))));
+        assertThat(config.getArrayWithSomeEncryptedValues()).containsExactly("value", "value", "other value", "[oh dear");
+        assertThat(config.getPojoWithEncryptedValues()).is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
+                .and(hasProperty("password", equalTo("value")))));
     }
 
     @Test
@@ -68,17 +65,15 @@ public class EncryptedConfigMapperUtilsTest {
         String configFileContent = new String(Files.readAllBytes(CONFIG_FILE.toPath()), StandardCharsets.UTF_8);
         TestConfig config = EncryptedConfigMapperUtils.getConfig(configFileContent, TestConfig.class, MAPPER);
 
-        assertEquals("value", config.getUnencrypted());
-        assertEquals("value", config.getEncrypted());
-        assertEquals("don't use quotes", config.getEncryptedWithSingleQuote());
-        assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
-        assertEquals("[oh dear", config.getEncryptedMalformedYaml());
+        assertThat(config.getUnencrypted()).isEqualTo("value");
+        assertThat(config.getEncrypted()).isEqualTo("value");
+        assertThat(config.getEncryptedWithSingleQuote()).isEqualTo("don't use quotes");
+        assertThat(config.getEncryptedWithDoubleQuote()).isEqualTo("double quote is \"");
+        assertThat(config.getEncryptedMalformedYaml()).isEqualTo("[oh dear");
 
-        assertThat(config.getArrayWithSomeEncryptedValues(),
-                contains("value", "value", "other value", "[oh dear"));
-        assertThat(config.getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                        .and(hasProperty("password", equalTo("value"))));
+        assertThat(config.getArrayWithSomeEncryptedValues()).containsExactly("value", "value", "other value", "[oh dear");
+        assertThat(config.getPojoWithEncryptedValues()).is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
+                        .and(hasProperty("password", equalTo("value")))));
     }
 
     @Value.Immutable

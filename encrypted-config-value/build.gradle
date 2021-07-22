@@ -9,6 +9,7 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-all'
     testCompile 'junit:junit'
     testCompile 'org.mockito:mockito-core'
+    testImplementation 'org.assertj:assertj-core'
 }
 
 tasks.check.dependsOn(javadoc)

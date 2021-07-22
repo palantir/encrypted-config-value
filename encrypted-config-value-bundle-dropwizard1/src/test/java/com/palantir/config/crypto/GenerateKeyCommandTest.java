@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.algorithm.Algorithm;
@@ -40,7 +39,7 @@ public final class GenerateKeyCommandTest {
         command.run(null, namespace);
 
         KeyPair keyPair = KeyFileUtils.keyPairFromPath(tempFilePath);
-        assertThat(keyPair.encryptionKey().getType().getAlgorithm(), is(algorithm));
+        assertThat(keyPair.encryptionKey().getType().getAlgorithm()).isEqualTo(algorithm);
     }
 
     @Test

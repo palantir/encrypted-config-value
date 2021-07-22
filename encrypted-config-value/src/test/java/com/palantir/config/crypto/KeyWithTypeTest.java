@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -33,9 +32,9 @@ public final class KeyWithTypeTest {
         String serialized = mapper.writeValueAsString(kwt);
 
         String expectedSerialization = String.format("\"%s\"", kwtString);
-        assertThat(serialized, is(expectedSerialization));
+        assertThat(serialized).isEqualTo(expectedSerialization);
 
         KeyWithType deserialized = mapper.readValue(serialized, KeyWithType.class);
-        assertThat(deserialized.toString(), is(kwt.toString()));
+        assertThat(deserialized.toString()).isEqualTo(kwt.toString());
     }
 }
