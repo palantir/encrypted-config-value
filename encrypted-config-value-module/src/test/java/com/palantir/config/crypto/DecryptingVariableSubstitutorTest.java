@@ -16,9 +16,8 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.util.StringSubstitutionException;
@@ -55,28 +54,28 @@ public class DecryptingVariableSubstitutorTest {
 
     @Test
     public final void constantsAreNotModified() {
-        assertThat(substitutor.replace("abc"), is("abc"));
+        assertThat(substitutor.replace("abc")).isEqualTo("abc");
     }
 
     @Test
     public final void invalidEncryptedVariablesThrowStringSubstitutionException() {
         try {
             substitutor.replace("${enc:invalid-contents}");
-            fail();
+            fail("fail");
         } catch (StringSubstitutionException e) {
-            assertThat(e.getValue(), is("enc:invalid-contents"));
-            assertThat(e.getField(), is(""));
+            assertThat(e.getValue()).isEqualTo("enc:invalid-contents");
+            assertThat(e.getField()).isEqualTo("");
         }
     }
 
     @Test
     public final void nonEncryptedVariablesAreNotModified() {
-        assertThat(substitutor.replace("${abc}"), is("${abc}"));
+        assertThat(substitutor.replace("${abc}")).isEqualTo("${abc}");
     }
 
     @Test
     public final void variableIsDecrypted() throws Exception {
-        assertThat(substitutor.replace("${" + encrypt("abc") + "}"), is("abc"));
+        assertThat(substitutor.replace("${" + encrypt("abc") + "}")).isEqualTo("abc");
     }
 
     private String encrypt(String value) {

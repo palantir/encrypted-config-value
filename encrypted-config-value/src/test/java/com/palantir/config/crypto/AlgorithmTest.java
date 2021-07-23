@@ -16,14 +16,15 @@
 
 package com.palantir.config.crypto;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import org.assertj.core.api.HamcrestCondition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,7 +45,7 @@ public final class AlgorithmTest {
         KeyPair keyPair1 = algorithm.newKeyPair();
         KeyPair keyPair2 = algorithm.newKeyPair();
 
-        assertThat(keyPair1, is(not(keyPair2)));
+        assertThat(keyPair1).is(new HamcrestCondition<>(is(not(keyPair2))));
     }
 
     @Test
@@ -56,7 +57,7 @@ public final class AlgorithmTest {
         KeyWithType decryptionKey = keyPair.decryptionKey();
         String decrypted = encryptedValue.decrypt(decryptionKey);
 
-        assertThat(decrypted, is(plaintext));
+        assertThat(decrypted).isEqualTo(plaintext);
     }
 
     @Test
@@ -67,17 +68,17 @@ public final class AlgorithmTest {
         EncryptedValue encrypted2 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
 
         // we don't want to leak that certain values are the same
-        assertThat(encrypted1, is(not(encrypted2)));
+        assertThat(encrypted1).is(new HamcrestCondition<>(is(not(encrypted2))));
         // paranoia, let's say the equals method is badly behaved
-        assertThat(encrypted1.toString(), is(not(encrypted2.toString())));
+        assertThat(encrypted1.toString()).is(new HamcrestCondition<>(is(not(encrypted2.toString()))));
 
         // we should naturally decrypt back to the same thing - the plaintext
         KeyWithType decryptionKey = keyPair.decryptionKey();
         String decryptedString1 = encrypted1.decrypt(decryptionKey);
         String decryptedString2 = encrypted2.decrypt(decryptionKey);
 
-        assertThat(decryptedString1, is(plaintext));
-        assertThat(decryptedString2, is(plaintext));
+        assertThat(decryptedString1).isEqualTo(plaintext);
+        assertThat(decryptedString2).isEqualTo(plaintext);
     }
 
     @Parameters(name = "{0}")
