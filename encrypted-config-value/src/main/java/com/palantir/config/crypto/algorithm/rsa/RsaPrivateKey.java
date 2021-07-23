@@ -53,8 +53,8 @@ public final class RsaPrivateKey implements Key {
         public KeyWithType keyFromBytes(byte[] key) {
             PrivateKey localPrivateKey;
             try {
-                localPrivateKey = KeyFactory.getInstance(Algorithm.RSA.toString()).generatePrivate(
-                        new PKCS8EncodedKeySpec(key));
+                localPrivateKey =
+                        KeyFactory.getInstance(Algorithm.RSA.toString()).generatePrivate(new PKCS8EncodedKeySpec(key));
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }

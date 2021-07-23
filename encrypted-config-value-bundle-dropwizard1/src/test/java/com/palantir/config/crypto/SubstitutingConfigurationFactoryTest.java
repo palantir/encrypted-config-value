@@ -76,8 +76,9 @@ public class SubstitutingConfigurationFactoryTest {
             failBecauseExceptionWasNotThrown(ConfigurationDecryptionException.class);
         } catch (ConfigurationDecryptionException e) {
             assertThat(e.getMessage()).contains("src/test/resources/testConfigWithError.yml has an error");
-            assertThat(e.getMessage()).contains(
-                    "The value 'enc:ERROR' for field 'arrayWithSomeEncryptedValues[3]' could not be replaced");
+            assertThat(e.getMessage())
+                    .contains(
+                            "The value 'enc:ERROR' for field 'arrayWithSomeEncryptedValues[3]' could not be replaced");
         }
     }
 }

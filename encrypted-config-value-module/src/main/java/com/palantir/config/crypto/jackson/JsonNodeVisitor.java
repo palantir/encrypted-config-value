@@ -43,5 +43,4 @@ public interface JsonNodeVisitor<T> {
     T visitPojo(POJONode pojoNode);
 
     T visitText(TextNode textNode);
-
 }

@@ -53,8 +53,8 @@ public final class RsaPublicKey implements Key {
         public KeyWithType keyFromBytes(byte[] key) {
             PublicKey localPublicKey;
             try {
-                localPublicKey = KeyFactory.getInstance(Algorithm.RSA.toString()).generatePublic(
-                        new X509EncodedKeySpec(key));
+                localPublicKey =
+                        KeyFactory.getInstance(Algorithm.RSA.toString()).generatePublic(new X509EncodedKeySpec(key));
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }

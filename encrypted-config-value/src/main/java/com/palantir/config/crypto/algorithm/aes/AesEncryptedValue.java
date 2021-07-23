@@ -62,18 +62,17 @@ public abstract class AesEncryptedValue extends EncryptedValue {
         KeyType.AES.checkKeyArgument(kwt, AesKey.class);
         final SecretKey secretKeySpec = ((AesKey) kwt.getKey()).getSecretKey();
         return Suppliers.silently(() -> {
-                    // Java expects the tag at the end of the encrypted bytes.
-                    byte[] ct = Arrays.copyOf(getCiphertext(), getCiphertext().length + getTag().length);
-                    System.arraycopy(getTag(), 0, ct, getCiphertext().length, getTag().length);
+            // Java expects the tag at the end of the encrypted bytes.
+            byte[] ct = Arrays.copyOf(getCiphertext(), getCiphertext().length + getTag().length);
+            System.arraycopy(getTag(), 0, ct, getCiphertext().length, getTag().length);
 
-                    GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(getTag().length * Byte.SIZE, getIv());
-                    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-                    cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);
+            GCMParameterSpec gcmSpecWithIv = new GCMParameterSpec(getTag().length * Byte.SIZE, getIv());
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, gcmSpecWithIv);
 
-                    byte[] decrypted = cipher.doFinal(ct);
-                    return new String(decrypted, StandardCharsets.UTF_8);
-                }
-        );
+            byte[] decrypted = cipher.doFinal(ct);
+            return new String(decrypted, StandardCharsets.UTF_8);
+        });
     }
 
     @Override

@@ -52,7 +52,5 @@ public final class RsaKeyPair {
         return KeyPair.of(pub, priv);
     }
 
-    private RsaKeyPair() {
-    }
-
+    private RsaKeyPair() {}
 }

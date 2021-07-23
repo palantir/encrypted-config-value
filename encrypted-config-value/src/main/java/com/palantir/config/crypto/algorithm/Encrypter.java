@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto.algorithm;
 
-
 import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.EncryptedValue;
 import com.palantir.config.crypto.KeyWithType;
