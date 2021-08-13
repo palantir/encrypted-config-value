@@ -2,15 +2,15 @@ apply plugin: 'com.palantir.external-publish-jar'
 apply from: "${rootDir}/gradle/immutables-processors.gradle"
 
 dependencies {
-    compile project(':encrypted-config-value')
-    compile 'com.google.guava:guava'
-    compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-    compile 'org.apache.commons:commons-lang3'
+    api project(':encrypted-config-value')
+    api 'com.google.guava:guava'
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    api 'org.apache.commons:commons-lang3'
 
-    testCompile 'org.hamcrest:hamcrest-all'
-    testCompile 'junit:junit'
-    testCompile 'org.mockito:mockito-core'
+    testImplementation 'org.hamcrest:hamcrest-all'
+    testImplementation 'junit:junit'
+    testImplementation 'org.mockito:mockito-core'
 }
 
 tasks.check.dependsOn(javadoc)
