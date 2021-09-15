@@ -5,6 +5,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.palantir.javaformat:gradle-palantir-java-format:2.2.0'
         classpath 'com.palantir.gradle.externalpublish:gradle-external-publish-plugin:1.4.0'
         classpath 'com.palantir.gradle.docker:gradle-docker:0.27.0'
         classpath 'com.palantir.baseline:gradle-baseline-java:4.25.0'
@@ -27,6 +28,7 @@ apply plugin: 'com.palantir.external-publish'
 apply plugin: 'org.inferred.processors'
 
 allprojects {
+    apply plugin: 'com.palantir.java-format'
     version gitVersion()
     group 'com.palantir.config.crypto'
 }

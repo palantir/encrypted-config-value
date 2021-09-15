@@ -36,5 +36,4 @@ public abstract class KeyPairFiles {
     public boolean pathsEqual() {
         return encryptionKeyFile().equals(decryptionKeyFile());
     }
-
 }

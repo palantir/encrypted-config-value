@@ -60,7 +60,8 @@ public final class SubstitutingConfigurationFactory<T> extends YamlConfiguration
      * @param propertyPrefix the system property name prefix used by overrides
      * @param substitutor The custom {@link JsonNodeVisitor} implementation.
      */
-    public SubstitutingConfigurationFactory(Class<T> klass,
+    public SubstitutingConfigurationFactory(
+            Class<T> klass,
             Validator validator,
             ObjectMapper objectMapper,
             String propertyPrefix,
@@ -75,10 +76,8 @@ public final class SubstitutingConfigurationFactory<T> extends YamlConfiguration
             JsonNode substitutedNode = JsonNodeVisitors.dispatch(node, substitutor);
             return super.build(substitutedNode, path);
         } catch (StringSubstitutionException e) {
-            String error = String.format(
-                    "The value '%s' for field '%s' could not be replaced",
-                    e.getValue(),
-                    e.getField());
+            String error =
+                    String.format("The value '%s' for field '%s' could not be replaced", e.getValue(), e.getField());
             throw new ConfigurationDecryptionException(path, ImmutableList.of(error), e);
         }
     }
@@ -97,10 +96,8 @@ public final class SubstitutingConfigurationFactory<T> extends YamlConfiguration
         }
 
         @Override
-        public ConfigurationFactory<T> create(Class<T> klass,
-                Validator validator,
-                ObjectMapper objectMapper,
-                String propertyPrefix) {
+        public ConfigurationFactory<T> create(
+                Class<T> klass, Validator validator, ObjectMapper objectMapper, String propertyPrefix) {
             return new SubstitutingConfigurationFactory<>(klass, validator, objectMapper, propertyPrefix, substitutor);
         }
     }
