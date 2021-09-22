@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import org.immutables.value.Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EncryptedConfigMapperUtilsTest {
 
