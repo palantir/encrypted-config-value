@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -28,7 +27,7 @@ public final class EncryptedValueCompatTest {
         EncryptedValue ev = EncryptedValue.fromString(
                 "enc:QjR4AHIYoIzvjEHf53XETM3QYnCl1mgFYC51Q7x4ebwM+h3PHVqSt/1un/+KvpJ2mZfMH0tifu+htRVxEPyXmt88lyKB83Npe"
                         + "sNJEoLFLL+wBWCkppaLRuc/1w==");
-        assertThat(ev.decrypt(kwa), is("my secret. I don't want anyone to know this"));
+        assertThat(ev.decrypt(kwa)).isEqualTo("my secret. I don't want anyone to know this");
     }
 
     @Test
@@ -37,7 +36,7 @@ public final class EncryptedValueCompatTest {
         EncryptedValue ev = EncryptedValue.fromString(
                 "enc:eyJ0eXBlIjoiQUVTIiwibW9kZSI6IkdDTSIsImNpcGhlcnRleHQiOiJNOTRrSXlvYTUrMloiLCJpdiI6InVBR3FSbFA5d2l6c"
                         + "GRCMHoiLCJ0YWciOiJBQ1N1ekR3VFVMb21zanhwRk1rWUtBPT0ifQ==");
-        assertThat(ev.decrypt(kwa), is("plaintext"));
+        assertThat(ev.decrypt(kwa)).isEqualTo("plaintext");
     }
 
     @Test
@@ -64,7 +63,7 @@ public final class EncryptedValueCompatTest {
                         + "qrb08s46hodTPDLU76JNrtaxlCssXYxFN/Ni8k95pKauwPxRfvTP0SUf7o9rsZrY6LdV9+M3y6mNrEIKevAZQZtNmvX"
                         + "riclQGV1CwRzV/0sNVuTfNqNw0lDsI4hcvC26DhLrXla8jCUiKEYDFAqVr2DaTwtV3htxtCB36Jk6Lg5abdcc9B/ZqV"
                         + "7lfUIddGEuXFzhz8KIIGtwVVXqis15Dw1ECSNJhicHZp43vSYN9y9NJTnvTAhCQ==");
-        assertThat(ev.decrypt(kwa), is("my secret. I don't want anyone to know this"));
+        assertThat(ev.decrypt(kwa)).isEqualTo("my secret. I don't want anyone to know this");
     }
 
     @Test
@@ -95,6 +94,6 @@ public final class EncryptedValueCompatTest {
                         + "xROEVMNUVBWjJoNytscVY5Rmp0emxBdWtxbUp4OEVwMGhJbGhPUjIzNndJcWQwZHpBVzZnODYybENLb1Nob0dvS04y"
                         + "dHR5alU2TURRUWo0a0hBNFdCbTBOdm9XREZHN1p3T1ozbDIwVnY3R1ZRPT0iLCJvYWVwLWFsZyI6IlNIQS0yNTYiLC"
                         + "JtZGYxLWFsZyI6IlNIQS0yNTYifQ==");
-        assertThat(ev.decrypt(kwa), is("plaintext"));
+        assertThat(ev.decrypt(kwa)).isEqualTo("plaintext");
     }
 }
