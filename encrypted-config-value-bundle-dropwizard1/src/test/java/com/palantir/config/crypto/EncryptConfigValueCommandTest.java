@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.algorithm.Algorithm;
@@ -70,7 +69,7 @@ public final class EncryptConfigValueCommandTest {
         KeyWithType decryptionKey = keyPair.decryptionKey();
         String decryptedValue = configValue.decrypt(decryptionKey);
 
-        assertThat(decryptedValue, is(plaintext));
+        assertThat(decryptedValue).isEqualTo(plaintext);
     }
 
     @Test
