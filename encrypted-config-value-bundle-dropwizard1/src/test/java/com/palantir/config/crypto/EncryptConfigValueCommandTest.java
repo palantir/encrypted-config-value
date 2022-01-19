@@ -59,8 +59,10 @@ public final class EncryptConfigValueCommandTest {
         KeyFileUtils.keyPairToFile(keyPair, tempFilePath);
 
         Namespace namespace = new Namespace(ImmutableMap.of(
-                EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
-                EncryptConfigValueCommand.VALUE, plaintext));
+                EncryptConfigValueCommand.KEYFILE,
+                tempFilePath.toString(),
+                EncryptConfigValueCommand.VALUE,
+                plaintext));
 
         command.run(null, namespace);
 
@@ -88,8 +90,10 @@ public final class EncryptConfigValueCommandTest {
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
         Namespace namespace = new Namespace(ImmutableMap.of(
-                EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
-                EncryptConfigValueCommand.VALUE, plaintext));
+                EncryptConfigValueCommand.KEYFILE,
+                tempFilePath.toString(),
+                EncryptConfigValueCommand.VALUE,
+                plaintext));
 
         command.run(null, namespace);
     }

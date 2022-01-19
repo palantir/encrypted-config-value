@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto.algorithm.rsa;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -69,9 +68,11 @@ public abstract class RsaEncryptedValue extends EncryptedValue {
         final PrivateKey privateKey = ((RsaPrivateKey) kwt.getKey()).getPrivateKey();
         return Suppliers.silently(() -> {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
-            OAEPParameterSpec oaepParams = new OAEPParameterSpec(getOaepHashAlg().toString(), "MGF1",
-                    new MGF1ParameterSpec(
-                            getMdf1HashAlg().toString()), PSource.PSpecified.DEFAULT);
+            OAEPParameterSpec oaepParams = new OAEPParameterSpec(
+                    getOaepHashAlg().toString(),
+                    "MGF1",
+                    new MGF1ParameterSpec(getMdf1HashAlg().toString()),
+                    PSource.PSpecified.DEFAULT);
             cipher.init(Cipher.DECRYPT_MODE, privateKey, oaepParams);
 
             byte[] decrypted = cipher.doFinal(getCiphertext());

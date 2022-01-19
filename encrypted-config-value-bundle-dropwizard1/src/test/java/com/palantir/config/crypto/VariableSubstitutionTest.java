@@ -50,11 +50,12 @@ public final class VariableSubstitutionTest {
         assertEquals("double quote is \"", RULE.getConfiguration().getEncryptedWithDoubleQuote());
         assertEquals("[oh dear", RULE.getConfiguration().getEncryptedMalformedYaml());
 
-        assertThat(RULE.getConfiguration().getArrayWithSomeEncryptedValues(),
+        assertThat(
+                RULE.getConfiguration().getArrayWithSomeEncryptedValues(),
                 contains("value", "value", "other value", "[oh dear"));
-        assertThat(RULE.getConfiguration().getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                .and(hasProperty("password", equalTo("value"))));
+        assertThat(
+                RULE.getConfiguration().getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user"))).and(hasProperty("password", equalTo("value"))));
     }
 
     public static final class TestApplication extends Application<TestConfig> {
@@ -66,5 +67,4 @@ public final class VariableSubstitutionTest {
         @Override
         public void run(TestConfig _configuration, Environment _environment) throws Exception {}
     }
-
 }

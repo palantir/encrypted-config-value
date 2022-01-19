@@ -36,9 +36,6 @@ public abstract class KeyPair {
     }
 
     public static KeyPair symmetric(KeyWithType key) {
-        return ImmutableKeyPair.builder()
-                .encryptionKey(key)
-                .decryptionKey(key)
-                .build();
+        return ImmutableKeyPair.builder().encryptionKey(key).decryptionKey(key).build();
     }
 }

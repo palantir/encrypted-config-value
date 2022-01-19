@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto;
 
-
 import com.palantir.config.crypto.algorithm.aes.AesEncryptedValue;
 import com.palantir.config.crypto.algorithm.aes.AesKey;
 import com.palantir.config.crypto.algorithm.aes.ImmutableAesEncryptedValue;
@@ -43,8 +42,8 @@ public abstract class LegacyEncryptedValue extends EncryptedValue {
             // if RSA key is provided, interpret value as legacy RSA value
             translatedValue = rsaValueFromLegacy(this);
         } else {
-            throw new IllegalArgumentException(
-                    "decrypting legacy values not supported for key type " + kwa.getKey().getClass());
+            throw new IllegalArgumentException("decrypting legacy values not supported for key type "
+                    + kwa.getKey().getClass());
         }
         return translatedValue.decrypt(kwa);
     }
