@@ -16,8 +16,9 @@
 
 package com.palantir.config.crypto.jackson;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.config.crypto.DecryptingVariableSubstitutor;
@@ -31,16 +32,35 @@ public final class EncryptedConfigMapperUtils {
     private EncryptedConfigMapperUtils() {}
 
     public static <T> T getConfig(File configFile, Class<T> clazz, ObjectMapper mapper)
-            throws JsonParseException, JsonMappingException, IOException {
-        JsonNode configNode = mapper.readValue(configFile, JsonNode.class);
-        JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
-        return mapper.treeToValue(substitutedNode, clazz);
+            throws IOException {
+        return getConfig(
+                mapper.getFactory().createParser(configFile),
+                mapper.getTypeFactory().constructType(clazz),
+                mapper);
     }
 
+    public static <T> T getConfig(File configFile, TypeReference<T> typeRef, ObjectMapper mapper)
+            throws IOException {
+        return getConfig(
+                mapper.getFactory().createParser(configFile),
+                mapper.getTypeFactory().constructType(typeRef),
+                mapper);
+    }
+
+
     public static <T> T getConfig(String configFileContent, Class<T> clazz, ObjectMapper mapper)
-            throws JsonParseException, JsonMappingException, IOException {
-        JsonNode configNode = mapper.readTree(configFileContent);
+            throws IOException {
+        return getConfig(
+            mapper.getFactory().createParser(configFileContent),
+            mapper.getTypeFactory().constructType(clazz),
+            mapper);
+    }
+
+    private static <T> T getConfig(JsonParser configParser, JavaType javaType, ObjectMapper mapper)
+            throws IOException {
+        JsonNode configNode = mapper.readTree(configParser);
         JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
-        return mapper.treeToValue(substitutedNode, clazz);
+        JsonParser substitutedParser = mapper.treeAsTokens(substitutedNode);
+        return mapper.readValue(substitutedParser, javaType);
     }
 }

@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,7 +48,7 @@ public class EncryptedConfigMapperUtilsTest {
     }
 
     @Test
-    public final void testCanDecryptValueInConfig() throws IOException {
+    public final void testCanDecryptValueInConfigToClass() throws IOException {
         TestConfig config = EncryptedConfigMapperUtils.getConfig(CONFIG_FILE, TestConfig.class, MAPPER);
 
         assertEquals("value", config.getUnencrypted());
@@ -61,6 +62,23 @@ public class EncryptedConfigMapperUtilsTest {
         assertThat(config.getPojoWithEncryptedValues(),
                 both(hasProperty("username", equalTo("some-user")))
                 .and(hasProperty("password", equalTo("value"))));
+    }
+
+    @Test
+    public final void testCanDecryptValueInConfigToTypeRef() throws IOException {
+        TestConfig config = EncryptedConfigMapperUtils.getConfig(CONFIG_FILE, new TypeReference<TestConfig>() {}, MAPPER);
+
+        assertEquals("value", config.getUnencrypted());
+        assertEquals("value", config.getEncrypted());
+        assertEquals("don't use quotes", config.getEncryptedWithSingleQuote());
+        assertEquals("double quote is \"", config.getEncryptedWithDoubleQuote());
+        assertEquals("[oh dear", config.getEncryptedMalformedYaml());
+
+        assertThat(config.getArrayWithSomeEncryptedValues(),
+                contains("value", "value", "other value", "[oh dear"));
+        assertThat(config.getPojoWithEncryptedValues(),
+                both(hasProperty("username", equalTo("some-user")))
+                        .and(hasProperty("password", equalTo("value"))));
     }
 
     @Test
