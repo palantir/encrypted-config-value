@@ -16,19 +16,15 @@
 
 package com.palantir.config.crypto;
 
+import com.palantir.config.crypto.jackson.Substitutor;
 import com.palantir.config.crypto.util.StringSubstitutionException;
-import org.apache.commons.lang3.text.StrLookup;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.StringLookupFactory;
 
-public final class DecryptingVariableSubstitutor extends StrSubstitutor {
+public final class DecryptingVariableSubstitutor extends StringSubstitutor implements Substitutor {
 
     public DecryptingVariableSubstitutor() {
-        super(new DecryptingStringLookup());
-    }
-
-    private static final class DecryptingStringLookup extends StrLookup<String> {
-        @Override
-        public String lookup(String encryptedValue) {
+        super(StringLookupFactory.INSTANCE.functionStringLookup(encryptedValue -> {
             if (!EncryptedValue.isEncryptedValue(encryptedValue)) {
                 return null;
             }
@@ -38,6 +34,6 @@ public final class DecryptingVariableSubstitutor extends StrSubstitutor {
             } catch (RuntimeException e) {
                 throw new StringSubstitutionException(e, encryptedValue);
             }
-        }
+        }));
     }
 }

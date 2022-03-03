@@ -29,13 +29,12 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.palantir.config.crypto.util.StringSubstitutionException;
 import java.util.Iterator;
 import java.util.Map;
-import org.apache.commons.lang3.text.StrSubstitutor;
 
 public final class JsonNodeStringReplacer implements JsonNodeVisitor<JsonNode> {
 
-    private final StrSubstitutor substitutor;
+    private final Substitutor substitutor;
 
-    public JsonNodeStringReplacer(StrSubstitutor substitutor) {
+    public JsonNodeStringReplacer(Substitutor substitutor) {
         this.substitutor = substitutor;
     }
 

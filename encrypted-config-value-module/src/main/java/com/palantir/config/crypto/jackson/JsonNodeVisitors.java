@@ -24,6 +24,8 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.palantir.logsafe.SafeArg;
+import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 
 public final class JsonNodeVisitors {
     private JsonNodeVisitors() {
@@ -51,7 +53,9 @@ public final class JsonNodeVisitors {
             case STRING:
                 return visitor.visitText((TextNode) node);
             default:
-                throw new IllegalArgumentException("Unexpected node type " + node.getNodeType());
+                throw new SafeIllegalArgumentException(
+                        "Unexpected node type",
+                        SafeArg.of("nodeType", node.getNodeType()));
         }
     }
 }

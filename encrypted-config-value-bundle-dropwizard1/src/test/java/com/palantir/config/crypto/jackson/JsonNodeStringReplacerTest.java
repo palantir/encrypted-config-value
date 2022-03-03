@@ -36,7 +36,6 @@ import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.util.StringSubstitutionException;
-import org.apache.commons.lang3.text.StrSubstitutor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +46,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public final class JsonNodeStringReplacerTest {
 
     @Mock
-    private StrSubstitutor strSubstitutor;
+    private Substitutor substitutor;
     @Mock
     private Throwable cause;
 
@@ -55,13 +54,13 @@ public final class JsonNodeStringReplacerTest {
 
     @Before
     public void before() {
-        jsonNodeStringReplacer = new JsonNodeStringReplacer(strSubstitutor);
+        jsonNodeStringReplacer = new JsonNodeStringReplacer(substitutor);
     }
 
     @Test
     public void visitTextDelegatesToStrSubstitutor() {
         TextNode textNode = new TextNode("abc");
-        when(strSubstitutor.replace("abc")).thenReturn("def");
+        when(substitutor.replace("abc")).thenReturn("def");
         assertThat(jsonNodeStringReplacer.visitText(textNode)).isEqualTo(new TextNode("def"));
     }
 
@@ -71,7 +70,7 @@ public final class JsonNodeStringReplacerTest {
         arrayNode.add("abc");
         arrayNode.add(1);
 
-        when(strSubstitutor.replace("abc")).thenReturn("def");
+        when(substitutor.replace("abc")).thenReturn("def");
 
         ArrayNode expected = new ArrayNode(JsonNodeFactory.instance);
         expected.add("def");
@@ -90,7 +89,7 @@ public final class JsonNodeStringReplacerTest {
                 ImmutableMap.<String, JsonNode>of("key", new TextNode("abc"))));
         arrayNode.add(4);
 
-        doThrow(new StringSubstitutionException(cause, "abc")).when(strSubstitutor).replace("abc");
+        doThrow(new StringSubstitutionException(cause, "abc")).when(substitutor).replace("abc");
 
         try {
             jsonNodeStringReplacer.visitArray(arrayNode);
@@ -109,7 +108,7 @@ public final class JsonNodeStringReplacerTest {
                         "key1", new TextNode("abc"),
                         "key2", new IntNode(1)));
 
-        when(strSubstitutor.replace("abc")).thenReturn("def");
+        when(substitutor.replace("abc")).thenReturn("def");
 
         ObjectNode expected = new ObjectNode(
                 JsonNodeFactory.instance,
@@ -136,7 +135,7 @@ public final class JsonNodeStringReplacerTest {
                         "key1", new IntNode(1),
                         "key2", arrayNode));
 
-        doThrow(new StringSubstitutionException(cause, "abc")).when(strSubstitutor).replace("abc");
+        doThrow(new StringSubstitutionException(cause, "abc")).when(substitutor).replace("abc");
 
         try {
             jsonNodeStringReplacer.visitObject(objectNode);

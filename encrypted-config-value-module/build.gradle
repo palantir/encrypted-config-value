@@ -6,12 +6,18 @@ dependencies {
     api 'com.google.guava:guava'
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-    api 'org.apache.commons:commons-lang3'
+    api 'org.apache.commons:commons-text'
 
-    testImplementation 'org.hamcrest:hamcrest-all'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.palantir.safe-logging:preconditions'
+    implementation 'com.palantir.safe-logging:safe-logging'
+
+    testImplementation 'com.fasterxml.jackson.core:jackson-annotations'
+    testImplementation 'com.google.code.findbugs:jsr305'
+    testImplementation 'com.google.errorprone:error_prone_annotations'
     testImplementation 'junit:junit'
-    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.hamcrest:hamcrest-all'
 }
 
 tasks.check.dependsOn(javadoc)

@@ -6,6 +6,10 @@ dependencies {
     api 'com.google.guava:guava'
     api 'com.fasterxml.jackson.core:jackson-databind'
 
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.google.code.findbugs:jsr305'
+
     testImplementation 'org.hamcrest:hamcrest-all'
     testImplementation 'junit:junit'
     testImplementation 'org.mockito:mockito-core'

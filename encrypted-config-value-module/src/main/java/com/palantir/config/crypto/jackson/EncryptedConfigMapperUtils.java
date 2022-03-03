@@ -16,8 +16,7 @@
 
 package com.palantir.config.crypto.jackson;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.config.crypto.DecryptingVariableSubstitutor;
@@ -25,21 +24,21 @@ import java.io.File;
 import java.io.IOException;
 
 public final class EncryptedConfigMapperUtils {
-    private static final JsonNodeStringReplacer JSON_NODE_STRING_REPLACER =
+    private static final JsonNodeVisitor<JsonNode> JSON_NODE_STRING_REPLACER =
             new JsonNodeStringReplacer(new DecryptingVariableSubstitutor());
 
     private EncryptedConfigMapperUtils() {}
 
-    public static <T> T getConfig(File configFile, Class<T> clazz, ObjectMapper mapper)
-            throws JsonParseException, JsonMappingException, IOException {
-        JsonNode configNode = mapper.readValue(configFile, JsonNode.class);
-        JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
-        return mapper.treeToValue(substitutedNode, clazz);
+    public static <T> T getConfig(File configFile, Class<T> clazz, ObjectMapper mapper) throws IOException {
+        return substitute(clazz, mapper, mapper.readValue(configFile, JsonNode.class));
     }
 
-    public static <T> T getConfig(String configFileContent, Class<T> clazz, ObjectMapper mapper)
-            throws JsonParseException, JsonMappingException, IOException {
-        JsonNode configNode = mapper.readTree(configFileContent);
+    public static <T> T getConfig(String configFileContent, Class<T> clazz, ObjectMapper mapper) throws IOException {
+        return substitute(clazz, mapper, mapper.readValue(configFileContent, JsonNode.class));
+    }
+
+    private static <T> T substitute(Class<T> clazz, ObjectMapper mapper, JsonNode configNode)
+            throws JsonProcessingException {
         JsonNode substitutedNode = JsonNodeVisitors.dispatch(configNode, JSON_NODE_STRING_REPLACER);
         return mapper.treeToValue(substitutedNode, clazz);
     }
