@@ -7,8 +7,19 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'io.dropwizard:dropwizard-core'
 
+    implementation 'io.dropwizard:dropwizard-configuration'
+    implementation 'javax.validation:validation-api'
+    implementation 'net.sourceforge.argparse4j:argparse4j'
+    implementation project(':encrypted-config-value')
+
+    testImplementation 'com.fasterxml.jackson.core:jackson-annotations'
+    testImplementation 'com.google.code.findbugs:jsr305'
+    testImplementation 'com.google.errorprone:error_prone_annotations'
+    testImplementation 'io.dropwizard:dropwizard-jackson'
+    testImplementation 'io.dropwizard:dropwizard-jersey'
     testImplementation 'io.dropwizard:dropwizard-testing'
     testImplementation 'junit:junit'
+    testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.hamcrest:hamcrest-all'
     testImplementation 'org.mockito:mockito-core'
 }

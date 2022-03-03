@@ -33,15 +33,18 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'org.inferred.processors'
     apply plugin: 'maven-publish'
+    apply plugin: 'com.palantir.baseline-class-uniqueness'
+    apply plugin: 'com.palantir.baseline-exact-dependencies'
 
     repositories {
         mavenCentral()
     }
 
-
+    tasks.check.dependsOn(checkImplicitDependencies)
+    tasks.check.dependsOn(checkUnusedDependencies)
     tasks.check.dependsOn(javadoc)
 }
 
