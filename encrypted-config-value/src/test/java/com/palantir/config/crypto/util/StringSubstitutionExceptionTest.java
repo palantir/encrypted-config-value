@@ -16,13 +16,12 @@
 
 package com.palantir.config.crypto.util;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StringSubstitutionExceptionTest {
@@ -80,8 +79,8 @@ public class StringSubstitutionExceptionTest {
     }
 
     private void assertException(StringSubstitutionException exception, String field) {
-        assertThat(exception.getValue(), is(VALUE));
-        assertThat(exception.getField(), is(field));
-        assertThat(exception.getCause(), is(cause));
+        assertThat(exception.getValue()).isEqualTo(VALUE);
+        assertThat(exception.getField()).isEqualTo(field);
+        assertThat(exception.getCause()).isEqualTo(cause);
     }
 }
