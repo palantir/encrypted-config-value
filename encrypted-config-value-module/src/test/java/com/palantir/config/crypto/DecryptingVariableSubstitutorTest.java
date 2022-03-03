@@ -64,7 +64,7 @@ public class DecryptingVariableSubstitutorTest {
             fail("fail");
         } catch (StringSubstitutionException e) {
             assertThat(e.getValue()).isEqualTo("enc:invalid-contents");
-            assertThat(e.getField()).isEqualTo("");
+            assertThat(e.getField()).isEmpty();
         }
     }
 
