@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public final class EncryptedValueTest {
     private static final String plaintext = "my secret. I don't want anyone to know this";
@@ -94,16 +95,20 @@ public final class EncryptedValueTest {
         assertThat(encryptedValue.decrypt(rsaPrivKey)).isEqualTo(plaintext);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void weFailToConstructWithInvalidPrefix() {
-        String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
-        EncryptedValue.fromString(invalid); // throws
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
+            EncryptedValue.fromString(invalid);
+        }); // throws
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void weFailToConstructWithAnInvalidEncryptedValue() {
-        String invalid = "enc:verysecret^^";
-        EncryptedValue.fromString(invalid); // throws if suffix is not a base64-encoded string
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String invalid = "enc:verysecret^^";
+            EncryptedValue.fromString(invalid);
+        }); // throws if suffix is not a base64-encoded string
     }
 
     private void weCannotDecryptWithTheWrongKey(Algorithm algorithm) throws NoSuchAlgorithmException {
@@ -116,14 +121,18 @@ public final class EncryptedValueTest {
         encryptedValue.decrypt(decryptionKey); //throws
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void weCannotDecryptWithTheWrongAesKey() throws NoSuchAlgorithmException {
-        weCannotDecryptWithTheWrongKey(Algorithm.AES);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            weCannotDecryptWithTheWrongKey(Algorithm.AES);
+        });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void weCannotDecryptWithTheWrongRsaKey() throws NoSuchAlgorithmException {
-        weCannotDecryptWithTheWrongKey(Algorithm.RSA);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            weCannotDecryptWithTheWrongKey(Algorithm.RSA);
+        });
     }
 
     private void weCanDecryptAValue(Algorithm algorithm) {

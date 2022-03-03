@@ -24,7 +24,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import net.sourceforge.argparse4j.inf.Namespace;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public final class GenerateKeyCommandTest {
     private final GenerateKeyCommand command = new GenerateKeyCommand();
@@ -52,18 +53,20 @@ public final class GenerateKeyCommandTest {
         weGenerateAValidKey(Algorithm.AES);
     }
 
-    @Test(expected = FileAlreadyExistsException.class)
+    @Test
     public void weDoNotOverwriteAnExistingKeyfile() throws Exception {
-        Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
-        String algorithm = "AES";
+        Assertions.assertThrows(FileAlreadyExistsException.class, () -> {
+            Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
+                    String algorithm = "AES";
 
-        // create the file
-        Files.createFile(tempFilePath);
+                    // create the file
+                    Files.createFile(tempFilePath);
 
-        Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
-                GenerateKeyCommand.ALGORITHM, algorithm,
-                GenerateKeyCommand.FILE, tempFilePath.toString()));
+                    Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
+                            GenerateKeyCommand.ALGORITHM, algorithm,
+                            GenerateKeyCommand.FILE, tempFilePath.toString()));
 
-        command.run(null, namespace);
+                    command.run(null, namespace);
+        });
     }
 }
