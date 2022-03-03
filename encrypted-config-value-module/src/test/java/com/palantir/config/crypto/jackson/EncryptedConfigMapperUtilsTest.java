@@ -34,7 +34,7 @@ import java.nio.file.Files;
 import java.util.List;
 import org.assertj.core.api.HamcrestCondition;
 import org.immutables.value.Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EncryptedConfigMapperUtilsTest {
 

@@ -27,9 +27,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import net.sourceforge.argparse4j.inf.Namespace;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public final class EncryptConfigValueCommandTest {
     private static final String CHARSET = "UTF8";
@@ -40,13 +41,13 @@ public final class EncryptConfigValueCommandTest {
 
     private PrintStream originalSystemOut;
 
-    @Before
+    @BeforeEach
     public void setUpStreams() throws UnsupportedEncodingException {
         originalSystemOut = System.out;
         System.setOut(new PrintStream(outContent, false, CHARSET));
     }
 
-    @After
+    @AfterEach
     public void cleanUpStreams() {
         System.setOut(originalSystemOut);
     }
@@ -82,14 +83,18 @@ public final class EncryptConfigValueCommandTest {
         weEncryptAndPrintAValue(Algorithm.RSA);
     }
 
-    @Test(expected = NoSuchFileException.class)
+    @Test
     public void weFailIfTheKeyfileDoesNotExist() throws Exception {
-        Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
+        Assertions.assertThrows(NoSuchFileException.class, () -> {
+            Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-        Namespace namespace = new Namespace(ImmutableMap.of(
-                EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
-                EncryptConfigValueCommand.VALUE, plaintext));
+            Namespace namespace = new Namespace(ImmutableMap.of(
+                    EncryptConfigValueCommand.KEYFILE,
+                    tempFilePath.toString(),
+                    EncryptConfigValueCommand.VALUE,
+                    plaintext));
 
-        command.run(null, namespace);
+            command.run(null, namespace);
+        });
     }
 }
