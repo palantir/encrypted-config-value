@@ -16,12 +16,10 @@
 
 package com.palantir.config.crypto;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.palantir.config.crypto.util.TestConfig;
 import io.dropwizard.Application;
@@ -29,6 +27,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import java.io.IOException;
+import org.assertj.core.api.HamcrestCondition;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -44,17 +43,17 @@ public final class VariableSubstitutionTest {
 
     @Test
     public void testCanDecryptValueInConfig() throws IOException {
-        assertEquals("value", RULE.getConfiguration().getUnencrypted());
-        assertEquals("value", RULE.getConfiguration().getEncrypted());
-        assertEquals("don't use quotes", RULE.getConfiguration().getEncryptedWithSingleQuote());
-        assertEquals("double quote is \"", RULE.getConfiguration().getEncryptedWithDoubleQuote());
-        assertEquals("[oh dear", RULE.getConfiguration().getEncryptedMalformedYaml());
+        assertThat(RULE.getConfiguration().getUnencrypted()).isEqualTo("value");
+        assertThat(RULE.getConfiguration().getEncrypted()).isEqualTo("value");
+        assertThat(RULE.getConfiguration().getEncryptedWithSingleQuote()).isEqualTo("don't use quotes");
+        assertThat(RULE.getConfiguration().getEncryptedWithDoubleQuote()).isEqualTo("double quote is \"");
+        assertThat(RULE.getConfiguration().getEncryptedMalformedYaml()).isEqualTo("[oh dear");
 
-        assertThat(RULE.getConfiguration().getArrayWithSomeEncryptedValues(),
-                contains("value", "value", "other value", "[oh dear"));
-        assertThat(RULE.getConfiguration().getPojoWithEncryptedValues(),
-                both(hasProperty("username", equalTo("some-user")))
-                .and(hasProperty("password", equalTo("value"))));
+        assertThat(RULE.getConfiguration().getArrayWithSomeEncryptedValues())
+                .containsExactly("value", "value", "other value", "[oh dear");
+        assertThat(RULE.getConfiguration().getPojoWithEncryptedValues())
+                .is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
+                        .and(hasProperty("password", equalTo("value")))));
     }
 
     public static final class TestApplication extends Application<TestConfig> {
