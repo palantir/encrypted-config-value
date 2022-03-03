@@ -1,0 +1,5 @@
+type: break
+break:
+  description: Use Apache commons-text StringSubstitutor
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/335
