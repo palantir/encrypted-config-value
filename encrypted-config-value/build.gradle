@@ -10,14 +10,11 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core'
     implementation 'com.google.code.findbugs:jsr305'
 
-    testImplementation 'org.hamcrest:hamcrest-all'
-    testImplementation 'junit:junit'
-    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine', {
-        because 'allows JUnit 3 and JUnit 4 tests to run'
-    }
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 

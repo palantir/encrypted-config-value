@@ -54,19 +54,19 @@ public final class GenerateKeyCommandTest {
     }
 
     @Test
-    public void weDoNotOverwriteAnExistingKeyfile() throws Exception {
+    public void weDoNotOverwriteAnExistingKeyfile() {
         Assertions.assertThrows(FileAlreadyExistsException.class, () -> {
             Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
-                    String algorithm = "AES";
+            String algorithm = "AES";
 
-                    // create the file
-                    Files.createFile(tempFilePath);
+            // create the file
+            Files.createFile(tempFilePath);
 
-                    Namespace namespace = new Namespace(ImmutableMap.<String, Object>of(
-                            GenerateKeyCommand.ALGORITHM, algorithm,
-                            GenerateKeyCommand.FILE, tempFilePath.toString()));
+            Namespace namespace = new Namespace(ImmutableMap.of(
+                    GenerateKeyCommand.ALGORITHM, algorithm,
+                    GenerateKeyCommand.FILE, tempFilePath.toString()));
 
-                    command.run(null, namespace);
+            command.run(null, namespace);
         });
     }
 }

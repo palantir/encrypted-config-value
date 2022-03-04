@@ -84,15 +84,15 @@ public final class EncryptConfigValueCommandTest {
     }
 
     @Test
-    public void weFailIfTheKeyfileDoesNotExist() throws Exception {
+    public void weFailIfTheKeyfileDoesNotExist() {
         Assertions.assertThrows(NoSuchFileException.class, () -> {
             Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-                    Namespace namespace = new Namespace(ImmutableMap.of(
-                            EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
-                            EncryptConfigValueCommand.VALUE, plaintext));
+            Namespace namespace = new Namespace(ImmutableMap.of(
+                    EncryptConfigValueCommand.KEYFILE, tempFilePath.toString(),
+                    EncryptConfigValueCommand.VALUE, plaintext));
 
-                    command.run(null, namespace);
+            command.run(null, namespace);
         });
     }
 }

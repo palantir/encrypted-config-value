@@ -17,9 +17,6 @@
 package com.palantir.config.crypto.jackson;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +26,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.palantir.config.crypto.KeyFileUtils;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
-import org.assertj.core.api.HamcrestCondition;
 import org.immutables.value.Value;
 import org.junit.jupiter.api.Test;
 
@@ -58,13 +53,15 @@ public class EncryptedConfigMapperUtilsTest {
         assertThat(config.getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
         assertThat(config.getPojoWithEncryptedValues())
-                .is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
-                        .and(hasProperty("password", equalTo("value")))));
+                .satisfies(person -> {
+                    assertThat(person.getUsername()).isEqualTo("some-user");
+                    assertThat(person.getPassword()).isEqualTo("value");
+                });
     }
 
     @Test
     public final void testCanDecryptValueInConfigFileContent() throws IOException {
-        String configFileContent = new String(Files.readAllBytes(CONFIG_FILE.toPath()), StandardCharsets.UTF_8);
+        String configFileContent = Files.readString(CONFIG_FILE.toPath());
         TestConfig config = EncryptedConfigMapperUtils.getConfig(configFileContent, TestConfig.class, MAPPER);
 
         assertThat(config.getUnencrypted()).isEqualTo("value");
@@ -76,8 +73,10 @@ public class EncryptedConfigMapperUtilsTest {
         assertThat(config.getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
         assertThat(config.getPojoWithEncryptedValues())
-                .is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
-                        .and(hasProperty("password", equalTo("value")))));
+                .satisfies(person -> {
+                    assertThat(person.getUsername()).isEqualTo("some-user");
+                    assertThat(person.getPassword()).isEqualTo("value");
+                });
     }
 
     @Value.Immutable
