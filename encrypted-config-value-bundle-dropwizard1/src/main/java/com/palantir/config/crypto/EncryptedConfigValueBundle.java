@@ -28,8 +28,7 @@ public final class EncryptedConfigValueBundle implements Bundle {
 
     // Generically capture configuration type T from Bootstrap<T>, though we don't actually care about it
     private static <T extends Configuration> void setConfigurationFactoryFactory(
-            Bootstrap<T> bootstrap,
-            final JsonNodeVisitor<JsonNode> replacer) {
+            Bootstrap<T> bootstrap, final JsonNodeVisitor<JsonNode> replacer) {
         bootstrap.setConfigurationFactoryFactory(new SubstitutingConfigurationFactory.Factory<T>(replacer));
     }
 
@@ -42,5 +41,4 @@ public final class EncryptedConfigValueBundle implements Bundle {
 
     @Override
     public void run(Environment _environment) {}
-
 }

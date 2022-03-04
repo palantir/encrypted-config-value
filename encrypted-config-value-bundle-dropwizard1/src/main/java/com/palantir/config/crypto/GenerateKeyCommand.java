@@ -35,13 +35,17 @@ public final class GenerateKeyCommand extends Command {
 
     @Override
     public void configure(Subparser subparser) {
-        subparser.addArgument("-a", "--algorithm")
+        subparser
+                .addArgument("-a", "--algorithm")
                 .required(true)
                 .type(String.class)
                 .dest(ALGORITHM)
-                .help("The algorithm to use (see https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator for a list of valid algorithms)");
+                .help("The algorithm to use (see"
+                          + " https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator"
+                          + " for a list of valid algorithms)");
 
-        subparser.addArgument("-f", "--file")
+        subparser
+                .addArgument("-f", "--file")
                 .required(false)
                 .type(String.class)
                 .dest(FILE)
@@ -66,5 +70,4 @@ public final class GenerateKeyCommand extends Command {
             System.out.println("Wrote private key to " + keyPairFiles.decryptionKeyFile());
         }
     }
-
 }

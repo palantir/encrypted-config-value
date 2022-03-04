@@ -45,6 +45,5 @@ public final class AesKeyPair {
         return KeyPair.symmetric(kwa);
     }
 
-    private AesKeyPair() {
-    }
+    private AesKeyPair() {}
 }

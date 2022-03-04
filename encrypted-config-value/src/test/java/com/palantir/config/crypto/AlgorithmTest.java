@@ -83,9 +83,6 @@ public final class AlgorithmTest {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return ImmutableList.of(
-                new Object[] {"AES", Algorithm.AES},
-                new Object[] {"RSA", Algorithm.RSA}
-                );
+        return ImmutableList.of(new Object[] {"AES", Algorithm.AES}, new Object[] {"RSA", Algorithm.RSA});
     }
 }

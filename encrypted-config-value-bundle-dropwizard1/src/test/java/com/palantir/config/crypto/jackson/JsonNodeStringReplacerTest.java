@@ -47,6 +47,7 @@ public final class JsonNodeStringReplacerTest {
 
     @Mock
     private Substitutor substitutor;
+
     @Mock
     private Throwable cause;
 
@@ -85,8 +86,7 @@ public final class JsonNodeStringReplacerTest {
         arrayNode.add(1);
         arrayNode.add(2);
         arrayNode.add(new ObjectNode(
-                JsonNodeFactory.instance,
-                ImmutableMap.<String, JsonNode>of("key", new TextNode("abc"))));
+                JsonNodeFactory.instance, ImmutableMap.<String, JsonNode>of("key", new TextNode("abc"))));
         arrayNode.add(4);
 
         doThrow(new StringSubstitutionException(cause, "abc")).when(substitutor).replace("abc");
@@ -125,15 +125,11 @@ public final class JsonNodeStringReplacerTest {
         arrayNode.add(1);
         arrayNode.add(2);
         arrayNode.add(new ObjectNode(
-                JsonNodeFactory.instance,
-                ImmutableMap.<String, JsonNode>of("key", new TextNode("abc"))));
+                JsonNodeFactory.instance, ImmutableMap.<String, JsonNode>of("key", new TextNode("abc"))));
         arrayNode.add(4);
 
         ObjectNode objectNode = new ObjectNode(
-                JsonNodeFactory.instance,
-                ImmutableMap.<String, JsonNode>of(
-                        "key1", new IntNode(1),
-                        "key2", arrayNode));
+                JsonNodeFactory.instance, ImmutableMap.<String, JsonNode>of("key1", new IntNode(1), "key2", arrayNode));
 
         doThrow(new StringSubstitutionException(cause, "abc")).when(substitutor).replace("abc");
 

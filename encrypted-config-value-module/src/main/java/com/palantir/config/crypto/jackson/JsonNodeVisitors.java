@@ -54,8 +54,7 @@ public final class JsonNodeVisitors {
                 return visitor.visitText((TextNode) node);
             default:
                 throw new SafeIllegalArgumentException(
-                        "Unexpected node type",
-                        SafeArg.of("nodeType", node.getNodeType()));
+                        "Unexpected node type", SafeArg.of("nodeType", node.getNodeType()));
         }
     }
 }

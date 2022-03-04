@@ -16,5 +16,4 @@
 
 package com.palantir.config.crypto.supplier;
 
-
 public interface DecryptedStringSupplier extends ThrowingSupplier<String> {}
