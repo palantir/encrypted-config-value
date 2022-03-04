@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -43,9 +42,9 @@ import java.io.IOException;
  * the value, along with any relevant parameters for the algorithm.
  */
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AesEncryptedValue.class, name = "AES"),
-        @JsonSubTypes.Type(value = RsaEncryptedValue.class, name = "RSA")
-        })
+    @JsonSubTypes.Type(value = AesEncryptedValue.class, name = "AES"),
+    @JsonSubTypes.Type(value = RsaEncryptedValue.class, name = "RSA")
+})
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 public abstract class EncryptedValue {
     private static final ObjectMapper MAPPER = new ObjectMapper();

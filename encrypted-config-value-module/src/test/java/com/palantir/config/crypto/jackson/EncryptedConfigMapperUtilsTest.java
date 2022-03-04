@@ -52,11 +52,10 @@ public class EncryptedConfigMapperUtilsTest {
 
         assertThat(config.getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
-        assertThat(config.getPojoWithEncryptedValues())
-                .satisfies(person -> {
-                    assertThat(person.getUsername()).isEqualTo("some-user");
-                    assertThat(person.getPassword()).isEqualTo("value");
-                });
+        assertThat(config.getPojoWithEncryptedValues()).satisfies(person -> {
+            assertThat(person.getUsername()).isEqualTo("some-user");
+            assertThat(person.getPassword()).isEqualTo("value");
+        });
     }
 
     @Test
@@ -72,11 +71,10 @@ public class EncryptedConfigMapperUtilsTest {
 
         assertThat(config.getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
-        assertThat(config.getPojoWithEncryptedValues())
-                .satisfies(person -> {
-                    assertThat(person.getUsername()).isEqualTo("some-user");
-                    assertThat(person.getPassword()).isEqualTo("value");
-                });
+        assertThat(config.getPojoWithEncryptedValues()).satisfies(person -> {
+            assertThat(person.getUsername()).isEqualTo("some-user");
+            assertThat(person.getPassword()).isEqualTo("value");
+        });
     }
 
     @Value.Immutable
@@ -142,5 +140,4 @@ public class EncryptedConfigMapperUtilsTest {
             return pojoWithEncryptedValues;
         }
     }
-
 }

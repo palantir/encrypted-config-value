@@ -63,8 +63,7 @@ public final class GenerateKeyCommandTest {
             Files.createFile(tempFilePath);
 
             Namespace namespace = new Namespace(ImmutableMap.of(
-                    GenerateKeyCommand.ALGORITHM, algorithm,
-                    GenerateKeyCommand.FILE, tempFilePath.toString()));
+                    GenerateKeyCommand.ALGORITHM, algorithm, GenerateKeyCommand.FILE, tempFilePath.toString()));
 
             command.run(null, namespace);
         });

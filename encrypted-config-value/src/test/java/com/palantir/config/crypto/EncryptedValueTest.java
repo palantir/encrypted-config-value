@@ -118,7 +118,7 @@ public final class EncryptedValueTest {
         EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
 
         KeyWithType decryptionKey = otherKeyPair.decryptionKey();
-        encryptedValue.decrypt(decryptionKey); //throws
+        encryptedValue.decrypt(decryptionKey); // throws
     }
 
     @Test
@@ -170,5 +170,4 @@ public final class EncryptedValueTest {
         weCanDecryptAValue(Algorithm.RSA);
         weCanDecryptUsingAKeyFile(Algorithm.RSA);
     }
-
 }

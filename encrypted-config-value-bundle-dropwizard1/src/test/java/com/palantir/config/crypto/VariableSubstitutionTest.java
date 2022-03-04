@@ -34,8 +34,8 @@ public final class VariableSubstitutionTest {
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
 
-    private static final DropwizardAppExtension<TestConfig> dropwizard = new DropwizardAppExtension<>(
-            TestApplication.class, "src/test/resources/testConfig.yml");
+    private static final DropwizardAppExtension<TestConfig> dropwizard =
+            new DropwizardAppExtension<>(TestApplication.class, "src/test/resources/testConfig.yml");
 
     @Test
     public void testCanDecryptValueInConfig() {
@@ -47,11 +47,10 @@ public final class VariableSubstitutionTest {
 
         assertThat(dropwizard.getConfiguration().getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
-        assertThat(dropwizard.getConfiguration().getPojoWithEncryptedValues())
-                .satisfies(person -> {
-                    assertThat(person.getUsername()).isEqualTo("some-user");
-                    assertThat(person.getPassword()).isEqualTo("value");
-                });
+        assertThat(dropwizard.getConfiguration().getPojoWithEncryptedValues()).satisfies(person -> {
+            assertThat(person.getUsername()).isEqualTo("some-user");
+            assertThat(person.getPassword()).isEqualTo("value");
+        });
     }
 
     public static final class TestApplication extends Application<TestConfig> {
@@ -63,5 +62,4 @@ public final class VariableSubstitutionTest {
         @Override
         public void run(TestConfig _configuration, Environment _environment) {}
     }
-
 }
