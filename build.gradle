@@ -43,6 +43,20 @@ subprojects {
         mavenCentral()
     }
 
+    tasks.withType(Test) {
+        useJUnitPlatform {
+            includeEngines 'junit-jupiter'
+        }
+        maxParallelForks Runtime.getRuntime().availableProcessors()
+        testLogging {
+            events "passed", "skipped", "failed"
+            exceptionFormat "full"
+            showCauses true
+            showExceptions true
+            showStackTraces true
+        }
+    }
+
     tasks.check.dependsOn(checkImplicitDependencies)
     tasks.check.dependsOn(checkUnusedDependencies)
     tasks.check.dependsOn(javadoc)

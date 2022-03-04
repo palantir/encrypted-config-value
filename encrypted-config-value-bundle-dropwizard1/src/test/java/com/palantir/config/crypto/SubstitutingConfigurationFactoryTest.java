@@ -40,7 +40,7 @@ public class SubstitutingConfigurationFactoryTest {
         previousProperty = System.getProperty(KeyFileUtils.KEY_PATH_PROPERTY);
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
 
-        factory = new SubstitutingConfigurationFactory(
+        factory = new SubstitutingConfigurationFactory<TestConfig>(
                 TestConfig.class,
                 Validators.newValidator(),
                 Jackson.newObjectMapper(),

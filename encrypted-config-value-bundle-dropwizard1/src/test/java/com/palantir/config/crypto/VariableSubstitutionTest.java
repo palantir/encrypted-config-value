@@ -24,20 +24,18 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
 public final class VariableSubstitutionTest {
 
-    private static final DropwizardAppExtension<TestConfig> dropwizard = new DropwizardAppExtension<>(
-            TestApplication.class, "src/test/resources/testConfig.yml");
-
-    @BeforeAll
-    static void beforeClass() {
+    static {
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
+
+    private static final DropwizardAppExtension<TestConfig> dropwizard = new DropwizardAppExtension<>(
+            TestApplication.class, "src/test/resources/testConfig.yml");
 
     @Test
     public void testCanDecryptValueInConfig() {
