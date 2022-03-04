@@ -42,7 +42,8 @@ public class DecryptingVariableSubstitutorTest {
 
         Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
         KeyFileUtils.keyPairToFile(KEY_PAIR, tempFilePath);
-        System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, tempFilePath.toAbsolutePath().toString());
+        System.setProperty(
+                KeyFileUtils.KEY_PATH_PROPERTY, tempFilePath.toAbsolutePath().toString());
     }
 
     @AfterClass

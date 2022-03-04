@@ -25,10 +25,7 @@ public class StringSubstitutionException extends RuntimeException {
     private final boolean lastExtensionWasArrayIndex;
 
     private StringSubstitutionException(
-            Throwable cause,
-            String value,
-            StringBuilder fieldBuilder,
-            boolean lastExtensionWasArrayIndex) {
+            Throwable cause, String value, StringBuilder fieldBuilder, boolean lastExtensionWasArrayIndex) {
         super(cause);
         this.value = value;
         this.fieldBuilder = fieldBuilder;
