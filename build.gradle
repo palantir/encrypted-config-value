@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        gradlePluginPortal()
-        mavenCentral()
+        gradlePluginPortal() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
+        mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
     }
 
     dependencies {
@@ -19,7 +19,7 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
 }
 
 apply plugin: 'com.palantir.baseline'
@@ -42,7 +42,7 @@ subprojects {
     apply plugin: 'com.palantir.baseline-exact-dependencies'
 
     repositories {
-        mavenCentral()
+        mavenCentral() { metadataSources { mavenPom(); ignoreGradleMetadataRedirection() } }
     }
 
     tasks.check.dependsOn(checkImplicitDependencies)
