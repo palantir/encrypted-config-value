@@ -28,21 +28,20 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import org.immutables.value.Value;
 
-public final class RsaPrivateKey implements Key {
-    private final PrivateKey privateKey;
+@Value.Immutable
+public abstract class RsaPrivateKey implements Key {
 
-    public RsaPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
-    }
+    public abstract PrivateKey getPrivateKey();
 
-    public PrivateKey getPrivateKey() {
-        return privateKey;
+    public static Key of(PrivateKey privateKey) {
+        return ImmutableRsaPrivateKey.builder().privateKey(privateKey).build();
     }
 
     @Override
-    public byte[] bytes() {
-        return privateKey.getEncoded();
+    public final byte[] bytes() {
+        return getPrivateKey().getEncoded();
     }
 
     @Immutable
@@ -60,7 +59,7 @@ public final class RsaPrivateKey implements Key {
             }
             return ImmutableKeyWithType.builder()
                     .type(KeyType.RSA_PRIVATE)
-                    .key(new RsaPrivateKey(localPrivateKey))
+                    .key(RsaPrivateKey.of(localPrivateKey))
                     .build();
         }
     }

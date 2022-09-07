@@ -25,21 +25,20 @@ import com.palantir.config.crypto.algorithm.KeyGenerator;
 import com.palantir.config.crypto.algorithm.KeyType;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import org.immutables.value.Value;
 
-public final class AesKey implements Key {
-    private final SecretKey secretKey;
+@Value.Immutable
+public abstract class AesKey implements Key {
 
-    public AesKey(SecretKey secretKey) {
-        this.secretKey = secretKey;
-    }
+    public abstract SecretKey getSecretKey();
 
-    public SecretKey getSecretKey() {
-        return secretKey;
+    public static AesKey of(SecretKey secretKey) {
+        return ImmutableAesKey.builder().secretKey(secretKey).build();
     }
 
     @Override
-    public byte[] bytes() {
-        return secretKey.getEncoded();
+    public final byte[] bytes() {
+        return getSecretKey().getEncoded();
     }
 
     @Immutable
@@ -51,7 +50,7 @@ public final class AesKey implements Key {
             SecretKeySpec localSecretKey = new SecretKeySpec(key, Algorithm.AES.toString());
             return ImmutableKeyWithType.builder()
                     .type(KeyType.AES)
-                    .key(new AesKey(localSecretKey))
+                    .key(AesKey.of(localSecretKey))
                     .build();
         }
     }

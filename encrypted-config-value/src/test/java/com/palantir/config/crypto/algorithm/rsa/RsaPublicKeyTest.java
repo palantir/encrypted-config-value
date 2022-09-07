@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2018 Palantir Technologies Inc. All rights reserved.
+ * (c) Copyright 2022 Palantir Technologies Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,32 @@
 
 package com.palantir.config.crypto.algorithm.rsa;
 
-import com.palantir.config.crypto.ImmutableKeyWithType;
-import com.palantir.config.crypto.KeyPair;
-import com.palantir.config.crypto.KeyWithType;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.KeyType;
+import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import org.junit.Test;
 
-public final class RsaKeyPair {
-
-    private static final int KEY_SIZE_BITS = 2048;
-
-    public static KeyPair newKeyPair() {
+public class RsaPublicKeyTest {
+    private static KeyPair generateKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {
             keyPairGenerator = KeyPairGenerator.getInstance(Algorithm.RSA.toString());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        keyPairGenerator.initialize(KEY_SIZE_BITS);
+        keyPairGenerator.initialize(2048);
 
-        java.security.KeyPair rsaKeyPair = keyPairGenerator.generateKeyPair();
-
-        KeyWithType pub = ImmutableKeyWithType.builder()
-                .type(KeyType.RSA_PUBLIC)
-                .key(RsaPublicKey.of(rsaKeyPair.getPublic()))
-                .build();
-
-        KeyWithType priv = ImmutableKeyWithType.builder()
-                .type(KeyType.RSA_PRIVATE)
-                .key(RsaPrivateKey.of(rsaKeyPair.getPrivate()))
-                .build();
-
-        return KeyPair.of(pub, priv);
+        return keyPairGenerator.generateKeyPair();
     }
 
-    private RsaKeyPair() {}
+    @Test
+    public void equalityFromSamePublicKey() {
+        PublicKey publicKey = generateKeyPair().getPublic();
+
+        assertThat(RsaPublicKey.of(publicKey)).isEqualTo(RsaPublicKey.of(publicKey));
+    }
 }

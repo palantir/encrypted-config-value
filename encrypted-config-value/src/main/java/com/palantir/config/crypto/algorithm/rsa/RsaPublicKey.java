@@ -28,21 +28,19 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import org.immutables.value.Value;
 
-public final class RsaPublicKey implements Key {
-    private final PublicKey publicKey;
+@Value.Immutable
+public abstract class RsaPublicKey implements Key {
+    public abstract PublicKey getPublicKey();
 
-    public RsaPublicKey(PublicKey publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public PublicKey getPublicKey() {
-        return publicKey;
+    public static RsaPublicKey of(PublicKey publicKey) {
+        return ImmutableRsaPublicKey.builder().publicKey(publicKey).build();
     }
 
     @Override
-    public byte[] bytes() {
-        return publicKey.getEncoded();
+    public final byte[] bytes() {
+        return getPublicKey().getEncoded();
     }
 
     @Immutable
@@ -60,7 +58,7 @@ public final class RsaPublicKey implements Key {
             }
             return ImmutableKeyWithType.builder()
                     .type(KeyType.RSA_PUBLIC)
-                    .key(new RsaPublicKey(localPublicKey))
+                    .key(RsaPublicKey.of(localPublicKey))
                     .build();
         }
     }

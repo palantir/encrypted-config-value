@@ -24,17 +24,24 @@ import org.junit.Test;
 
 public final class KeyWithTypeTest {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String kwtString = "AES:rqrvWpLld+wKLOyxJYxQVg==";
-    private static final KeyWithType kwt = KeyWithType.fromString(kwtString);
+    private static final String KWT_STRING = "AES:rqrvWpLld+wKLOyxJYxQVg==";
+    private static final KeyWithType KWT = KeyWithType.fromString(KWT_STRING);
 
     @Test
     public void testSerialization() throws IOException {
-        String serialized = mapper.writeValueAsString(kwt);
+        String serialized = mapper.writeValueAsString(KWT);
 
-        String expectedSerialization = String.format("\"%s\"", kwtString);
+        String expectedSerialization = String.format("\"%s\"", KWT_STRING);
         assertThat(serialized).isEqualTo(expectedSerialization);
 
         KeyWithType deserialized = mapper.readValue(serialized, KeyWithType.class);
-        assertThat(deserialized.toString()).isEqualTo(kwt.toString());
+        assertThat(deserialized.toString()).isEqualTo(KWT.toString());
+    }
+
+    @Test
+    public void testEqualityFromSameString() {
+        KeyWithType kwt1 = KeyWithType.fromString(KWT_STRING);
+        KeyWithType kwt2 = KeyWithType.fromString(KWT_STRING);
+        assertThat(kwt1).isEqualTo(kwt2);
     }
 }

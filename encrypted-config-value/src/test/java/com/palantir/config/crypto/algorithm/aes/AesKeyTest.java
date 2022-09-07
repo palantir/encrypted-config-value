@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2018 Palantir Technologies Inc. All rights reserved.
+ * (c) Copyright 2022 Palantir Technologies Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,34 +16,29 @@
 
 package com.palantir.config.crypto.algorithm.aes;
 
-import com.palantir.config.crypto.ImmutableKeyWithType;
-import com.palantir.config.crypto.KeyPair;
-import com.palantir.config.crypto.KeyWithType;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.palantir.config.crypto.algorithm.Algorithm;
-import com.palantir.config.crypto.algorithm.KeyType;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.SecretKey;
+import org.junit.Test;
 
-public final class AesKeyPair {
-
-    private static final int KEY_SIZE_BITS = 256;
-
-    public static KeyPair newKeyPair() {
+public class AesKeyTest {
+    public static SecretKey newSecretKey() {
         javax.crypto.KeyGenerator keyGen;
         try {
             keyGen = javax.crypto.KeyGenerator.getInstance(Algorithm.AES.toString());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        keyGen.init(KEY_SIZE_BITS);
-        SecretKey secretKey = keyGen.generateKey();
-
-        KeyWithType kwa = ImmutableKeyWithType.builder()
-                .type(KeyType.AES)
-                .key(AesKey.of(secretKey))
-                .build();
-        return KeyPair.symmetric(kwa);
+        keyGen.init(128);
+        return keyGen.generateKey();
     }
 
-    private AesKeyPair() {}
+    @Test
+    public void equalityFromSameSecretKey() {
+        SecretKey secretKey = newSecretKey();
+
+        assertThat(AesKey.of(secretKey)).isEqualTo(AesKey.of(secretKey));
+    }
 }
