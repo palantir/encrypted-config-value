@@ -18,22 +18,26 @@ package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.jackson.Substitutor;
 import com.palantir.config.crypto.util.StringSubstitutionException;
-import org.apache.commons.text.StringSubstitutor;
-import org.apache.commons.text.lookup.StringLookupFactory;
+import java.util.regex.Pattern;
 
-public final class DecryptingVariableSubstitutor extends StringSubstitutor implements Substitutor {
+public final class DecryptingVariableSubstitutor implements Substitutor {
 
-    public DecryptingVariableSubstitutor() {
-        super(StringLookupFactory.INSTANCE.functionStringLookup(encryptedValue -> {
-            if (!EncryptedValue.isEncryptedValue(encryptedValue)) {
-                return null;
-            }
+    private static final Pattern PATTERN = Pattern.compile("\\$\\{(enc:.*?)}");
 
-            try {
-                return KeyFileUtils.decryptUsingDefaultKeys(EncryptedValue.fromString(encryptedValue));
-            } catch (RuntimeException e) {
-                throw new StringSubstitutionException(e, encryptedValue);
-            }
-        }));
+    public DecryptingVariableSubstitutor() {}
+
+    @Override
+    public String replace(String source) {
+        if (source != null && source.contains("${")) {
+            return PATTERN.matcher(source).replaceAll(matchResult -> {
+                String encryptedValue = matchResult.group(1);
+                try {
+                    return KeyFileUtils.decryptUsingDefaultKeys(EncryptedValue.fromString(encryptedValue));
+                } catch (RuntimeException e) {
+                    throw new StringSubstitutionException(e, encryptedValue);
+                }
+            });
+        }
+        return source;
     }
 }
