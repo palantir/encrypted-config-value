@@ -1,0 +1,5 @@
+type: fix
+fix:
+  description: '`org.apache.commons:commons-text` has been updated to version `1.10.0`.'
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/415
