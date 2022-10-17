@@ -1,0 +1,6 @@
+type: break
+break:
+  description: Use standard java regex rather than commons-text string-substitutor.
+    Note that `DecryptingVariableSubstitutor` no longer extends commons-lang `StringSubstitutor`.
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/416
