@@ -24,6 +24,8 @@ import com.palantir.config.crypto.util.StringSubstitutionException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.StringLookupFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,6 +79,18 @@ public class DecryptingVariableSubstitutorTest {
     @Test
     public final void variableIsDecrypted() throws Exception {
         assertThat(substitutor.replace("${" + encrypt("abc") + "}")).isEqualTo("abc");
+    }
+
+    @Test
+    public void our_custom_substitutor() {
+        assertThat(substitutor.replace("${script:HelloWorld!}")).isEqualTo("qwerty");
+    }
+
+    @Test
+    public void default_substitutor() {
+        assertThat(new StringSubstitutor(StringLookupFactory.INSTANCE.interpolatorStringLookup())
+                        .replace("${script:HelloWorld!}"))
+                .isEqualTo("qwerty");
     }
 
     private String encrypt(String value) {
