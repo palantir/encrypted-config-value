@@ -17,6 +17,7 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
@@ -82,15 +83,38 @@ public class DecryptingVariableSubstitutorTest {
     }
 
     @Test
-    public void our_custom_substitutor() {
-        assertThat(substitutor.replace("${script:HelloWorld!}")).isEqualTo("qwerty");
+    public void our_custom_substitutor_does_not_run_scripts() {
+        assertThat(substitutor.replace("${script:HelloWorld!}")).isEqualTo("${script:HelloWorld!}");
     }
 
     @Test
-    public void default_substitutor() {
-        assertThat(new StringSubstitutor(StringLookupFactory.INSTANCE.interpolatorStringLookup())
-                        .replace("${script:HelloWorld!}"))
-                .isEqualTo("qwerty");
+    public void our_custom_substitutor_does_not_run_url() {
+        assertThat(substitutor.replace("${url:https://google.com}")).isEqualTo("${url:https://google.com}");
+    }
+
+    @Test
+    public void our_custom_substitutor_does_not_interpolate_dns() {
+        assertThat(substitutor.replace("${dns:address|apache.org}")).isEqualTo("${dns:address|apache.org}");
+    }
+
+    @Test
+    public void our_custom_substitutor_does_not_interpolate_env() {
+        assertThat(substitutor.replace("${env:PATH}")).isEqualTo("${env:PATH}");
+    }
+
+    @Test
+    public void our_custom_substitutor_does_not_interpolate_file() {
+        assertThat(substitutor.replace("${file:.gitignore}")).isEqualTo("${file:.gitignore}");
+    }
+
+    @Test
+    public void default_substitutor_does_interpolate_badly() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> {
+                    new StringSubstitutor(StringLookupFactory.INSTANCE.interpolatorStringLookup())
+                            .replace("${script:invalid-script}");
+                })
+                .withMessageContaining("invalid-script");
     }
 
     private String encrypt(String value) {
