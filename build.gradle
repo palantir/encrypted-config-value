@@ -5,6 +5,8 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.palantir.gradle.jdks:gradle-jdks:0.27.0'
+        classpath 'com.palantir.gradle.jdkslatest:gradle-jdks-latest:0.4.0'
         classpath 'com.palantir.javaformat:gradle-palantir-java-format:2.27.0'
         classpath 'com.palantir.gradle.externalpublish:gradle-external-publish-plugin:1.11.0'
         classpath 'com.palantir.gradle.docker:gradle-docker:0.27.0'
@@ -27,6 +29,7 @@ apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.external-publish'
 apply plugin: 'org.inferred.processors'
 apply plugin: 'com.palantir.baseline-java-versions'
+apply plugin: 'com.palantir.jdks.latest'
 
 allprojects {
     apply plugin: 'com.palantir.java-format'
