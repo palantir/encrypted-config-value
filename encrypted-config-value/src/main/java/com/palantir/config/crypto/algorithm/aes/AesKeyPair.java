@@ -21,6 +21,7 @@ import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.KeyType;
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.SecretKey;
 
@@ -33,7 +34,7 @@ public final class AesKeyPair {
         try {
             keyGen = javax.crypto.KeyGenerator.getInstance(Algorithm.AES.toString());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new SafeRuntimeException(e);
         }
         keyGen.init(KEY_SIZE_BITS);
         SecretKey secretKey = keyGen.generateKey();

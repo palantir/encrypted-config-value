@@ -21,6 +21,7 @@ import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.KeyType;
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 
@@ -33,7 +34,7 @@ public final class RsaKeyPair {
         try {
             keyPairGenerator = KeyPairGenerator.getInstance(Algorithm.RSA.toString());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new SafeRuntimeException(e);
         }
         keyPairGenerator.initialize(KEY_SIZE_BITS);
 
