@@ -16,18 +16,22 @@
 
 package com.palantir.config.crypto.algorithm;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.palantir.logsafe.Preconditions.checkArgument;
 
+import com.google.errorprone.annotations.CompileTimeConstant;
 import com.palantir.config.crypto.Key;
 import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.aes.AesKey;
 import com.palantir.config.crypto.algorithm.rsa.RsaPrivateKey;
 import com.palantir.config.crypto.algorithm.rsa.RsaPublicKey;
+import com.palantir.logsafe.Safe;
+import com.palantir.logsafe.SafeArg;
 
 /**
  * KeyType defines the universe of available key types. Each key type has a unique name and supports creating a new
  * {@link KeyWithType} based on key bytes.
  */
+@Safe
 public enum KeyType {
     AES("AES", AesKey.AesKeyGenerator.INSTANCE, Algorithm.AES),
     RSA_PUBLIC("RSA-PUB", RsaPublicKey.RsaPublicKeyGenerator.INSTANCE, Algorithm.RSA),
@@ -42,11 +46,13 @@ public enum KeyType {
         throw new IllegalArgumentException("unrecognized key algorithm: " + name);
     }
 
+    @Safe
     private final String name;
+
     private final KeyGenerator generator;
     private final Algorithm algorithm;
 
-    KeyType(String name, KeyGenerator generator, Algorithm algorithm) {
+    KeyType(@CompileTimeConstant String name, KeyGenerator generator, Algorithm algorithm) {
         this.name = name;
         this.generator = generator;
         this.algorithm = algorithm;
@@ -66,11 +72,15 @@ public enum KeyType {
     }
 
     public void checkKeyArgument(KeyWithType kwt, Class<? extends Key> keyClazz) {
-        checkArgument(kwt.getType().equals(this), "key must be for %s algorithm but was %s", this, kwt.getType());
+        checkArgument(
+                kwt.getType().equals(this),
+                "key type did not match expected type for algorithm",
+                SafeArg.of("algorithm", name),
+                SafeArg.of("type", kwt.getType()));
         checkArgument(
                 keyClazz.isAssignableFrom(kwt.getKey().getClass()),
-                "key must be of type %s but was %s",
-                keyClazz,
-                kwt.getKey().getClass());
+                "key type did not match expected type",
+                SafeArg.of("expected", keyClazz),
+                SafeArg.of("actual", kwt.getKey().getClass()));
     }
 }
