@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.BaseEncoding;
 import com.palantir.config.crypto.algorithm.aes.AesEncryptedValue;
 import com.palantir.config.crypto.algorithm.rsa.RsaEncryptedValue;
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.io.IOException;
 
 /**
@@ -104,7 +105,7 @@ public abstract class EncryptedValue {
         try {
             return MAPPER.writeValueAsBytes(value);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new SafeRuntimeException(e);
         }
     }
 }

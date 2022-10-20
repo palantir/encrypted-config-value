@@ -23,6 +23,7 @@ import com.palantir.config.crypto.KeyWithType;
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.KeyGenerator;
 import com.palantir.config.crypto.algorithm.KeyType;
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -56,7 +57,7 @@ public final class RsaPrivateKey implements Key {
                 localPrivateKey =
                         KeyFactory.getInstance(Algorithm.RSA.toString()).generatePrivate(new PKCS8EncodedKeySpec(key));
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
+                throw new SafeRuntimeException(e);
             }
             return ImmutableKeyWithType.builder()
                     .type(KeyType.RSA_PRIVATE)

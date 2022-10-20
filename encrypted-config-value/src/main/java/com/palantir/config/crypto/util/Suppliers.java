@@ -17,7 +17,7 @@
 package com.palantir.config.crypto.util;
 
 import com.palantir.config.crypto.supplier.ThrowingSupplier;
-import java.io.IOException;
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -37,24 +37,25 @@ public final class Suppliers {
         try {
             return supplier.get();
         } catch (AEADBadTagException e) {
-            throw new RuntimeException(
+            throw new SafeRuntimeException(
                     "couldn't verify the message's authentication tag "
                             + "- either the message was tampered with, or the key is invalid",
                     e);
         } catch (InvalidKeyException | InvalidKeySpecException e) {
-            throw new RuntimeException("the key was invalid", e);
+            throw new SafeRuntimeException("the key was invalid", e);
         } catch (NoSuchPaddingException | BadPaddingException e) {
-            throw new RuntimeException("the padding was invalid", e);
+            throw new SafeRuntimeException("the padding was invalid", e);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException("illegal block size", e);
+            throw new SafeRuntimeException("illegal block size", e);
         } catch (NoSuchProviderException | NoSuchAlgorithmException e) {
-            throw new RuntimeException("there was not a provider for the given algorithm", e);
+            throw new SafeRuntimeException("there was not a provider for the given algorithm", e);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException("the algorithm parameter was invalid", e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new SafeRuntimeException("the algorithm parameter was invalid", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new SafeRuntimeException(e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new SafeRuntimeException(e);
         }
     }
 }

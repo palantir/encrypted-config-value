@@ -16,12 +16,14 @@
 
 package com.palantir.config.crypto;
 
+import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 
 public final class KeyFileUtils {
     public static final String KEY_PATH_PROPERTY = "palantir.config.key_path";
@@ -32,7 +34,7 @@ public final class KeyFileUtils {
         try {
             keyPair = keyPairFromDefaultPath();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read key", e);
+            throw new SafeRuntimeException("Failed to read key", e);
         }
         return encryptedValue.decrypt(keyPair.decryptionKey());
     }
@@ -51,7 +53,7 @@ public final class KeyFileUtils {
         keyWithTypeToFile(keyPair.encryptionKey(), path);
 
         Path decryptionKeyPath = path;
-        if (keyPair.encryptionKey() != keyPair.decryptionKey()) {
+        if (!Objects.equals(keyPair.encryptionKey(), keyPair.decryptionKey())) {
             decryptionKeyPath = privatePath(path);
             keyWithTypeToFile(keyPair.decryptionKey(), decryptionKeyPath);
         }

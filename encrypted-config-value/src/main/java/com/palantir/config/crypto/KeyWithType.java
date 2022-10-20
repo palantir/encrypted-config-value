@@ -16,7 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.palantir.logsafe.Preconditions.checkArgument;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
