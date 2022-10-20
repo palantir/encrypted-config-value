@@ -18,10 +18,11 @@ dependencies {
     testImplementation 'io.dropwizard:dropwizard-jackson'
     testImplementation 'io.dropwizard:dropwizard-jersey'
     testImplementation 'io.dropwizard:dropwizard-testing'
-    testImplementation 'junit:junit'
     testImplementation 'org.assertj:assertj-core'
-    testImplementation 'org.hamcrest:hamcrest-all'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 
 tasks.check.dependsOn(javadoc)

@@ -17,43 +17,40 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.both;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
 
 import com.palantir.config.crypto.util.TestConfig;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.dropwizard.testing.junit.DropwizardAppRule;
-import java.io.IOException;
-import org.assertj.core.api.HamcrestCondition;
-import org.junit.ClassRule;
-import org.junit.Test;
+import io.dropwizard.testing.junit5.DropwizardAppExtension;
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(DropwizardExtensionsSupport.class)
 public final class VariableSubstitutionTest {
 
     static {
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
     }
 
-    @ClassRule
-    public static final DropwizardAppRule<TestConfig> RULE =
-            new DropwizardAppRule(TestApplication.class, "src/test/resources/testConfig.yml");
+    private static final DropwizardAppExtension<TestConfig> dropwizard =
+            new DropwizardAppExtension<>(TestApplication.class, "src/test/resources/testConfig.yml");
 
     @Test
-    public void testCanDecryptValueInConfig() throws IOException {
-        assertThat(RULE.getConfiguration().getUnencrypted()).isEqualTo("value");
-        assertThat(RULE.getConfiguration().getEncrypted()).isEqualTo("value");
-        assertThat(RULE.getConfiguration().getEncryptedWithSingleQuote()).isEqualTo("don't use quotes");
-        assertThat(RULE.getConfiguration().getEncryptedWithDoubleQuote()).isEqualTo("double quote is \"");
-        assertThat(RULE.getConfiguration().getEncryptedMalformedYaml()).isEqualTo("[oh dear");
+    public void testCanDecryptValueInConfig() {
+        assertThat(dropwizard.getConfiguration().getUnencrypted()).isEqualTo("value");
+        assertThat(dropwizard.getConfiguration().getEncrypted()).isEqualTo("value");
+        assertThat(dropwizard.getConfiguration().getEncryptedWithSingleQuote()).isEqualTo("don't use quotes");
+        assertThat(dropwizard.getConfiguration().getEncryptedWithDoubleQuote()).isEqualTo("double quote is \"");
+        assertThat(dropwizard.getConfiguration().getEncryptedMalformedYaml()).isEqualTo("[oh dear");
 
-        assertThat(RULE.getConfiguration().getArrayWithSomeEncryptedValues())
+        assertThat(dropwizard.getConfiguration().getArrayWithSomeEncryptedValues())
                 .containsExactly("value", "value", "other value", "[oh dear");
-        assertThat(RULE.getConfiguration().getPojoWithEncryptedValues())
-                .is(new HamcrestCondition<>(both(hasProperty("username", equalTo("some-user")))
-                        .and(hasProperty("password", equalTo("value")))));
+        assertThat(dropwizard.getConfiguration().getPojoWithEncryptedValues()).satisfies(person -> {
+            assertThat(person.getUsername()).isEqualTo("some-user");
+            assertThat(person.getPassword()).isEqualTo("value");
+        });
     }
 
     public static final class TestApplication extends Application<TestConfig> {
@@ -63,6 +60,6 @@ public final class VariableSubstitutionTest {
         }
 
         @Override
-        public void run(TestConfig _configuration, Environment _environment) throws Exception {}
+        public void run(TestConfig _configuration, Environment _environment) {}
     }
 }

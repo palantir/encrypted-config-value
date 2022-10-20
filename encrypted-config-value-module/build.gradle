@@ -15,9 +15,9 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-annotations'
     testImplementation 'com.google.code.findbugs:jsr305'
     testImplementation 'com.google.errorprone:error_prone_annotations'
-    testImplementation 'junit:junit'
     testImplementation 'org.assertj:assertj-core'
-    testImplementation 'org.hamcrest:hamcrest-all'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
 }
 
 tasks.check.dependsOn(javadoc)

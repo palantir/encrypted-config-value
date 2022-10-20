@@ -12,10 +12,12 @@ dependencies {
     implementation 'com.palantir.safe-logging:safe-logging'
     implementation 'com.palantir.safe-logging:preconditions'
 
-    testImplementation 'org.hamcrest:hamcrest-all'
-    testImplementation 'junit:junit'
-    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 
 tasks.check.dependsOn(javadoc)

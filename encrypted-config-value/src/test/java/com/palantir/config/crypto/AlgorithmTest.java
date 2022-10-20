@@ -17,39 +17,26 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
-import com.google.common.collect.ImmutableList;
 import com.palantir.config.crypto.algorithm.Algorithm;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import org.assertj.core.api.HamcrestCondition;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
-@RunWith(value = Parameterized.class)
 public final class AlgorithmTest {
     private static final String plaintext = "Some top secret plaintext for testing things";
 
-    private final Algorithm algorithm;
-
-    public AlgorithmTest(String _name, Algorithm algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    @Test
-    public void weGenerateRandomKeys() {
+    @ParameterizedTest
+    @EnumSource(Algorithm.class)
+    public void weGenerateRandomKeys(Algorithm algorithm) {
         KeyPair keyPair1 = algorithm.newKeyPair();
         KeyPair keyPair2 = algorithm.newKeyPair();
 
-        assertThat(keyPair1).is(new HamcrestCondition<>(is(not(keyPair2))));
+        assertThat(keyPair1).isNotSameAs(keyPair2).isNotEqualTo(keyPair2);
     }
 
-    @Test
-    public void weCanEncryptAndDecrypt() throws NoSuchAlgorithmException {
+    @ParameterizedTest
+    @EnumSource(Algorithm.class)
+    public void weCanEncryptAndDecrypt(Algorithm algorithm) {
         KeyPair keyPair = algorithm.newKeyPair();
 
         EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
@@ -60,17 +47,18 @@ public final class AlgorithmTest {
         assertThat(decrypted).isEqualTo(plaintext);
     }
 
-    @Test
-    public void theSameStringEncryptsToDifferentCiphertexts() throws NoSuchAlgorithmException {
+    @ParameterizedTest
+    @EnumSource(Algorithm.class)
+    public void theSameStringEncryptsToDifferentCiphertexts(Algorithm algorithm) {
         KeyPair keyPair = algorithm.newKeyPair();
 
         EncryptedValue encrypted1 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
         EncryptedValue encrypted2 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
 
         // we don't want to leak that certain values are the same
-        assertThat(encrypted1).is(new HamcrestCondition<>(is(not(encrypted2))));
+        assertThat(encrypted1).isNotSameAs(encrypted2).isNotEqualTo(encrypted2);
         // paranoia, let's say the equals method is badly behaved
-        assertThat(encrypted1.toString()).is(new HamcrestCondition<>(is(not(encrypted2.toString()))));
+        assertThat(encrypted1.toString()).isNotSameAs(encrypted2.toString()).isNotEqualTo(encrypted2.toString());
 
         // we should naturally decrypt back to the same thing - the plaintext
         KeyWithType decryptionKey = keyPair.decryptionKey();
@@ -79,10 +67,5 @@ public final class AlgorithmTest {
 
         assertThat(decryptedString1).isEqualTo(plaintext);
         assertThat(decryptedString2).isEqualTo(plaintext);
-    }
-
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return ImmutableList.of(new Object[] {"AES", Algorithm.AES}, new Object[] {"RSA", Algorithm.RSA});
     }
 }

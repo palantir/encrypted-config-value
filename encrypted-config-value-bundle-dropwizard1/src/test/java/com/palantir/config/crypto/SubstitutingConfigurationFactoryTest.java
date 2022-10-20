@@ -27,20 +27,20 @@ import io.dropwizard.jackson.Jackson;
 import io.dropwizard.jersey.validation.Validators;
 import java.io.File;
 import java.io.IOException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class SubstitutingConfigurationFactoryTest {
     private static String previousProperty;
     private static SubstitutingConfigurationFactory<TestConfig> factory;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws IOException {
         previousProperty = System.getProperty(KeyFileUtils.KEY_PATH_PROPERTY);
         System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, "src/test/resources/test.key");
 
-        factory = new SubstitutingConfigurationFactory(
+        factory = new SubstitutingConfigurationFactory<TestConfig>(
                 TestConfig.class,
                 Validators.newValidator(),
                 Jackson.newObjectMapper(),
@@ -48,7 +48,7 @@ public class SubstitutingConfigurationFactoryTest {
                 new JsonNodeStringReplacer(new DecryptingVariableSubstitutor()));
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         if (previousProperty != null) {
             System.setProperty(KeyFileUtils.KEY_PATH_PROPERTY, previousProperty);
