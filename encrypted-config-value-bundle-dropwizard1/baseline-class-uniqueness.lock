@@ -2,38 +2,6 @@
 # Run ./gradlew checkClassUniqueness --write-locks to update this file
 
 ## runtimeClasspath
-[jakarta.activation:jakarta.activation-api, javax.activation:javax.activation-api]
-  - javax.activation.ActivationDataFlavor
-  - javax.activation.CommandInfo
-  - javax.activation.CommandInfo$Beans
-  - javax.activation.CommandInfo$Beans$1
-  - javax.activation.CommandMap
-  - javax.activation.CommandObject
-  - javax.activation.DataContentHandler
-  - javax.activation.DataContentHandlerFactory
-  - javax.activation.DataHandler
-  - javax.activation.DataHandler$1
-  - javax.activation.DataHandlerDataSource
-  - javax.activation.DataSource
-  - javax.activation.DataSourceDataContentHandler
-  - javax.activation.FileDataSource
-  - javax.activation.FileTypeMap
-  - javax.activation.MailcapCommandMap
-  - javax.activation.MailcapCommandMap$1
-  - javax.activation.MimeType
-  - javax.activation.MimeTypeParameterList
-  - javax.activation.MimeTypeParseException
-  - javax.activation.MimetypesFileTypeMap
-  - javax.activation.MimetypesFileTypeMap$1
-  - javax.activation.ObjectDataContentHandler
-  - javax.activation.SecuritySupport
-  - javax.activation.SecuritySupport$1
-  - javax.activation.SecuritySupport$2
-  - javax.activation.SecuritySupport$3
-  - javax.activation.SecuritySupport$4
-  - javax.activation.SecuritySupport$5
-  - javax.activation.URLDataSource
-  - javax.activation.UnsupportedDataTypeException
 [jakarta.xml.bind:jakarta.xml.bind-api, javax.xml.bind:jaxb-api]
   - META-INF.versions.9.javax.xml.bind.ModuleUtil
   - javax.xml.bind.Binder
