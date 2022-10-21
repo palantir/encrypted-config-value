@@ -7,6 +7,7 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'io.dropwizard:dropwizard-core', {
         exclude module: 'jakarta.activation-api'
+        exclude module: 'jakarta.xml.bind-api'
     }
 
     implementation 'io.dropwizard:dropwizard-configuration'
