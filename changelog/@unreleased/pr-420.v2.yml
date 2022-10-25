@@ -1,0 +1,5 @@
+type: break
+break:
+  description: Remove support for obsolete dropwizard-1.x
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/420
