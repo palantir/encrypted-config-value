@@ -17,13 +17,13 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public final class EncryptedValueTest {
@@ -97,18 +97,20 @@ public final class EncryptedValueTest {
 
     @Test
     public void weFailToConstructWithInvalidPrefix() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
-            EncryptedValue.fromString(invalid);
-        }); // throws
+        assertThatThrownBy(() -> {
+                    String invalid = "anc:TCkE/OT7xsKWqP4SRNBEj54Pk7wDMQzMGJtX90toFuGeejM/LQBDTZ8hEaKQt/3i";
+                    EncryptedValue.fromString(invalid);
+                })
+                .isInstanceOf(IllegalArgumentException.class); // throws
     }
 
     @Test
     public void weFailToConstructWithAnInvalidEncryptedValue() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            String invalid = "enc:verysecret^^";
-            EncryptedValue.fromString(invalid);
-        }); // throws if suffix is not a base64-encoded string
+        assertThatThrownBy(() -> {
+                    String invalid = "enc:verysecret^^";
+                    EncryptedValue.fromString(invalid);
+                })
+                .isInstanceOf(IllegalArgumentException.class); // throws if suffix is not a base64-encoded string
     }
 
     private void weCannotDecryptWithTheWrongKey(Algorithm algorithm) throws NoSuchAlgorithmException {
@@ -123,16 +125,18 @@ public final class EncryptedValueTest {
 
     @Test
     public void weCannotDecryptWithTheWrongAesKey() throws NoSuchAlgorithmException {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            weCannotDecryptWithTheWrongKey(Algorithm.AES);
-        });
+        assertThatThrownBy(() -> {
+                    weCannotDecryptWithTheWrongKey(Algorithm.AES);
+                })
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
     public void weCannotDecryptWithTheWrongRsaKey() throws NoSuchAlgorithmException {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            weCannotDecryptWithTheWrongKey(Algorithm.RSA);
-        });
+        assertThatThrownBy(() -> {
+                    weCannotDecryptWithTheWrongKey(Algorithm.RSA);
+                })
+                .isInstanceOf(RuntimeException.class);
     }
 
     private void weCanDecryptAValue(Algorithm algorithm) {

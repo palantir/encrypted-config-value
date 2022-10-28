@@ -17,6 +17,7 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.algorithm.Algorithm;
@@ -24,7 +25,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import net.sourceforge.argparse4j.inf.Namespace;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public final class GenerateKeyCommandTest {
@@ -55,17 +55,19 @@ public final class GenerateKeyCommandTest {
 
     @Test
     public void weDoNotOverwriteAnExistingKeyfile() {
-        Assertions.assertThrows(FileAlreadyExistsException.class, () -> {
-            Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
-            String algorithm = "AES";
+        assertThatThrownBy(() -> {
+                    Path tempFilePath =
+                            Files.createTempDirectory("temp-key-directory").resolve("test.key");
+                    String algorithm = "AES";
 
-            // create the file
-            Files.createFile(tempFilePath);
+                    // create the file
+                    Files.createFile(tempFilePath);
 
-            Namespace namespace = new Namespace(ImmutableMap.of(
-                    GenerateKeyCommand.ALGORITHM, algorithm, GenerateKeyCommand.FILE, tempFilePath.toString()));
+                    Namespace namespace = new Namespace(ImmutableMap.of(
+                            GenerateKeyCommand.ALGORITHM, algorithm, GenerateKeyCommand.FILE, tempFilePath.toString()));
 
-            command.run(null, namespace);
-        });
+                    command.run(null, namespace);
+                })
+                .isInstanceOf(FileAlreadyExistsException.class);
     }
 }
