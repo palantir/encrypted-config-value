@@ -49,7 +49,7 @@ import java.io.IOException;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 public abstract class EncryptedValue {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String PREFIX = "enc:";
+    static final String PREFIX = "enc:";
 
     @JsonIgnore
     public abstract <T> T accept(EncryptedValueVisitor<T> visitor);
