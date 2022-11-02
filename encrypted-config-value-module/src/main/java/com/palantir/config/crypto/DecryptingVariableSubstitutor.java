@@ -18,6 +18,7 @@ package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.jackson.Substitutor;
 import com.palantir.config.crypto.util.StringSubstitutionException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class DecryptingVariableSubstitutor implements Substitutor {
@@ -32,7 +33,8 @@ public final class DecryptingVariableSubstitutor implements Substitutor {
             return PATTERN.matcher(source).replaceAll(matchResult -> {
                 String encryptedValue = matchResult.group(1);
                 try {
-                    return KeyFileUtils.decryptUsingDefaultKeys(EncryptedValue.fromString(encryptedValue));
+                    return Matcher.quoteReplacement(
+                            KeyFileUtils.decryptUsingDefaultKeys(EncryptedValue.fromString(encryptedValue)));
                 } catch (RuntimeException e) {
                     throw new StringSubstitutionException(e, encryptedValue);
                 }
