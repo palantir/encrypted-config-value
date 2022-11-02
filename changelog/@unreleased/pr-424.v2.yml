@@ -1,0 +1,5 @@
+type: fix
+fix:
+  description: Fix decryption of values including replacement syntax
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/424

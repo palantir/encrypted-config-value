@@ -79,6 +79,11 @@ public class DecryptingVariableSubstitutorTest {
         assertThat(substitutor.replace("${" + encrypt("abc") + "}")).isEqualTo("abc");
     }
 
+    @Test
+    public final void variableIsDecryptedWithRegex() throws Exception {
+        assertThat(substitutor.replace("${" + encrypt("$5") + "}")).isEqualTo("$5");
+    }
+
     private String encrypt(String value) {
         return ALGORITHM.newEncrypter().encrypt(KEY_PAIR.encryptionKey(), value).toString();
     }
