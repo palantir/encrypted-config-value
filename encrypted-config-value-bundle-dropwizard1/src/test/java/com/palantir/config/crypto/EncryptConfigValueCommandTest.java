@@ -17,6 +17,7 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableMap;
 import com.palantir.config.crypto.algorithm.Algorithm;
@@ -28,7 +29,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,16 +87,18 @@ public final class EncryptConfigValueCommandTest {
 
     @Test
     public void weFailIfTheKeyfileDoesNotExist() {
-        Assertions.assertThrows(NoSuchFileException.class, () -> {
-            Path tempFilePath = Files.createTempDirectory("temp-key-directory").resolve("test.key");
+        assertThatThrownBy(() -> {
+                    Path tempFilePath =
+                            Files.createTempDirectory("temp-key-directory").resolve("test.key");
 
-            Namespace namespace = new Namespace(ImmutableMap.of(
-                    EncryptConfigValueCommand.KEYFILE,
-                    tempFilePath.toString(),
-                    EncryptConfigValueCommand.VALUE,
-                    plaintext));
+                    Namespace namespace = new Namespace(ImmutableMap.of(
+                            EncryptConfigValueCommand.KEYFILE,
+                            tempFilePath.toString(),
+                            EncryptConfigValueCommand.VALUE,
+                            plaintext));
 
-            command.run(null, namespace);
-        });
+                    command.run(null, namespace);
+                })
+                .isInstanceOf(NoSuchFileException.class);
     }
 }
