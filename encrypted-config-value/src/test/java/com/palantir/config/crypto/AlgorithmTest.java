@@ -19,14 +19,27 @@ package com.palantir.config.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Stream;
+import net.jqwik.api.Assume;
+import net.jqwik.api.EdgeCasesMode;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.constraints.StringLength;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public final class AlgorithmTest {
-    private static final String plaintext = "Some top secret plaintext for testing things";
+    static Stream<Arguments> args() {
+        return Stream.of(Algorithm.values())
+                .flatMap(algorithm -> Stream.of(
+                        Arguments.of(algorithm, "Some top secret plaintext for testing things"),
+                        Arguments.of(algorithm, "test")));
+    }
 
     @ParameterizedTest
-    @EnumSource(Algorithm.class)
+    @MethodSource("args")
     public void weGenerateRandomKeys(Algorithm algorithm) {
         KeyPair keyPair1 = algorithm.newKeyPair();
         KeyPair keyPair2 = algorithm.newKeyPair();
@@ -35,21 +48,14 @@ public final class AlgorithmTest {
     }
 
     @ParameterizedTest
-    @EnumSource(Algorithm.class)
-    public void weCanEncryptAndDecrypt(Algorithm algorithm) {
-        KeyPair keyPair = algorithm.newKeyPair();
-
-        EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
-
-        KeyWithType decryptionKey = keyPair.decryptionKey();
-        String decrypted = encryptedValue.decrypt(decryptionKey);
-
-        assertThat(decrypted).isEqualTo(plaintext);
+    @MethodSource("args")
+    public void weCanEncryptAndDecrypt(Algorithm algorithm, String plaintext) {
+        encryptAndDecrypt(algorithm, plaintext);
     }
 
     @ParameterizedTest
-    @EnumSource(Algorithm.class)
-    public void theSameStringEncryptsToDifferentCiphertexts(Algorithm algorithm) {
+    @MethodSource("args")
+    public void theSameStringEncryptsToDifferentCiphertexts(Algorithm algorithm, String plaintext) {
         KeyPair keyPair = algorithm.newKeyPair();
 
         EncryptedValue encrypted1 = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
@@ -67,5 +73,28 @@ public final class AlgorithmTest {
 
         assertThat(decryptedString1).isEqualTo(plaintext);
         assertThat(decryptedString2).isEqualTo(plaintext);
+    }
+
+    @Property(tries = 10_000)
+    void aes(@ForAll @StringLength(max = 100_000) String plaintext) {
+        encryptAndDecrypt(Algorithm.AES, plaintext);
+    }
+
+    @Property(tries = 100, edgeCases = EdgeCasesMode.MIXIN)
+    void rsa(@ForAll @StringLength(max = 64) String plaintext) {
+        // RSA test key can only encrypt 190 bytes
+        Assume.that(plaintext.getBytes(StandardCharsets.UTF_8).length <= 190);
+        encryptAndDecrypt(Algorithm.RSA, plaintext);
+    }
+
+    private static void encryptAndDecrypt(Algorithm algorithm, String plaintext) {
+        KeyPair keyPair = algorithm.newKeyPair();
+
+        EncryptedValue encryptedValue = algorithm.newEncrypter().encrypt(keyPair.encryptionKey(), plaintext);
+
+        KeyWithType decryptionKey = keyPair.decryptionKey();
+        String decrypted = encryptedValue.decrypt(decryptionKey);
+
+        assertThat(decrypted).isEqualTo(plaintext);
     }
 }

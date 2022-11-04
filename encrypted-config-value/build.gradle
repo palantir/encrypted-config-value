@@ -12,6 +12,9 @@ dependencies {
     implementation 'com.palantir.safe-logging:safe-logging'
     implementation 'com.palantir.safe-logging:preconditions'
 
+    testRuntimeOnly 'net.jqwik:jqwik'
+
+    testImplementation 'net.jqwik:jqwik-api'
     testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
