@@ -11,6 +11,6 @@ net.jqwik:* = 1.7.1
 org.assertj:assertj-core = 3.23.1
 org.immutables:* = 2.8.8
 org.junit.jupiter:* = 5.9.1
-org.mockito:* = 4.8.1
+org.mockito:* = 4.9.0
 org.objenesis:objenesis = 3.3
 org.slf4j:* = 1.7.36
