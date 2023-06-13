@@ -46,6 +46,25 @@ public final class RsaPrivateKey implements Key {
         return privateKey.getEncoded();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final RsaPrivateKey other = (RsaPrivateKey) obj;
+        return privateKey.equals(other.getPrivateKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return privateKey.hashCode();
+    }
+
     @Immutable
     public enum RsaPrivateKeyGenerator implements KeyGenerator {
         INSTANCE;

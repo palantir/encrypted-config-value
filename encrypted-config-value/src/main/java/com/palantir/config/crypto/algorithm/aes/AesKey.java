@@ -42,6 +42,25 @@ public final class AesKey implements Key {
         return secretKey.getEncoded();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final AesKey other = (AesKey) obj;
+        return secretKey.equals(other.getSecretKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return secretKey.hashCode();
+    }
+
     @Immutable
     public enum AesKeyGenerator implements KeyGenerator {
         INSTANCE;
