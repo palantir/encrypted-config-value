@@ -46,6 +46,25 @@ public final class RsaPublicKey implements Key {
         return publicKey.getEncoded();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final RsaPublicKey other = (RsaPublicKey) obj;
+        return publicKey.equals(other.getPublicKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return publicKey.hashCode();
+    }
+
     @Immutable
     public enum RsaPublicKeyGenerator implements KeyGenerator {
         INSTANCE;
