@@ -19,12 +19,12 @@ package com.palantir.config.crypto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.palantir.config.crypto.jackson.JsonNodeStringReplacer;
 import com.palantir.config.crypto.jackson.JsonNodeVisitor;
-import io.dropwizard.Bundle;
-import io.dropwizard.Configuration;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.Configuration;
+import io.dropwizard.core.ConfiguredBundle;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
 
-public final class EncryptedConfigValueBundle implements Bundle {
+public final class EncryptedConfigValueBundle<T extends Configuration> implements ConfiguredBundle<T> {
 
     // Generically capture configuration type T from Bootstrap<T>, though we don't actually care about it
     private static <T extends Configuration> void setConfigurationFactoryFactory(
@@ -40,5 +40,5 @@ public final class EncryptedConfigValueBundle implements Bundle {
     }
 
     @Override
-    public void run(Environment _environment) {}
+    public void run(T _configuration, Environment _environment) {}
 }

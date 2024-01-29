@@ -17,8 +17,8 @@
 package com.palantir.config.crypto;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
-import io.dropwizard.cli.Command;
-import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.core.cli.Command;
+import io.dropwizard.core.setup.Bootstrap;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import net.sourceforge.argparse4j.inf.Namespace;

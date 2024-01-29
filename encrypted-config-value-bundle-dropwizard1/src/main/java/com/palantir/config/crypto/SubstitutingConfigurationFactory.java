@@ -39,8 +39,8 @@ import io.dropwizard.configuration.ConfigurationException;
 import io.dropwizard.configuration.ConfigurationFactory;
 import io.dropwizard.configuration.ConfigurationFactoryFactory;
 import io.dropwizard.configuration.YamlConfigurationFactory;
+import jakarta.validation.Validator;
 import java.io.IOException;
-import javax.validation.Validator;
 
 /**
  * A {@link ConfigurationFactory} subclass which filters parsed JSON through a

@@ -17,7 +17,7 @@
 package com.palantir.config.crypto.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 import java.util.List;
 
 public final class TestConfig extends Configuration {

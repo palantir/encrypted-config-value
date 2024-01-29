@@ -19,9 +19,9 @@ package com.palantir.config.crypto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.palantir.config.crypto.util.TestConfig;
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.Application;
+import io.dropwizard.core.setup.Bootstrap;
+import io.dropwizard.core.setup.Environment;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.Test;

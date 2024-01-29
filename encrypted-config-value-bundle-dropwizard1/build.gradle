@@ -11,7 +11,7 @@ dependencies {
     }
 
     implementation 'io.dropwizard:dropwizard-configuration'
-    implementation 'javax.validation:validation-api'
+    implementation 'jakarta.validation:jakarta.validation-api'
     implementation 'net.sourceforge.argparse4j:argparse4j'
     implementation project(':encrypted-config-value')
 
