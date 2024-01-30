@@ -1,0 +1,5 @@
+type: break
+break:
+  description: The `encrypted-config-value-bundle-dropwizard1` library has been removed.
+  links:
+  - https://github.com/palantir/encrypted-config-value/pull/547
