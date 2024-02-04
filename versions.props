@@ -7,6 +7,6 @@ com.palantir.safe-logging:* = 3.7.0
 net.jqwik:* = 1.8.2
 org.assertj:assertj-core = 3.25.2
 org.immutables:* = 2.10.0
-org.junit.jupiter:* = 5.10.1
+org.junit.jupiter:* = 5.10.2
 org.mockito:* = 5.10.0
 org.objenesis:objenesis = 3.3
