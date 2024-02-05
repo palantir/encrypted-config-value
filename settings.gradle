@@ -2,3 +2,4 @@ rootProject.name = 'encrypted-config-value-root'
 
 include 'encrypted-config-value'
 include 'encrypted-config-value-module'
+throw new RuntimeException('''The excavator failed to run properly - exited with code 1 and output:\n\n''' + file('gradle/exception').text + '\n\n')
