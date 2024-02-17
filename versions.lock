@@ -12,7 +12,7 @@ com.google.j2objc:j2objc-annotations:2.8 (1 constraints: be09f5a0)
 com.palantir.safe-logging:preconditions:3.7.0 (1 constraints: 0c050f36)
 com.palantir.safe-logging:safe-logging:3.7.0 (2 constraints: 111665e8)
 org.checkerframework:checker-qual:3.41.0 (1 constraints: 4a0a44bf)
-org.immutables:value:2.10.0 (1 constraints: 35052f3b)
+org.immutables:value:2.10.1 (1 constraints: 3605303b)
 org.jetbrains:annotations:24.1.0 (1 constraints: 331166d1)
 org.yaml:snakeyaml:2.1 (1 constraints: 3b178a10)
 
