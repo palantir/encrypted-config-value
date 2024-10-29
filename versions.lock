@@ -1,8 +1,8 @@
 # Run ./gradlew writeVersionsLocks to regenerate this file
-com.fasterxml.jackson.core:jackson-annotations:2.18.0 (2 constraints: c7170672)
-com.fasterxml.jackson.core:jackson-core:2.18.0 (3 constraints: 972fdbea)
-com.fasterxml.jackson.core:jackson-databind:2.18.0 (2 constraints: 0d1d3dec)
-com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.0 (1 constraints: 3d05473b)
+com.fasterxml.jackson.core:jackson-annotations:2.18.1 (2 constraints: c9173d72)
+com.fasterxml.jackson.core:jackson-core:2.18.1 (3 constraints: 9a2f97eb)
+com.fasterxml.jackson.core:jackson-databind:2.18.1 (2 constraints: 0f1d81ec)
+com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.1 (1 constraints: 3e05483b)
 com.google.code.findbugs:jsr305:3.0.2 (2 constraints: 1d0fb186)
 com.google.errorprone:error_prone_annotations:2.28.0 (3 constraints: 8c208d58)
 com.google.guava:failureaccess:1.0.2 (1 constraints: 150ae2b4)
@@ -14,7 +14,7 @@ com.palantir.safe-logging:safe-logging:3.7.0 (2 constraints: 111665e8)
 org.checkerframework:checker-qual:3.43.0 (1 constraints: 4c0a4abf)
 org.immutables:value:2.10.1 (1 constraints: 3605303b)
 org.jetbrains:annotations:24.1.0 (1 constraints: 331166d1)
-org.yaml:snakeyaml:2.2 (1 constraints: 3c178b10)
+org.yaml:snakeyaml:2.3 (1 constraints: 3d178c10)
 
 [Test dependencies]
 net.bytebuddy:byte-buddy:1.15.4 (2 constraints: c916c650)
