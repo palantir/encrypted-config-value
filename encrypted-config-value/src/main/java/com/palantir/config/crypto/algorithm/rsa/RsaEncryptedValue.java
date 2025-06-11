@@ -65,6 +65,7 @@ public abstract class RsaEncryptedValue extends EncryptedValue {
     @Override
     public final String decrypt(KeyWithType kwt) {
         KeyType.RSA_PRIVATE.checkKeyArgument(kwt, RsaPrivateKey.class);
+        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final PrivateKey privateKey = ((RsaPrivateKey) kwt.getKey()).getPrivateKey();
         return Suppliers.silently(() -> {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
