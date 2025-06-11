@@ -58,8 +58,10 @@ public enum RsaOaepEncrypter implements Encrypter {
     }
 
     @Override
-    public final EncryptedValue encrypt(KeyWithType kwt, final String plaintext) {
+    public final EncryptedValue encrypt(
+            KeyWithType kwt, @SuppressWarnings("for-rollout:UnnecessaryFinal") final String plaintext) {
         KeyType.RSA_PUBLIC.checkKeyArgument(kwt, RsaPublicKey.class);
+        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final PublicKey publicKey = ((RsaPublicKey) kwt.getKey()).getPublicKey();
         return Suppliers.silently(() -> {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");

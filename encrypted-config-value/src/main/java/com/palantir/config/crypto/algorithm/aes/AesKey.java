@@ -52,6 +52,7 @@ public final class AesKey implements Key {
             return false;
         }
 
+        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final AesKey other = (AesKey) obj;
         return secretKey.equals(other.getSecretKey());
     }

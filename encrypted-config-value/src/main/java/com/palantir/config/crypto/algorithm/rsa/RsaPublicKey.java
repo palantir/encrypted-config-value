@@ -56,6 +56,7 @@ public final class RsaPublicKey implements Key {
             return false;
         }
 
+        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final RsaPublicKey other = (RsaPublicKey) obj;
         return publicKey.equals(other.getPublicKey());
     }
@@ -69,6 +70,7 @@ public final class RsaPublicKey implements Key {
     public enum RsaPublicKeyGenerator implements KeyGenerator {
         INSTANCE;
 
+        @SuppressWarnings("for-rollout:InsecureCryptoUsage")
         @Override
         public KeyWithType keyFromBytes(byte[] key) {
             PublicKey localPublicKey;

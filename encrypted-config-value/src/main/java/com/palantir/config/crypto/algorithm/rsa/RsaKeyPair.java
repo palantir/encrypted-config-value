@@ -29,6 +29,7 @@ public final class RsaKeyPair {
 
     private static final int KEY_SIZE_BITS = 2048;
 
+    @SuppressWarnings("for-rollout:InsecureCryptoUsage")
     public static KeyPair newKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {

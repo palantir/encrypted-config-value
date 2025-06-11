@@ -35,12 +35,16 @@ public enum AesGcmEncrypter implements Encrypter {
     private static final int IV_SIZE_BITS = 96;
     private static final int TAG_SIZE_BITS = 128;
 
+    @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
     @Override
-    public final EncryptedValue encrypt(KeyWithType kwt, final String plaintext) {
+    public final EncryptedValue encrypt(
+            KeyWithType kwt, @SuppressWarnings("for-rollout:UnnecessaryFinal") final String plaintext) {
         KeyType.AES.checkKeyArgument(kwt, AesKey.class);
+        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final SecretKey secretKeySpec = ((AesKey) kwt.getKey()).getSecretKey();
 
         return Suppliers.silently(() -> {
+            @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
             javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding");
 
             byte[] ivBytes = new byte[IV_SIZE_BITS / Byte.SIZE];
