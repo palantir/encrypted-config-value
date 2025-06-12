@@ -24,9 +24,7 @@ import javax.crypto.SecretKey;
 import org.junit.jupiter.api.Test;
 
 public class AesKeyTest {
-    @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
     public static SecretKey newSecretKey() {
-        @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
         javax.crypto.KeyGenerator keyGen;
         try {
             keyGen = javax.crypto.KeyGenerator.getInstance(Algorithm.AES.toString());

@@ -56,7 +56,6 @@ public final class RsaPrivateKey implements Key {
             return false;
         }
 
-        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final RsaPrivateKey other = (RsaPrivateKey) obj;
         return privateKey.equals(other.getPrivateKey());
     }

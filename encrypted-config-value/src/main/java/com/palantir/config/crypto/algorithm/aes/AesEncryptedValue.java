@@ -60,7 +60,6 @@ public abstract class AesEncryptedValue extends EncryptedValue {
     @Override
     public final String decrypt(KeyWithType kwt) {
         KeyType.AES.checkKeyArgument(kwt, AesKey.class);
-        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final SecretKey secretKeySpec = ((AesKey) kwt.getKey()).getSecretKey();
         return Suppliers.silently(() -> {
             // Java expects the tag at the end of the encrypted bytes.

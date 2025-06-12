@@ -56,7 +56,6 @@ public final class RsaPublicKey implements Key {
             return false;
         }
 
-        @SuppressWarnings("for-rollout:UnnecessaryFinal")
         final RsaPublicKey other = (RsaPublicKey) obj;
         return publicKey.equals(other.getPublicKey());
     }

@@ -29,9 +29,7 @@ public final class AesKeyPair {
 
     private static final int KEY_SIZE_BITS = 256;
 
-    @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
     public static KeyPair newKeyPair() {
-        @SuppressWarnings("for-rollout:UnnecessarilyFullyQualified")
         javax.crypto.KeyGenerator keyGen;
         try {
             keyGen = javax.crypto.KeyGenerator.getInstance(Algorithm.AES.toString());
