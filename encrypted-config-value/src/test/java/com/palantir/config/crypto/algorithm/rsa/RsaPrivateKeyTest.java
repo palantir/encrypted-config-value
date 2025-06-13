@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 
 public class RsaPrivateKeyTest {
 
-    @SuppressWarnings("for-rollout:InsecureCryptoUsage")
     private static KeyPair generateKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {

@@ -32,7 +32,6 @@ public final class JsonNodeVisitors {
         // utilities
     }
 
-    @SuppressWarnings({"for-rollout:StatementSwitchToExpressionSwitch", "for-rollout:UnnecessaryDefaultInEnumSwitch"})
     public static <T> T dispatch(JsonNode node, JsonNodeVisitor<T> visitor) {
         switch (node.getNodeType()) {
             case ARRAY:
