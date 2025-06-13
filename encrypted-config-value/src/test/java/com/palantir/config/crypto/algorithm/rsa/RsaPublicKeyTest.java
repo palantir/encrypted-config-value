@@ -26,7 +26,6 @@ import java.security.PublicKey;
 import org.junit.jupiter.api.Test;
 
 public class RsaPublicKeyTest {
-    @SuppressWarnings("for-rollout:InsecureCryptoUsage")
     private static KeyPair generateKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {

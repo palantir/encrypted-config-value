@@ -69,7 +69,6 @@ public final class RsaPrivateKey implements Key {
     public enum RsaPrivateKeyGenerator implements KeyGenerator {
         INSTANCE;
 
-        @SuppressWarnings("for-rollout:InsecureCryptoUsage")
         @Override
         public KeyWithType keyFromBytes(byte[] key) {
             PrivateKey localPrivateKey;
