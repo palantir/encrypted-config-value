@@ -21,7 +21,6 @@ buildscript {
 
 plugins {
 id 'com.palantir.git-version' version '4.0.0'
-id 'org.inferred.processors' version '3.7.0'
 }
 
 repositories {
@@ -33,7 +32,6 @@ apply plugin: 'com.palantir.consistent-versions'
 apply plugin: 'com.palantir.external-publish'
 apply plugin: 'com.palantir.failure-reports'
 apply plugin: 'com.palantir.jdks'
-apply plugin: 'org.inferred.processors'
 apply plugin: 'com.palantir.baseline-java-versions'
 apply plugin: 'com.palantir.jdks.latest'
 
@@ -46,7 +44,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java-library'
-    apply plugin: 'org.inferred.processors'
     apply plugin: 'maven-publish'
     apply plugin: 'com.palantir.baseline-class-uniqueness'
     apply plugin: 'com.palantir.baseline-exact-dependencies'
