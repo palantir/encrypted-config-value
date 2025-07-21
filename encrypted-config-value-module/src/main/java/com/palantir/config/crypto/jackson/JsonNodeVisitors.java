@@ -24,8 +24,6 @@ import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.palantir.logsafe.SafeArg;
-import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 
 public final class JsonNodeVisitors {
     private JsonNodeVisitors() {
@@ -33,28 +31,16 @@ public final class JsonNodeVisitors {
     }
 
     public static <T> T dispatch(JsonNode node, JsonNodeVisitor<T> visitor) {
-        switch (node.getNodeType()) {
-            case ARRAY:
-                return visitor.visitArray((ArrayNode) node);
-            case BINARY:
-                return visitor.visitBinary((BinaryNode) node);
-            case BOOLEAN:
-                return visitor.visitBoolean((BooleanNode) node);
-            case MISSING:
-                return visitor.visitMissing();
-            case NULL:
-                return visitor.visitNull();
-            case NUMBER:
-                return visitor.visitNumeric((NumericNode) node);
-            case OBJECT:
-                return visitor.visitObject((ObjectNode) node);
-            case POJO:
-                return visitor.visitPojo((POJONode) node);
-            case STRING:
-                return visitor.visitText((TextNode) node);
-            default:
-                throw new SafeIllegalArgumentException(
-                        "Unexpected node type", SafeArg.of("nodeType", node.getNodeType()));
-        }
+        return switch (node.getNodeType()) {
+            case ARRAY -> visitor.visitArray((ArrayNode) node);
+            case BINARY -> visitor.visitBinary((BinaryNode) node);
+            case BOOLEAN -> visitor.visitBoolean((BooleanNode) node);
+            case MISSING -> visitor.visitMissing();
+            case NULL -> visitor.visitNull();
+            case NUMBER -> visitor.visitNumeric((NumericNode) node);
+            case OBJECT -> visitor.visitObject((ObjectNode) node);
+            case POJO -> visitor.visitPojo((POJONode) node);
+            case STRING -> visitor.visitText((TextNode) node);
+        };
     }
 }

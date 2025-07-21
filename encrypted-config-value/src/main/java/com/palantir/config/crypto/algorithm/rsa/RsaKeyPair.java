@@ -19,7 +19,6 @@ package com.palantir.config.crypto.algorithm.rsa;
 import com.palantir.config.crypto.ImmutableKeyWithType;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.KeyWithType;
-import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.KeyType;
 import com.palantir.logsafe.exceptions.SafeRuntimeException;
 import java.security.KeyPairGenerator;
@@ -32,7 +31,7 @@ public final class RsaKeyPair {
     public static KeyPair newKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(Algorithm.RSA.toString());
+            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             throw new SafeRuntimeException(e);
         }

@@ -16,7 +16,7 @@
 
 package com.palantir.config.crypto;
 
-import com.palantir.logsafe.exceptions.SafeRuntimeException;
+import com.palantir.logsafe.exceptions.SafeUncheckedIoException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -34,7 +34,7 @@ public final class KeyFileUtils {
         try {
             keyPair = keyPairFromDefaultPath();
         } catch (IOException e) {
-            throw new SafeRuntimeException("Failed to read key", e);
+            throw new SafeUncheckedIoException("Failed to read key", e);
         }
         return encryptedValue.decrypt(keyPair.decryptionKey());
     }

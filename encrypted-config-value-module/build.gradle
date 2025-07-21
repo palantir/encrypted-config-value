@@ -8,8 +8,6 @@ dependencies {
     api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
     implementation 'com.fasterxml.jackson.core:jackson-core'
-    implementation 'com.palantir.safe-logging:preconditions'
-    implementation 'com.palantir.safe-logging:safe-logging'
 
     testRuntimeOnly 'net.jqwik:jqwik'
 
