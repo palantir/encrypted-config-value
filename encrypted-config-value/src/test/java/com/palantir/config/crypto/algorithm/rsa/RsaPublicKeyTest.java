@@ -18,7 +18,6 @@ package com.palantir.config.crypto.algorithm.rsa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.palantir.config.crypto.algorithm.Algorithm;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -29,7 +28,7 @@ public class RsaPublicKeyTest {
     private static KeyPair generateKeyPair() {
         KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(Algorithm.RSA.toString());
+            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

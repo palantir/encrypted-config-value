@@ -20,7 +20,6 @@ import com.google.errorprone.annotations.Immutable;
 import com.palantir.config.crypto.ImmutableKeyWithType;
 import com.palantir.config.crypto.Key;
 import com.palantir.config.crypto.KeyWithType;
-import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.algorithm.KeyGenerator;
 import com.palantir.config.crypto.algorithm.KeyType;
 import javax.crypto.SecretKey;
@@ -67,7 +66,7 @@ public final class AesKey implements Key {
 
         @Override
         public KeyWithType keyFromBytes(byte[] key) {
-            SecretKeySpec localSecretKey = new SecretKeySpec(key, Algorithm.AES.toString());
+            SecretKeySpec localSecretKey = new SecretKeySpec(key, "AES");
             return ImmutableKeyWithType.builder()
                     .type(KeyType.AES)
                     .key(new AesKey(localSecretKey))

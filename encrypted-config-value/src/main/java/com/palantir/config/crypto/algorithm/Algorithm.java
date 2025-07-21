@@ -16,7 +16,6 @@
 
 package com.palantir.config.crypto.algorithm;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.config.crypto.KeyPair;
 import com.palantir.config.crypto.algorithm.aes.AesGcmEncrypter;
 import com.palantir.config.crypto.algorithm.aes.AesKeyPair;
@@ -29,36 +28,28 @@ import com.palantir.config.crypto.algorithm.rsa.RsaOaepEncrypter;
  * algorithm with a supported key.
  */
 public enum Algorithm {
-    AES("AES", AesGcmEncrypter.INSTANCE) {
+    AES(AesGcmEncrypter.INSTANCE) {
         @Override
         public KeyPair newKeyPair() {
             return AesKeyPair.newKeyPair();
         }
     },
-    RSA("RSA", RsaOaepEncrypter.INSTANCE) {
+    RSA(RsaOaepEncrypter.INSTANCE) {
         @Override
         public KeyPair newKeyPair() {
             return RsaKeyPair.newKeyPair();
         }
     };
 
-    private final String name;
     private final Encrypter encrypter;
 
-    Algorithm(String name, Encrypter cipher) {
-        this.name = name;
-        this.encrypter = cipher;
+    Algorithm(Encrypter encrypter) {
+        this.encrypter = encrypter;
     }
 
     public abstract KeyPair newKeyPair();
 
     public Encrypter newEncrypter() {
         return encrypter;
-    }
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return name;
     }
 }
