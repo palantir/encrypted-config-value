@@ -11,7 +11,7 @@ com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 c
 com.google.j2objc:j2objc-annotations:3.0.0 (1 constraints: 150aeab4)
 com.palantir.safe-logging:preconditions:3.9.0 (1 constraints: 0e051536)
 com.palantir.safe-logging:safe-logging:3.9.0 (2 constraints: 1516d1e8)
-org.immutables:value:2.11.1 (1 constraints: 3705333b)
+org.immutables:value:2.11.2 (1 constraints: 3805343b)
 org.jetbrains:annotations:26.0.2 (1 constraints: 36116fd1)
 org.jspecify:jspecify:1.0.0 (1 constraints: 130ae0b4)
 org.yaml:snakeyaml:2.4 (1 constraints: 3e178d10)
