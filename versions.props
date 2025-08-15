@@ -8,5 +8,5 @@ org.assertj:assertj-core = 3.27.4
 org.immutables:* = 2.11.3
 org.junit.jupiter:* = 5.13.4
 org.junit.platform:* = 1.13.4
-org.mockito:* = 5.18.0
+org.mockito:* = 5.19.0
 org.objenesis:objenesis = 3.4
