@@ -81,6 +81,7 @@ public final class JsonNodeStringReplacer implements JsonNodeVisitor<JsonNode> {
     @Override
     public JsonNode visitObject(ObjectNode objectNode) {
         ObjectNode newObjectNode = objectNode.objectNode();
+        @SuppressWarnings("for-rollout:deprecation")
         Iterator<Map.Entry<String, JsonNode>> entryIterator = objectNode.fields();
         while (entryIterator.hasNext()) {
             Map.Entry<String, JsonNode> entry = entryIterator.next();
