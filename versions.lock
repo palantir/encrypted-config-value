@@ -10,15 +10,15 @@ com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.19.2 (1 constraints: 
 
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 0705fc35)
 
-com.google.errorprone:error_prone_annotations:2.36.0 (3 constraints: 8f206758)
+com.google.errorprone:error_prone_annotations:2.41.0 (3 constraints: 8b209857)
 
 com.google.guava:failureaccess:1.0.3 (1 constraints: 160ae3b4)
 
-com.google.guava:guava:33.4.8-jre (1 constraints: b206a153)
+com.google.guava:guava:33.5.0-jre (1 constraints: ab068053)
 
 com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 constraints: bd17c918)
 
-com.google.j2objc:j2objc-annotations:3.0.0 (1 constraints: 150aeab4)
+com.google.j2objc:j2objc-annotations:3.1 (1 constraints: b809f1a0)
 
 com.palantir.safe-logging:preconditions:3.9.0 (1 constraints: 0e051536)
 
@@ -36,9 +36,9 @@ org.yaml:snakeyaml:2.4 (1 constraints: 3e178d10)
 
 [Test dependencies]
 
-net.bytebuddy:byte-buddy:1.17.6 (2 constraints: c716ff4f)
+net.bytebuddy:byte-buddy:1.17.7 (2 constraints: 9f161b3f)
 
-net.bytebuddy:byte-buddy-agent:1.17.6 (1 constraints: 490b4dde)
+net.bytebuddy:byte-buddy-agent:1.17.7 (1 constraints: 4a0b4ede)
 
 net.jqwik:jqwik:1.9.3 (1 constraints: 0f050e36)
 
@@ -52,7 +52,7 @@ net.jqwik:jqwik-web:1.9.3 (1 constraints: a007006d)
 
 org.apiguardian:apiguardian-api:1.1.2 (11 constraints: 9293fa1e)
 
-org.assertj:assertj-core:3.27.4 (1 constraints: 4205523b)
+org.assertj:assertj-core:3.27.5 (1 constraints: 4305533b)
 
 org.junit.jupiter:junit-jupiter:5.13.4 (1 constraints: 7e074077)
 
@@ -68,9 +68,9 @@ org.junit.platform:junit-platform-engine:1.13.4 (3 constraints: bc2dc41a)
 
 org.junit.platform:junit-platform-launcher:1.13.4 (1 constraints: 3b05363b)
 
-org.mockito:mockito-core:5.19.0 (2 constraints: 3a14bf87)
+org.mockito:mockito-core:5.20.0 (2 constraints: 2a143986)
 
-org.mockito:mockito-junit-jupiter:5.19.0 (1 constraints: 41055c3b)
+org.mockito:mockito-junit-jupiter:5.20.0 (1 constraints: 3905453b)
 
 org.objenesis:objenesis:3.4 (2 constraints: 5c0fdd79)
 
