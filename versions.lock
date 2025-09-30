@@ -28,7 +28,7 @@ org.immutables:value:2.11.4 (1 constraints: 3a05363b)
 
 org.jetbrains:annotations:26.0.2 (1 constraints: 36116fd1)
 
-org.jspecify:jspecify:1.0.0 (1 constraints: 130ae0b4)
+org.jspecify:jspecify:1.0.0 (7 constraints: 5370d26f)
 
 org.yaml:snakeyaml:2.4 (1 constraints: 3e178d10)
 
@@ -54,19 +54,19 @@ org.apiguardian:apiguardian-api:1.1.2 (11 constraints: 9293fa1e)
 
 org.assertj:assertj-core:3.27.6 (1 constraints: 4405543b)
 
-org.junit.jupiter:junit-jupiter:5.13.4 (1 constraints: 7e074077)
+org.junit.jupiter:junit-jupiter:6.0.0 (1 constraints: 47070770)
 
-org.junit.jupiter:junit-jupiter-api:5.13.4 (5 constraints: 3544f4b9)
+org.junit.jupiter:junit-jupiter-api:6.0.0 (5 constraints: 59437be7)
 
-org.junit.jupiter:junit-jupiter-engine:5.13.4 (1 constraints: 3a0e0a4a)
+org.junit.jupiter:junit-jupiter-engine:6.0.0 (1 constraints: 030eca3b)
 
-org.junit.jupiter:junit-jupiter-params:5.13.4 (2 constraints: 7813555c)
+org.junit.jupiter:junit-jupiter-params:6.0.0 (2 constraints: 0a13fa3a)
 
-org.junit.platform:junit-platform-commons:1.13.4 (4 constraints: d334c851)
+org.junit.platform:junit-platform-commons:6.0.0 (4 constraints: 6d3408f0)
 
-org.junit.platform:junit-platform-engine:1.13.4 (3 constraints: bc2dc41a)
+org.junit.platform:junit-platform-engine:6.0.0 (3 constraints: 562da8c7)
 
-org.junit.platform:junit-platform-launcher:1.13.4 (1 constraints: 3b05363b)
+org.junit.platform:junit-platform-launcher:6.0.0 (1 constraints: 08050936)
 
 org.mockito:mockito-core:5.20.0 (2 constraints: 2a143986)
 
