@@ -10,4 +10,4 @@ org.immutables:* = 2.12.1
 org.junit.jupiter:* = 6.0.2
 org.junit.platform:* = 6.0.2
 org.mockito:* = 5.21.0
-org.objenesis:objenesis = 3.4
+org.objenesis:objenesis = 3.5
