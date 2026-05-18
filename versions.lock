@@ -24,7 +24,7 @@ com.palantir.safe-logging:preconditions:3.15.0 (1 constraints: 3b05443b)
 
 com.palantir.safe-logging:safe-logging:3.15.0 (2 constraints: 6f16e20c)
 
-org.immutables:value:2.12.1 (1 constraints: 3805363b)
+org.immutables:value:2.12.2 (1 constraints: 3905373b)
 
 org.jetbrains:annotations:26.1.0 (1 constraints: 351170d1)
 
