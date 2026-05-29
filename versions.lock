@@ -40,15 +40,15 @@ net.bytebuddy:byte-buddy:1.18.3 (2 constraints: 9c16b43e)
 
 net.bytebuddy:byte-buddy-agent:1.17.7 (1 constraints: 4a0b4ede)
 
-net.jqwik:jqwik:1.10.0 (1 constraints: 3405293b)
+net.jqwik:jqwik:1.10.1 (1 constraints: 35052a3b)
 
-net.jqwik:jqwik-api:1.10.0 (5 constraints: 2e2a4e56)
+net.jqwik:jqwik-api:1.10.1 (5 constraints: 332a7a57)
 
-net.jqwik:jqwik-engine:1.10.0 (1 constraints: c507ac74)
+net.jqwik:jqwik-engine:1.10.1 (1 constraints: c607ad74)
 
-net.jqwik:jqwik-time:1.10.0 (1 constraints: c507ac74)
+net.jqwik:jqwik-time:1.10.1 (1 constraints: c607ad74)
 
-net.jqwik:jqwik-web:1.10.0 (1 constraints: c507ac74)
+net.jqwik:jqwik-web:1.10.1 (1 constraints: c607ad74)
 
 org.apiguardian:apiguardian-api:1.1.2 (11 constraints: 9293fa1e)
 
