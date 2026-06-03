@@ -18,6 +18,8 @@ package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.quicktheories.QuickTheory.qt;
+import static org.quicktheories.generators.SourceDSL.strings;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import com.palantir.config.crypto.util.StringSubstitutionException;
@@ -25,11 +27,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import net.jqwik.api.Assume;
-import net.jqwik.api.ForAll;
-import net.jqwik.api.Property;
-import net.jqwik.api.constraints.CharRange;
-import net.jqwik.api.constraints.StringLength;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -105,13 +102,17 @@ public final class DecryptingVariableSubstitutorTest {
         assertThat(substitutor.replace(source)).isEqualTo("abc:${enc:test}");
     }
 
-    @Property(tries = 10_000)
-    void propertyTestValues(@ForAll @CharRange(from = 0, to = 1024) @StringLength(max = 100) String plaintext)
-            throws IOException {
-        // RSA test key can only encrypt 190 bytes
-        Assume.that(plaintext.getBytes(StandardCharsets.UTF_8).length <= 190);
+    @Test
+    void propertyTestValues() throws IOException {
         ensureTestKeysExist();
-        assertThat(substitutor.replace("${" + encrypt(plaintext) + "}")).isEqualTo(plaintext);
+        qt().withExamples(10_000)
+                .forAll(strings().betweenCodePoints(0, 1024).ofLengthBetween(0, 100))
+                // RSA test key can only encrypt 190 bytes
+                .assuming(plaintext -> plaintext.getBytes(StandardCharsets.UTF_8).length <= 190)
+                .checkAssert(plaintext -> {
+                    assertThat(substitutor.replace("${" + encrypt(plaintext) + "}"))
+                            .isEqualTo(plaintext);
+                });
     }
 
     private static void ensureTestKeysExist() throws IOException {
