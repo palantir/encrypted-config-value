@@ -17,15 +17,13 @@
 package com.palantir.config.crypto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.quicktheories.QuickTheory.qt;
+import static org.quicktheories.generators.SourceDSL.strings;
 
 import com.palantir.config.crypto.algorithm.Algorithm;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
-import net.jqwik.api.Assume;
-import net.jqwik.api.EdgeCasesMode;
-import net.jqwik.api.ForAll;
-import net.jqwik.api.Property;
-import net.jqwik.api.constraints.StringLength;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -75,16 +73,20 @@ public final class AlgorithmTest {
         assertThat(decryptedString2).isEqualTo(plaintext);
     }
 
-    @Property(tries = 10_000)
-    void aes(@ForAll @StringLength(max = 100_000) String plaintext) {
-        encryptAndDecrypt(Algorithm.AES, plaintext);
+    @Test
+    void aes() {
+        qt().withExamples(10_000)
+                .forAll(strings().betweenCodePoints(0, 0xD7FF).ofLengthBetween(0, 100_000))
+                .checkAssert(plaintext -> encryptAndDecrypt(Algorithm.AES, plaintext));
     }
 
-    @Property(tries = 100, edgeCases = EdgeCasesMode.MIXIN)
-    void rsa(@ForAll @StringLength(max = 64) String plaintext) {
-        // RSA test key can only encrypt 190 bytes
-        Assume.that(plaintext.getBytes(StandardCharsets.UTF_8).length <= 190);
-        encryptAndDecrypt(Algorithm.RSA, plaintext);
+    @Test
+    void rsa() {
+        qt().withExamples(100)
+                .forAll(strings().betweenCodePoints(0, 0xD7FF).ofLengthBetween(0, 64))
+                // RSA test key can only encrypt 190 bytes
+                .assuming(plaintext -> plaintext.getBytes(StandardCharsets.UTF_8).length <= 190)
+                .checkAssert(plaintext -> encryptAndDecrypt(Algorithm.RSA, plaintext));
     }
 
     private static void encryptAndDecrypt(Algorithm algorithm, String plaintext) {
