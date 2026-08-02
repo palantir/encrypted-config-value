@@ -62,7 +62,7 @@ org.mockito:mockito-core:5.23.0 (2 constraints: 3014cc86)
 
 org.mockito:mockito-junit-jupiter:5.23.0 (1 constraints: 3c054e3b)
 
-org.objenesis:objenesis:3.5 (2 constraints: 5d0ffd79)
+org.objenesis:objenesis:3.6 (2 constraints: 5e0f1d7a)
 
 org.opentest4j:opentest4j:1.3.0 (2 constraints: cf209249)
 
