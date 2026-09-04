@@ -20,9 +20,9 @@ com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 c
 
 com.google.j2objc:j2objc-annotations:3.1 (1 constraints: b809f1a0)
 
-com.palantir.safe-logging:preconditions:3.18.0 (1 constraints: 3e054d3b)
+com.palantir.safe-logging:preconditions:3.19.0 (1 constraints: 3f05503b)
 
-com.palantir.safe-logging:safe-logging:3.18.0 (2 constraints: 7516870d)
+com.palantir.safe-logging:safe-logging:3.19.0 (2 constraints: 7716be0d)
 
 org.immutables:value:2.12.2 (1 constraints: 3905373b)
 
